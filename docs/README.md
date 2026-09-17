@@ -8,11 +8,15 @@ Documentation describes current contracts and durable rationale; Jira remains au
 
 ### Architecture
 
-`architecture/` contains current technical and domain contracts. Documents are added when their owning story establishes a contract worth preserving. Do not document speculative implementation as current truth.
+- [`architecture/domain-model.md`](architecture/domain-model.md) — stable domain ownership boundaries, including `Place` versus `TrekkingEvent`.
+- [`architecture/external-data-and-recommendations.md`](architecture/external-data-and-recommendations.md) — temporal external-data and advisory-recommendation boundaries.
+- [`architecture/validation.md`](architecture/validation.md) — baseline validation commands and evidence provenance rules.
+
+Concrete implementation contracts are added by the story that owns them. Do not document speculative implementation as current truth.
 
 ### Product
 
-`product/` contains current product scope and cross-story product constraints. The MVP scope is established during TOMG-2.
+- [`product/mvp-scope.md`](product/mvp-scope.md) — current MVP boundaries and story ownership.
 
 ## Supporting context
 
@@ -24,7 +28,7 @@ Documentation describes current contracts and durable rationale; Jira remains au
 
 `handoffs/` contains concise operational state for resuming work without chat history. A handoff points to durable documents rather than duplicating them.
 
-**Current handoff:** none yet. TOMG-2 creates the initial handoff during story closure.
+**Current handoff:** [`handoffs/current.md`](handoffs/current.md)
 
 ### History
 
