@@ -86,6 +86,9 @@ export function OutingEditor({
       .then((nextConditions) => {
         if (active) setLoadedConditions(nextConditions)
       })
+      .catch(() => {
+        if (active) setLoadedConditions({ forecastStatus: "error" })
+      })
 
     return () => {
       active = false
