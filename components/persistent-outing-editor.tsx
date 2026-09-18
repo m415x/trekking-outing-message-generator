@@ -17,5 +17,9 @@ export function PersistentOutingEditor() {
     setFrequentPlaces(createFrequentPlaceEditorPort(repository))
   }, [])
 
+  if (!frequentPlaces) {
+    return <p>Cargando lugares frecuentes…</p>
+  }
+
   return <OutingEditor frequentPlaces={frequentPlaces} />
 }
