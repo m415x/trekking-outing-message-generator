@@ -26,6 +26,7 @@ import {
 } from "../lib/outing-conditions"
 import type { OutingConditionsRequest } from "../lib/outing-conditions-service"
 import { MessagePreview } from "./message-preview"
+import { applyRecommendationOverrides, createRecommendations } from "../lib/recommendations"
 
 export interface OutingConditionsLoader {
   load(request: OutingConditionsRequest): Promise<OutingConditions>
@@ -50,6 +51,9 @@ export function OutingEditor({
   const [longitude, setLongitude] = useState("")
   const [placeError, setPlaceError] = useState("")
   const [placesRevision, setPlacesRevision] = useState(0)
+  const [manualHydrationLiters, setManualHydrationLiters] = useState<number | undefined>()
+  const [rejectHydration, setRejectHydration] = useState(false)
+  const [rejectedEquipment, setRejectedEquipment] = useState<string[]>([])
   const [loadedConditions, setLoadedConditions] = useState<OutingConditions | undefined>(
     conditions,
   )
@@ -103,13 +107,35 @@ export function OutingEditor({
   const daylightMarginMinutes =
     estimatedFinish &&
     displayedConditions &&
-    displayedConditions.forecastStatus !== "error"
+    displayedConditions.forecastStatus !== "error" &&
+    displayedConditions.sunset.date &&
+    displayedConditions.sunset.time
       ? calculateDaylightMarginMinutes(estimatedFinish, displayedConditions.sunset)
       : undefined
   const daylightStatus =
     daylightMarginMinutes !== undefined
       ? getDaylightStatus(daylightMarginMinutes, 60)
       : undefined
+
+  const suggestedRecommendations =
+    event.route.estimatedDurationMinutes !== undefined
+      ? createRecommendations({
+          estimatedDurationMinutes: event.route.estimatedDurationMinutes,
+          difficulty: event.route.difficulty,
+          weather:
+            displayedConditions?.forecastStatus === "available"
+              ? displayedConditions.weather
+              : undefined,
+          daylightStatus,
+        })
+      : undefined
+  const recommendations = suggestedRecommendations
+    ? applyRecommendationOverrides(suggestedRecommendations, {
+        hydrationLiters: manualHydrationLiters,
+        rejectHydration,
+        rejectedEquipment,
+      })
+    : undefined
 
   function updateEvent(next: Partial<TrekkingEvent>) {
     setEvent((current) => ({ ...current, ...next }))
@@ -541,6 +567,57 @@ export function OutingEditor({
         </fieldset>
 
         <fieldset className="space-y-4">
+          <legend className="text-lg font-semibold text-slate-950">Recomendaciones</legend>
+          {recommendations ? (
+            <>
+              <label className="block space-y-2 text-sm font-medium text-slate-800">
+                Agua orientativa (L)
+                <input
+                  className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950"
+                  type="number"
+                  min="0"
+                  step="0.5"
+                  value={recommendations.hydration?.liters ?? ""}
+                  disabled={rejectHydration}
+                  onChange={(e) => setManualHydrationLiters(Number(e.target.value))}
+                />
+              </label>
+              {recommendations.hydration && (
+                <p className="text-sm text-slate-600">
+                  Orientativo: {recommendations.hydration.reasons.join(". ")}
+                </p>
+              )}
+              <button
+                type="button"
+                onClick={() => setRejectHydration((current) => !current)}
+              >
+                {rejectHydration ? "Restaurar agua" : "Rechazar agua"}
+              </button>
+              {recommendations.equipment.map((recommendation) => (
+                <div key={recommendation.item} className="space-y-1 text-sm text-slate-700">
+                  <p>{recommendation.item}</p>
+                  <p>{recommendation.reasons.join(". ")}</p>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setRejectedEquipment((current) => [
+                        ...new Set([...current, recommendation.item]),
+                      ])
+                    }
+                  >
+                    Rechazar
+                  </button>
+                </div>
+              ))}
+            </>
+          ) : (
+            <p className="text-sm text-slate-600">
+              Completá la duración para obtener recomendaciones.
+            </p>
+          )}
+        </fieldset>
+
+        <fieldset className="space-y-4">
           <legend className="text-lg font-semibold text-slate-950">Responsables</legend>
           <label className="block space-y-2 text-sm font-medium text-slate-800">
             Coordinador
@@ -622,7 +699,7 @@ export function OutingEditor({
         </form>
 
         <div className="lg:sticky lg:top-6">
-          <MessagePreview event={event} />
+          <MessagePreview event={event} recommendations={recommendations} />
         </div>
       </div>
     </section>

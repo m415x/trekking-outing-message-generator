@@ -55,3 +55,20 @@ Failure or unavailability of optional external data should not unnecessarily blo
 ## Change rule
 
 Provider APIs, algorithms, thresholds, and implementation types are intentionally deferred. When an owning story establishes one of those contracts, document it in the appropriate current-truth document rather than retroactively treating this foundation document as an implementation specification.
+
+
+## Implemented TOMG-6 recommendation contract
+
+TOMG-6 implements a provider-neutral recommendation engine in `lib/recommendations.ts`, independent from React. Recommendation results are advisory and carry human-readable reasons.
+
+Hydration is an orientative carried-water planning estimate, not medical or physiological guidance. The MVP uses these explicit bands:
+
+- 0.5 L/hour by default;
+- 0.75 L/hour when outing-window temperature is at least 25 °C or difficulty is high/very high;
+- 1.0 L/hour when outing-window temperature is at least 30 °C and difficulty is high/very high.
+
+Duration multiplied by the selected rate is always rounded upward to the next 0.5 L. When an available outing-window forecast exists, its temperature is used. Without forecast weather, duration and difficulty still produce a recommendation; season labels are not used. Water is not automatically reduced because a route may contain a stream or spring.
+
+Current contextual equipment rules are explicit and testable: recommend a headlamp when the daylight status is approaching sunset or after sunset; wind protection when sustained wind is at least 25 km/h or gusts are at least 40 km/h; and sun protection when outing-window temperature is at least 25 °C.
+
+The UI presents the recommendation and its reasons before sharing. A user may explicitly replace the suggested water quantity or reject an equipment item. Recalculation applies those overrides rather than silently restoring the automated choice. Only the resolved, currently accepted recommendations are passed into generated message output.
