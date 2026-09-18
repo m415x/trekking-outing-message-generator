@@ -83,9 +83,17 @@ test("omits empty optional sections and keeps either responsible role", () => {
 
   const message = generateWhatsAppMessage(event)
 
-  assert.doesNotMatch(message, /maps\.example/)
+  assert.doesNotMatch(message, /maps\\.example/)
   assert.doesNotMatch(message, /Desnivel positivo/)
   assert.doesNotMatch(message, /Equipo recomendado/)
   assert.doesNotMatch(message, /Coordinador/)
-  assert.match(message, /Conocedor del camino:\* Cristian Lahoz/)
+  assert.match(message, /Conocedor del camino:\\* Cristian Lahoz/)
+})
+
+test("generates a tolerant partial preview without invalid placeholder lines", () => {
+  const event = createEmptyTrekkingEvent()
+  event.title = "Cerro Palo Seco"
+
+  assert.equal(generateWhatsAppMessage(event), "🥾 *CERRO PALO SECO*")
+  assert.equal(generateWhatsAppMessage(createEmptyTrekkingEvent()), "")
 })
