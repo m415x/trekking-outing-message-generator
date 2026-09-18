@@ -224,3 +224,24 @@ test("saved place validation rejects coordinates outside geographic bounds", () 
     { longitude: "Ingresá una longitud válida" },
   )
 })
+
+test("a reloaded editor port sees places persisted by a previous port", () => {
+  const places: Place[] = []
+  const repository: PlaceRepository = {
+    getAll: () => places,
+    save: (candidate) => {
+      const index = places.findIndex((place) => place.id === candidate.id)
+      if (index === -1) places.push(candidate)
+      else places[index] = candidate
+    },
+    remove: (id) => {
+      const index = places.findIndex((place) => place.id === id)
+      if (index !== -1) places.splice(index, 1)
+    },
+  }
+
+  createFrequentPlaceEditorPort(repository).save(place)
+  const reloadedPort = createFrequentPlaceEditorPort(repository)
+
+  assert.deepEqual(reloadedPort.load().places, [place])
+})
