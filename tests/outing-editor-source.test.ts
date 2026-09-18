@@ -246,3 +246,14 @@ test("outing editor allows rejecting the hydration recommendation", async () => 
   assert.match(source, /rejectHydration/)
   assert.match(source, /Rechazar agua/)
 })
+
+
+test("outing editor only derives daylight status when sunset is usable", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /displayedConditions\.sunset\.date/)
+  assert.match(source, /displayedConditions\.sunset\.time/)
+})
