@@ -260,8 +260,8 @@ test("outing editor only derives daylight status when sunset is usable", async (
 
 
 test("clears stale external conditions when the weather request becomes incomplete", async () => {
-  const source = readFileSync(
-    join(process.cwd(), "components/outing-editor.tsx"),
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
   )
 
