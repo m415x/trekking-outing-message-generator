@@ -175,6 +175,9 @@ export function OutingEditor({ frequentPlaces }: OutingEditorProps) {
                 const placeId = e.target.value
                 if (!frequentPlaces || !placeId) {
                   setSelectedPlaceId(null)
+                  setPlaceId("")
+                  setLatitude("")
+                  setLongitude("")
                   return
                 }
 
