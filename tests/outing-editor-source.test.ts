@@ -48,3 +48,14 @@ test("selecting a frequent place restores its management coordinates", async () 
   assert.match(source, /setLatitude\(managementFields\.latitude\)/)
   assert.match(source, /setLongitude\(managementFields\.longitude\)/)
 })
+
+test("estimated duration inputs are controlled by the event route snapshot", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.doesNotMatch(source, /defaultValue="0"/)
+  assert.match(source, /value=\{Math\.floor\(\(event\.route\.estimatedDurationMinutes \?\? 0\) \/ 60\)\}/)
+  assert.match(source, /value=\{\(event\.route\.estimatedDurationMinutes \?\? 0\) % 60\}/)
+})
