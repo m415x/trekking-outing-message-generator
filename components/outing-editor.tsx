@@ -188,6 +188,10 @@ export function OutingEditor({ frequentPlaces, conditions }: OutingEditorProps) 
           {conditions?.forecastStatus === "available" && (
             <div className="space-y-2 text-sm text-slate-600">
               <p>Temperatura: {conditions.weather.temperatureC} °C</p>
+              <p>Precipitación: {conditions.weather.precipitationMm} mm</p>
+              <p>Viento: {conditions.weather.windSpeedKmh} km/h</p>
+              <p>Ráfagas: {conditions.weather.windGustKmh} km/h</p>
+              <p>Actualizado: {conditions.fetchedAt}</p>
               <p>Amanecer: {conditions.sunrise.time}</p>
               <p>Atardecer: {conditions.sunset.time}</p>
               {estimatedFinish && <p>Fin estimado: {estimatedFinish.time}</p>}
