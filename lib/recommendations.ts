@@ -22,12 +22,13 @@ export interface EquipmentRecommendation extends AdvisoryRecommendation {
 }
 
 export interface Recommendations {
-  hydration: HydrationRecommendation
+  hydration?: HydrationRecommendation
   equipment: EquipmentRecommendation[]
 }
 
 export interface RecommendationOverrides {
   hydrationLiters?: number
+  rejectHydration?: boolean
   rejectedEquipment?: string[]
 }
 
@@ -38,13 +39,16 @@ export function applyRecommendationOverrides(
   const rejectedEquipment = new Set(overrides.rejectedEquipment ?? [])
 
   return {
-    hydration:
-      overrides.hydrationLiters === undefined
+    hydration: overrides.rejectHydration
+      ? undefined
+      : overrides.hydrationLiters === undefined
         ? recommendations.hydration
-        : {
-            ...recommendations.hydration,
-            liters: overrides.hydrationLiters,
-          },
+        : recommendations.hydration
+          ? {
+              ...recommendations.hydration,
+              liters: overrides.hydrationLiters,
+            }
+          : undefined,
     equipment: recommendations.equipment.filter(
       ({ item }) => !rejectedEquipment.has(item),
     ),
