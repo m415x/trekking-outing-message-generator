@@ -2,48 +2,42 @@
 
 ## Reliable starting point
 
-TOMG-2 establishes the project foundation and durable workflow. The next product story is TOMG-3, which owns creation of `TrekkingEvent` data and deterministic WhatsApp message generation.
+TOMG-3 implements the manual trekking-outing workflow on `tomg-3-create-outings-and-whatsapp-messages`. The story branch was created from `dev` at `4c443d83fcb60b70c83ec1aad51a3cfb9f31a472`; remote reconciliation on 2026-09-17 showed it 44 commits ahead and 0 behind before final documentation commits.
 
-Before starting TOMG-3, follow the story bootstrap in `AGENTS.md`: read this handoff, the relevant current architecture/product documents, inspect current code/tests selectively, then reconcile the complete Jira story with repository reality.
+The next implementation story after TOMG-3 closure is TOMG-4, which owns reusable `Place` data and local persistence. Before starting it, follow the story bootstrap in `AGENTS.md` and reconstruct state from current `dev`, durable docs, code/tests, and Jira rather than this handoff alone.
 
-## Current durable contracts
+## Implemented TOMG-3 contract
 
-- `docs/product/mvp-scope.md` defines MVP boundaries and story ownership.
-- `docs/architecture/domain-model.md` defines the stable `Place` / `TrekkingEvent` ownership boundary without freezing implementation types.
-- `docs/architecture/external-data-and-recommendations.md` defines external temporal-data and recommendation boundaries.
-- `docs/architecture/validation.md` defines the baseline validation gate and evidence provenance rules.
+- `TrekkingEvent` models meeting and trek start as distinct complete local moments.
+- Meeting point and trailhead are distinct locations; weather geography remains reserved for the trailhead/route in TOMG-5.
+- Meeting tolerance is explicit domain state and defaults to 15 minutes.
+- Route data includes distance, optional elevation gain, duration in minutes, and the four agreed difficulty values.
+- Default requirements can be deselected and custom per-outing requirements added without persistence.
+- Coordinator and Conocedor del camino are independent roles; at least one is required for final sharing.
+- Validation and deterministic WhatsApp generation are pure domain behavior.
+- Partial events render a progressive preview; Copy and WhatsApp remain disabled until final validation succeeds.
+- The editor uses a responsive single-column/mobile and two-column/large-screen layout with explicit validation guidance.
 
-## Implemented foundation
+See `docs/architecture/trekking-event-and-message-generation.md` for the concrete contract and `docs/architecture/domain-model.md` for cross-story ownership boundaries.
 
-- Next.js + TypeScript + Tailwind scaffold remains the application baseline.
-- `main` is stable/production; `dev` is the integration branch; story branches originate from current `dev`.
-- Development is remote-first, with executable evidence gathered only when commands are actually run.
-- The TypeScript test harness uses Node's test runner through `tsx`; `tests/harness.test.ts` is only a harness smoke test, not product coverage.
+## Human-reported execution evidence
 
-## TOMG-2 validation evidence
+TOMG-3 was developed remote-first with local TDD execution reported by the human. Focused cycles were observed as RED before implementation and GREEN after implementation. Reported checkpoints include:
 
-On 2026-09-17, the human reported running the complete closure gate locally on `tomg-2-project-foundation` after synchronizing the branch:
+- TOMG-14 form/editor regression: 8 tests passed, 0 failed; TypeScript and ESLint clean.
+- TOMG-15 sharing/preview regression: 9 tests passed, 0 failed; TypeScript and ESLint clean.
+- TOMG-16 validation/responsive checkpoint: 7 tests passed, 0 failed; TypeScript and ESLint clean.
+- Final responsive visual contract: 2 tests passed, 0 failed; subsequent TypeScript and ESLint checks reported clean.
 
-```text
-pnpm lint   — reported no errors
-pnpm tsc    — reported no errors
-pnpm test   — reported 1 test, 1 pass, 0 fail
-pnpm build  — reported no errors
-```
-
-This is human-reported local execution evidence, not connector-observed command execution. The reported `pnpm test` summary was: 1 test, 1 pass, 0 fail, 0 cancelled, 0 skipped, 0 todo.
+This is human-reported local execution evidence. The complete TOMG-3 closure gate (`pnpm lint`, `pnpm tsc`, `pnpm test`, `pnpm build`) must still be run after these documentation commits before the story is marked complete or merged.
 
 ## Deferred by design
 
-Do not pre-implement later-story scope while bootstrapping TOMG-3:
-
-- local persistence and `Place` repository implementation belong to TOMG-4;
-- weather/daylight provider integration belongs to TOMG-5;
-- hydration/equipment recommendation algorithms belong to TOMG-6;
-- database and authentication remain outside the MVP unless an approved future story changes that contract.
+- TOMG-4: reusable `Place` data, repository abstraction, and localStorage persistence.
+- TOMG-5: coordinates, weather/daylight integration, outing-window conditions, estimated finish, and daylight margin.
+- TOMG-6: advisory hydration/equipment recommendations.
+- Database, authentication, and server-side persistence remain outside the MVP unless an approved future story changes that contract.
 
 ## Closure state
 
-TOMG-8 and TOMG-9 were completed before this handoff. TOMG-10 established the validation harness; its executable validation was intentionally deferred to the TOMG-2 closure gate above. TOMG-11 owns final Jira/docs reconciliation and story handoff.
-
-Before merging the story branch, reconcile TOMG-2 and all child issue statuses in Jira and verify the branch diff against `dev`. After review/merge, `dev` becomes the source for the next story.
+TOMG-12 through TOMG-16 have implementation evidence; Jira reconciliation began during TOMG-17. TOMG-17 owns final documentation, complete validation evidence, remaining Jira reconciliation, and handoff. Do not mark TOMG-3 complete or merge it to `dev` until the full closure gate has actually passed and the remote branch diff/status has been rechecked.
