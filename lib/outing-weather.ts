@@ -20,7 +20,8 @@ export function selectOutingWindowWeather(
   const finishMinutes = civilMinutes(finish)
   const selected = hourly.filter(({ moment }) => {
     const observationMinutes = civilMinutes(moment)
-    return observationMinutes >= startMinutes && observationMinutes <= finishMinutes
+    const observationEndMinutes = observationMinutes + 60
+    return observationEndMinutes > startMinutes && observationMinutes <= finishMinutes
   })
 
   return {
