@@ -235,3 +235,14 @@ test("outing editor passes resolved recommendations to the message preview", asy
 
   assert.match(source, /<MessagePreview event=\{event\} recommendations=\{recommendations\} \/>/)
 })
+
+
+test("outing editor allows rejecting the hydration recommendation", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /rejectHydration/)
+  assert.match(source, /Rechazar agua/)
+})
