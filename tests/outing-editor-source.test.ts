@@ -193,7 +193,7 @@ test("outing editor ignores stale conditions responses after outing inputs chang
   )
 
   assert.match(source, /let active = true/)
-  assert.match(source, /if \(active\) setLoadedConditions\(nextConditions\)/)
+  assert.match(source, /if \(active\) \{\s*setLoadedConditions\(nextConditions\)/)
   assert.match(source, /active = false/)
 })
 
@@ -280,7 +280,7 @@ test("clears previous external conditions while a new valid request is loading",
 
   assert.match(
     source,
-    /let active = true\s*setLoadedConditions\(undefined\)\s*conditionsLoader\.load/,
+    /let active = true\s*setConditionsLoading\(true\)\s*setLoadedConditions\(undefined\)\s*conditionsLoader\.load/,
   )
 })
 
