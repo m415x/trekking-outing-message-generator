@@ -130,3 +130,15 @@ test("includes only accepted current recommendations in the generated message", 
   assert.match(message, /Protección contra el viento/)
   assert.doesNotMatch(message, /Protección solar/)
 })
+
+
+test("omits hydration from the generated message when it was rejected", () => {
+  const recommendations: Recommendations = {
+    hydration: undefined,
+    equipment: [],
+  }
+
+  const message = generateWhatsAppMessage(completeEvent(), recommendations)
+
+  assert.doesNotMatch(message, /Agua orientativa/)
+})
