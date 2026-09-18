@@ -1,7 +1,10 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { createOpenMeteoRequest } from "../lib/open-meteo"
+import {
+  createOpenMeteoProvider,
+  createOpenMeteoRequest,
+} from "../lib/open-meteo"
 
 test("builds Open-Meteo requests from outing coordinates", () => {
   const request = createOpenMeteoRequest({
