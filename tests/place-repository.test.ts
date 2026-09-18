@@ -144,3 +144,20 @@ test("malformed saved place entries are ignored", () => {
 
   assert.deepEqual(repository.getAll(), [place])
 })
+
+test("semantically invalid persisted places are ignored", () => {
+  const storage = new MemoryStorage()
+  storage.setItem(
+    "tomg.places",
+    JSON.stringify([
+      place,
+      { ...place, id: "bad-latitude-range", latitude: 91 },
+      { ...place, id: "bad-longitude-range", longitude: -181 },
+      { ...place, id: "bad-route", route: { difficulty: "extreme" } },
+    ]),
+  )
+
+  const repository = new LocalStoragePlaceRepository(storage)
+
+  assert.deepEqual(repository.getAll(), [place])
+})
