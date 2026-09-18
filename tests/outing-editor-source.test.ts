@@ -395,3 +395,25 @@ test("saved-place actions use full-width mobile targets and compact desktop sizi
     assert.match(source, buttonPattern)
   }
 })
+
+
+test("editor and preview allow long content to shrink without horizontal page overflow", async () => {
+  const editorSource = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+  const previewSource = await readFile(
+    new URL("../components/message-preview.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(
+    editorSource,
+    /className="grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-2 lg:items-start"/,
+  )
+  assert.match(editorSource, /className="min-w-0 lg:sticky lg:top-6"/)
+  assert.match(
+    previewSource,
+    /<pre className="[^"]*min-w-0[^"]*whitespace-pre-wrap[^"]*break-words[^"]*"/,
+  )
+})
