@@ -72,14 +72,14 @@ function parseLocalMoment(moment: EventMoment): Date {
 
   const [year, month, day] = moment.date.split("-").map(Number)
   const [hours, minutes] = moment.time.split(":").map(Number)
-  const value = new Date(year, month - 1, day, hours, minutes)
+  const value = new Date(Date.UTC(year, month - 1, day, hours, minutes))
 
   if (
-    value.getFullYear() !== year ||
-    value.getMonth() !== month - 1 ||
-    value.getDate() !== day ||
-    value.getHours() !== hours ||
-    value.getMinutes() !== minutes
+    value.getUTCFullYear() !== year ||
+    value.getUTCMonth() !== month - 1 ||
+    value.getUTCDate() !== day ||
+    value.getUTCHours() !== hours ||
+    value.getUTCMinutes() !== minutes
   ) {
     throw new Error("Invalid local moment")
   }
@@ -88,11 +88,11 @@ function parseLocalMoment(moment: EventMoment): Date {
 }
 
 function formatLocalMoment(value: Date): EventMoment {
-  const year = value.getFullYear()
-  const month = String(value.getMonth() + 1).padStart(2, "0")
-  const day = String(value.getDate()).padStart(2, "0")
-  const hours = String(value.getHours()).padStart(2, "0")
-  const minutes = String(value.getMinutes()).padStart(2, "0")
+  const year = value.getUTCFullYear()
+  const month = String(value.getUTCMonth() + 1).padStart(2, "0")
+  const day = String(value.getUTCDate()).padStart(2, "0")
+  const hours = String(value.getUTCHours()).padStart(2, "0")
+  const minutes = String(value.getUTCMinutes()).padStart(2, "0")
 
   return {
     date: `${year}-${month}-${day}`,
@@ -109,7 +109,7 @@ export function calculateEstimatedFinish(
   }
 
   const finish = parseLocalMoment(trekStart)
-  finish.setMinutes(finish.getMinutes() + estimatedDurationMinutes)
+  finish.setUTCMinutes(finish.getUTCMinutes() + estimatedDurationMinutes)
 
   return formatLocalMoment(finish)
 }
