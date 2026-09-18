@@ -23,7 +23,7 @@ Owns repository workflow, durable documentation structure, baseline validation c
 
 ### TOMG-3 — Create trekking outings and generate WhatsApp messages
 
-Owns the core `TrekkingEvent` workflow: structured outing inputs, difficulty and equipment selection, coordinator/conocedor del camino terminology, deterministic message generation, preview, copy, and WhatsApp handoff.
+Owns the implemented core `TrekkingEvent` workflow: distinct meeting and trailhead data, complete meeting and trek-start moments, route metrics, difficulty and requirements selection, Coordinator/Conocedor del camino roles, deterministic message generation, progressive preview, validation states, copy, and WhatsApp handoff. The editor is responsive and keeps final sharing disabled until the minimum event is valid.
 
 It does not own persistence, weather integration, or contextual recommendation logic.
 
