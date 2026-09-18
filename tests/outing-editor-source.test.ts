@@ -257,3 +257,16 @@ test("outing editor only derives daylight status when sunset is usable", async (
   assert.match(source, /displayedConditions\.sunset\.date/)
   assert.match(source, /displayedConditions\.sunset\.time/)
 })
+
+
+test("clears stale external conditions when the weather request becomes incomplete", () => {
+  const source = readFileSync(
+    join(process.cwd(), "components/outing-editor.tsx"),
+    "utf8",
+  )
+
+  assert.match(
+    source,
+    /if \(\s*!conditionsLoader[\s\S]*?\) \{\s*setLoadedConditions\(undefined\)\s*return/,
+  )
+})
