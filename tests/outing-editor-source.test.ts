@@ -117,12 +117,12 @@ test("outing editor receives conditions through a provider-neutral port", async 
   )
 
   assert.match(source, /conditions\?: OutingConditions/)
-  assert.match(source, /conditions\?\.forecastStatus === "available"/)
-  assert.match(source, /conditions\?\.forecastStatus === "unavailable"/)
-  assert.match(source, /conditions\?\.forecastStatus === "error"/)
-  assert.match(source, /conditions\.weather\.temperatureC/)
-  assert.match(source, /conditions\.sunrise\.time/)
-  assert.match(source, /conditions\.sunset\.time/)
+  assert.match(source, /displayedConditions\?\.forecastStatus === "available"/)
+  assert.match(source, /displayedConditions\?\.forecastStatus === "unavailable"/)
+  assert.match(source, /displayedConditions\?\.forecastStatus === "error"/)
+  assert.match(source, /displayedConditions\.weather\.temperatureC/)
+  assert.match(source, /displayedConditions\.sunrise\.time/)
+  assert.match(source, /displayedConditions\.sunset\.time/)
 })
 
 
@@ -145,10 +145,10 @@ test("outing editor exposes all outing-window weather values and forecast freshn
     "utf8",
   )
 
-  assert.match(source, /conditions\.weather\.precipitationMm/)
-  assert.match(source, /conditions\.weather\.windSpeedKmh/)
-  assert.match(source, /conditions\.weather\.windGustKmh/)
-  assert.match(source, /conditions\.fetchedAt/)
+  assert.match(source, /displayedConditions\.weather\.precipitationMm/)
+  assert.match(source, /displayedConditions\.weather\.windSpeedKmh/)
+  assert.match(source, /displayedConditions\.weather\.windGustKmh/)
+  assert.match(source, /displayedConditions\.fetchedAt/)
   assert.match(source, /Precipitación/)
   assert.match(source, /Ráfagas/)
   assert.match(source, /Actualizado/)
