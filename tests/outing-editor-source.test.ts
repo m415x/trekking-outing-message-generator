@@ -196,3 +196,16 @@ test("outing editor ignores stale conditions responses after outing inputs chang
   assert.match(source, /if \(active\) setLoadedConditions\(nextConditions\)/)
   assert.match(source, /active = false/)
 })
+
+
+test("persistent editor composes the Open-Meteo provider without leaking it into OutingEditor", async () => {
+  const source = await readFile(
+    new URL("../components/persistent-outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /createOpenMeteoProvider/)
+  assert.match(source, /loadOutingConditions/)
+  assert.match(source, /conditionsLoader/)
+  assert.match(source, /<OutingEditor/)
+})
