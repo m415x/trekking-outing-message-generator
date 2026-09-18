@@ -96,12 +96,12 @@ test("generates a tolerant partial preview without invalid placeholder lines", (
 
   const message = generateWhatsAppMessage(event)
 
-  assert.match(message, /^🥾 \\*CERRO PALO SECO\\*/)
-  assert.match(message, /🎒 \\*Equipo recomendado\\*/)
+  assert.ok(message.startsWith("🥾 *CERRO PALO SECO*"))
+  assert.ok(message.includes("🎒 *Equipo recomendado*"))
   assert.doesNotMatch(message, /📅|📍 \\*Encuentro\\*|🥾 \\*Inicio y recorrido\\*/)
   assert.doesNotMatch(message, /Invalid|NaN|undefined/)
 
   const emptyMessage = generateWhatsAppMessage(createEmptyTrekkingEvent())
-  assert.match(emptyMessage, /^🎒 \\*Equipo recomendado\\*/)
+  assert.ok(emptyMessage.startsWith("🎒 *Equipo recomendado*"))
   assert.doesNotMatch(emptyMessage, /Invalid|NaN|undefined/)
 })
