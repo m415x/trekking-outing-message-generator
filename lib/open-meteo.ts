@@ -30,3 +30,38 @@ export function createOpenMeteoRequest({
 
   return request
 }
+
+
+interface OpenMeteoResponse {
+  hourly: {
+    time: string[]
+    temperature_2m: number[]
+    precipitation: number[]
+    wind_speed_10m: number[]
+    wind_gusts_10m: number[]
+  }
+  daily: {
+    time: string[]
+    sunrise: string[]
+    sunset: string[]
+  }
+}
+
+function toEventMoment(value: string) {
+  const [date, time] = value.split("T")
+  return { date, time }
+}
+
+export function mapOpenMeteoResponse(response: OpenMeteoResponse) {
+  return {
+    hourly: response.hourly.time.map((time, index) => ({
+      moment: toEventMoment(time),
+      temperatureC: response.hourly.temperature_2m[index],
+      precipitationMm: response.hourly.precipitation[index],
+      windSpeedKmh: response.hourly.wind_speed_10m[index],
+      windGustKmh: response.hourly.wind_gusts_10m[index],
+    })),
+    sunrise: toEventMoment(response.daily.sunrise[0]),
+    sunset: toEventMoment(response.daily.sunset[0]),
+  }
+}
