@@ -14,6 +14,25 @@ export interface PlaceRepository {
 
 const STORAGE_KEY = "tomg.places"
 
+function isPlace(value: unknown): value is Place {
+  if (typeof value !== "object" || value === null) {
+    return false
+  }
+
+  const candidate = value as Partial<Place>
+
+  return (
+    typeof candidate.id === "string" &&
+    typeof candidate.name === "string" &&
+    typeof candidate.latitude === "number" &&
+    Number.isFinite(candidate.latitude) &&
+    typeof candidate.longitude === "number" &&
+    Number.isFinite(candidate.longitude) &&
+    typeof candidate.route === "object" &&
+    candidate.route !== null
+  )
+}
+
 export class LocalStoragePlaceRepository implements PlaceRepository {
   constructor(private readonly storage: StorageLike) {}
 
@@ -25,7 +44,7 @@ export class LocalStoragePlaceRepository implements PlaceRepository {
       }
 
       const parsed = JSON.parse(raw)
-      return Array.isArray(parsed) ? parsed : []
+      return Array.isArray(parsed) ? parsed.filter(isPlace) : []
     } catch {
       return []
     }
