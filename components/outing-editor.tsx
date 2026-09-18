@@ -107,7 +107,9 @@ export function OutingEditor({
   const daylightMarginMinutes =
     estimatedFinish &&
     displayedConditions &&
-    displayedConditions.forecastStatus !== "error"
+    displayedConditions.forecastStatus !== "error" &&
+    displayedConditions.sunset.date &&
+    displayedConditions.sunset.time
       ? calculateDaylightMarginMinutes(estimatedFinish, displayedConditions.sunset)
       : undefined
   const daylightStatus =
