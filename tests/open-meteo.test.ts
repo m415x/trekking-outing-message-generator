@@ -161,3 +161,32 @@ test("Open-Meteo provider reports an unavailable forecast without treating it as
 
   assert.equal(result.status, "forecastUnavailable")
 })
+
+
+test("Open-Meteo unavailable forecast preserves daylight when the response provides it", async () => {
+  const fetcher = async () => ({
+    ok: false,
+    status: 400,
+    json: async () => ({
+      daily: {
+        time: ["2026-12-20"],
+        sunrise: ["2026-12-20T06:28"],
+        sunset: ["2026-12-20T20:35"],
+      },
+    }),
+  })
+
+  const provider = createOpenMeteoProvider(fetcher)
+  const result = await provider.loadForecast({
+    latitude: -31.53,
+    longitude: -68.52,
+    date: "2026-12-20",
+    trekStart: { date: "2026-12-20", time: "08:30" },
+    estimatedDurationMinutes: 180,
+  })
+
+  assert.equal(result.status, "forecastUnavailable")
+  if (result.status !== "forecastUnavailable") return
+  assert.deepEqual(result.sunrise, { date: "2026-12-20", time: "06:28" })
+  assert.deepEqual(result.sunset, { date: "2026-12-20", time: "20:35" })
+})
