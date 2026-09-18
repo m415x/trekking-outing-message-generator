@@ -10,11 +10,15 @@ import { LocalStoragePlaceRepository } from "../lib/place-repository"
 import { OutingEditor } from "./outing-editor"
 
 export function PersistentOutingEditor() {
-  const [frequentPlaces, setFrequentPlaces] = useState<FrequentPlaceEditorPort>()
+  const [frequentPlaces, setPort] = useState<FrequentPlaceEditorPort>()
 
   useEffect(() => {
-    const repository = new LocalStoragePlaceRepository(window.localStorage)
-    setFrequentPlaces(createFrequentPlaceEditorPort(repository))
+    const timeoutId = window.setTimeout(() => {
+      const repository = new LocalStoragePlaceRepository(window.localStorage)
+      setPort(createFrequentPlaceEditorPort(repository))
+    }, 0)
+
+    return () => window.clearTimeout(timeoutId)
   }, [])
 
   if (!frequentPlaces) {
