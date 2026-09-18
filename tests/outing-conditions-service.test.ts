@@ -46,3 +46,60 @@ test("maps provider failures to an explicit error state", async () => {
 
   assert.deepEqual(result, { forecastStatus: "error" })
 })
+
+
+test("returns available outing-window conditions with freshness metadata", async () => {
+  const result = await loadOutingConditions(
+    {
+      latitude: -31.5375,
+      longitude: -68.5364,
+      date: "2026-09-20",
+      trekStart: { date: "2026-09-20", time: "08:30" },
+      estimatedDurationMinutes: 105,
+    },
+    {
+      loadForecast: async () => ({
+        status: "available",
+        fetchedAt: "2026-09-18T18:00:00Z",
+        sunrise: { date: "2026-09-20", time: "07:12" },
+        sunset: { date: "2026-09-20", time: "19:28" },
+        hourly: [
+          {
+            moment: { date: "2026-09-20", time: "08:00" },
+            temperatureC: 12,
+            precipitationMm: 0.2,
+            windSpeedKmh: 10,
+            windGustKmh: 18,
+          },
+          {
+            moment: { date: "2026-09-20", time: "09:00" },
+            temperatureC: 15,
+            precipitationMm: 0.3,
+            windSpeedKmh: 16,
+            windGustKmh: 28,
+          },
+          {
+            moment: { date: "2026-09-20", time: "10:00" },
+            temperatureC: 20,
+            precipitationMm: 0,
+            windSpeedKmh: 8,
+            windGustKmh: 12,
+          },
+        ],
+      }),
+    },
+  )
+
+  assert.deepEqual(result, {
+    forecastStatus: "available",
+    fetchedAt: "2026-09-18T18:00:00Z",
+    sunrise: { date: "2026-09-20", time: "07:12" },
+    sunset: { date: "2026-09-20", time: "19:28" },
+    weather: {
+      temperatureC: 15,
+      precipitationMm: 0.5,
+      windSpeedKmh: 16,
+      windGustKmh: 28,
+    },
+  })
+})
