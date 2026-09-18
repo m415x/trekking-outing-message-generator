@@ -296,3 +296,14 @@ test("degrades rejected weather loads to an explicit error state", async () => {
     /\.catch\(\(\) => \{\s*if \(active\) setLoadedConditions\(\{ forecastStatus: "error" \}\)\s*\}\)/,
   )
 })
+
+
+test("does not render empty sunrise or sunset values", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /displayedConditions\.sunrise\.time\s*&&/)
+  assert.match(source, /displayedConditions\.sunset\.time\s*&&/)
+})
