@@ -103,10 +103,14 @@ export function generateWhatsAppMessage(
 
   if (recommendations) {
     const recommendationLines = [
-      `💧 Agua orientativa: ${recommendations.hydration.liters} L`,
+      ...(recommendations.hydration
+        ? [`💧 Agua orientativa: ${recommendations.hydration.liters} L`]
+        : []),
       ...recommendations.equipment.map(({ item }) => `▪️ ${item}`),
     ]
-    sections.push(["💡 *Recomendaciones para la salida*", ...recommendationLines].join("\n"))
+    if (recommendationLines.length > 0) {
+      sections.push(["💡 *Recomendaciones para la salida*", ...recommendationLines].join("\n"))
+    }
   }
 
   const requirements = event.requirements.map((item) => item.trim()).filter(Boolean)
