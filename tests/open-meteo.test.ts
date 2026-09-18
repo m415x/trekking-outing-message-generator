@@ -190,3 +190,28 @@ test("Open-Meteo unavailable forecast preserves daylight when the response provi
   assert.deepEqual(result.sunrise, { date: "2026-12-20", time: "06:28" })
   assert.deepEqual(result.sunset, { date: "2026-12-20", time: "20:35" })
 })
+
+
+test("Open-Meteo provider does not classify every HTTP 400 as forecast unavailable", async () => {
+  const fetcher = async () => ({
+    ok: false,
+    status: 400,
+    json: async () => ({
+      error: true,
+      reason: "Invalid latitude",
+    }),
+  })
+
+  const provider = createOpenMeteoProvider(fetcher)
+
+  await assert.rejects(
+    provider.loadForecast({
+      latitude: 999,
+      longitude: -68.52,
+      date: "2026-09-20",
+      trekStart: { date: "2026-09-20", time: "08:30" },
+      estimatedDurationMinutes: 180,
+    }),
+    /Open-Meteo request failed/,
+  )
+})
