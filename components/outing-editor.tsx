@@ -63,10 +63,17 @@ export function OutingEditor({
   const displayedConditions = conditions ?? loadedConditions
 
   useEffect(() => {
+    const latitudeNumber = Number(latitude)
+    const longitudeNumber = Number(longitude)
+    const coordinatesAreValid =
+      latitudeNumber >= -90 && latitudeNumber <= 90 &&
+      longitudeNumber >= -180 && longitudeNumber <= 180
+
     if (
       !conditionsLoader ||
       latitude === "" ||
       longitude === "" ||
+      !coordinatesAreValid ||
       event.trekStart.date === "" ||
       event.trekStart.time === "" ||
       event.route.estimatedDurationMinutes === undefined
@@ -79,8 +86,8 @@ export function OutingEditor({
     setConditionsLoading(true)
     setLoadedConditions(undefined)
     conditionsLoader.load({
-        latitude: Number(latitude),
-        longitude: Number(longitude),
+        latitude: latitudeNumber,
+        longitude: longitudeNumber,
         date: event.trekStart.date,
         trekStart: event.trekStart,
         estimatedDurationMinutes: event.route.estimatedDurationMinutes,
