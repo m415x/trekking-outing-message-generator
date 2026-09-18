@@ -9,7 +9,7 @@ import {
   type Difficulty,
   type TrekkingEvent,
 } from "../lib/trekking-event"
-import { addCustomRequirement, setEstimatedDuration } from "../lib/outing-editor-state"
+import { addCustomRequirement, setEstimatedDuration, setMeetingDate } from "../lib/outing-editor-state"
 import { toggleRequirement } from "../lib/outing-form"
 
 export function OutingEditor() {
@@ -22,17 +22,17 @@ export function OutingEditor() {
 
   function updateMeeting(field: "date" | "time" | "placeName" | "mapsUrl", value: string) {
     setEvent((current) => {
-      if (field === "date" || field === "time") {
+      if (field === "date") {
+        return setMeetingDate(current, value)
+      }
+
+      if (field === "time") {
         return {
           ...current,
           meeting: {
             ...current.meeting,
-            [field]: value,
+            time: value,
           },
-          trekStart:
-            field === "date" && !current.trekStart.date
-              ? { ...current.trekStart, date: value }
-              : current.trekStart,
         }
       }
 
