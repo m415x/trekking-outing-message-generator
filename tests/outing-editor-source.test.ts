@@ -13,3 +13,14 @@ test("outing editor renders the frequent-place selector through its port", async
   assert.match(source, /selectedPlaceId/)
   assert.doesNotMatch(source, /localStorage/)
 })
+
+test("client composition wires local persistence into the outing editor", async () => {
+  const source = await readFile(
+    new URL("../components/persistent-outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /LocalStoragePlaceRepository/)
+  assert.match(source, /createFrequentPlaceEditorPort/)
+  assert.match(source, /<OutingEditor frequentPlaces=/)
+})
