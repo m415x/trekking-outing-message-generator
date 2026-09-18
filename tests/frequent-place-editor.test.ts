@@ -7,7 +7,7 @@ import {
   createFrequentPlaceEditorState,
   getFrequentPlaceOptions,
   selectFrequentPlace,
-  type FrequentPlaceEditorPort,
+  createFrequentPlaceEditorPort,
 } from "../lib/frequent-place-editor"
 import { createEmptyTrekkingEvent } from "../lib/trekking-event"
 
@@ -76,10 +76,7 @@ test("an unknown place id leaves the outing unchanged and clears selection", () 
 
 test("editor port loads places and applies selection without exposing storage", () => {
   const repository = new StubPlaceRepository([place])
-  const port: FrequentPlaceEditorPort = {
-    load: () => createFrequentPlaceEditorState(repository),
-    select: (placeId, event) => selectFrequentPlace(repository, placeId, event),
-  }
+  const port = createFrequentPlaceEditorPort(repository)
   const event = createEmptyTrekkingEvent()
 
   assert.deepEqual(port.load().places, [place])
