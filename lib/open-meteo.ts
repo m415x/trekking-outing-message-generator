@@ -1,3 +1,8 @@
+import type {
+  OutingConditionsProvider,
+  OutingConditionsRequest,
+} from "./outing-conditions-service"
+
 export interface OpenMeteoRequestInput {
   latitude: number
   longitude: number
@@ -81,5 +86,40 @@ export function mapOpenMeteoResponse(response: OpenMeteoResponse) {
     })),
     sunrise: toEventMoment(response.daily.sunrise[0]),
     sunset: toEventMoment(response.daily.sunset[0]),
+  }
+}
+
+
+interface FetchResponse {
+  ok: boolean
+  json(): Promise<unknown>
+}
+
+export type OpenMeteoFetcher = (
+  url: string,
+) => Promise<FetchResponse>
+
+export function createOpenMeteoProvider(
+  fetcher: OpenMeteoFetcher = (url) => fetch(url),
+): OutingConditionsProvider {
+  return {
+    async loadForecast(request: OutingConditionsRequest) {
+      const url = createOpenMeteoRequest(request)
+      const response = await fetcher(url.toString())
+
+      if (!response.ok) {
+        throw new Error("Open-Meteo request failed")
+      }
+
+      const mapped = mapOpenMeteoResponse(
+        (await response.json()) as OpenMeteoResponse,
+      )
+
+      return {
+        status: "available",
+        fetchedAt: new Date().toISOString(),
+        ...mapped,
+      }
+    },
   }
 }
