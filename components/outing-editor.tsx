@@ -11,6 +11,7 @@ import {
 } from "../lib/trekking-event"
 import { addCustomRequirement, setEstimatedDuration, setMeetingDate } from "../lib/outing-editor-state"
 import { toggleRequirement } from "../lib/outing-form"
+import { MessagePreview } from "./message-preview"
 
 export function OutingEditor() {
   const [event, setEvent] = useState<TrekkingEvent>(() => createEmptyTrekkingEvent())
@@ -322,6 +323,8 @@ export function OutingEditor() {
           </button>
         </fieldset>
       </form>
+
+      <MessagePreview event={event} />
     </section>
   )
 }
