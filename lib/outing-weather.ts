@@ -15,7 +15,7 @@ export function selectOutingWindowWeather(
   hourly: HourlyOutingWeather[],
   start: EventMoment,
   finish: EventMoment,
-): OutingWeather {
+): OutingWeather | undefined {
   const startMinutes = civilMinutes(start)
   const finishMinutes = civilMinutes(finish)
   const selected = hourly.filter(({ moment }) => {
@@ -23,6 +23,10 @@ export function selectOutingWindowWeather(
     const observationEndMinutes = observationMinutes + 60
     return observationEndMinutes > startMinutes && observationMinutes <= finishMinutes
   })
+
+  if (selected.length === 0) {
+    return undefined
+  }
 
   return {
     temperatureC: Math.max(...selected.map(({ temperatureC }) => temperatureC)),
