@@ -209,3 +209,19 @@ test("persistent editor composes the Open-Meteo provider without leaking it into
   assert.match(source, /conditionsLoader/)
   assert.match(source, /<OutingEditor/)
 })
+
+
+test("outing editor presents editable and rejectable contextual recommendations", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /Recomendaciones/)
+  assert.match(source, /createRecommendations/)
+  assert.match(source, /applyRecommendationOverrides/)
+  assert.match(source, /Agua orientativa/)
+  assert.match(source, /type="number"/)
+  assert.match(source, /Rechazar/)
+  assert.match(source, /Orientativo/)
+})
