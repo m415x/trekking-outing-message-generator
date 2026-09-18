@@ -72,3 +72,23 @@ test("includes hourly buckets that overlap the outing boundaries", () => {
 
   assert.equal(weather.precipitationMm, 0.5)
 })
+
+
+test("returns no summary when the provider has no hourly data for the outing window", () => {
+  assert.equal(
+    selectOutingWindowWeather(
+      [
+        {
+          moment: { date: "2026-09-20", time: "08:00" },
+          temperatureC: 12,
+          precipitationMm: 0,
+          windSpeedKmh: 10,
+          windGustKmh: 18,
+        },
+      ],
+      { date: "2026-09-20", time: "12:00" },
+      { date: "2026-09-20", time: "14:00" },
+    ),
+    undefined,
+  )
+})
