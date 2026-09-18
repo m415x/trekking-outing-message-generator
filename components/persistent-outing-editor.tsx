@@ -1,17 +1,20 @@
 "use client"
 
-import { useMemo } from "react"
+import { useEffect, useState } from "react"
 
 import {
   createFrequentPlaceEditorPort,
+  type FrequentPlaceEditorPort,
 } from "../lib/frequent-place-editor"
 import { LocalStoragePlaceRepository } from "../lib/place-repository"
 import { OutingEditor } from "./outing-editor"
 
 export function PersistentOutingEditor() {
-  const frequentPlaces = useMemo(() => {
+  const [frequentPlaces, setFrequentPlaces] = useState<FrequentPlaceEditorPort>()
+
+  useEffect(() => {
     const repository = new LocalStoragePlaceRepository(window.localStorage)
-    return createFrequentPlaceEditorPort(repository)
+    setFrequentPlaces(createFrequentPlaceEditorPort(repository))
   }, [])
 
   return <OutingEditor frequentPlaces={frequentPlaces} />
