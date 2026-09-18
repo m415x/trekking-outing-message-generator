@@ -150,3 +150,47 @@ test("recommends contextual equipment from explicit weather and daylight rules",
     assert.ok(recommendation.reasons.length > 0)
   }
 })
+
+
+test("preserves explicit manual choices when recommendations are recalculated", async () => {
+  const { applyRecommendationOverrides } = await import("../lib/recommendations")
+
+  const initial = createRecommendations({
+    estimatedDurationMinutes: 180,
+    difficulty: "moderate",
+    weather: {
+      temperatureC: 25,
+      precipitationMm: 0,
+      windSpeedKmh: 5,
+      windGustKmh: 10,
+    },
+  })
+
+  const overrides = {
+    hydrationLiters: 2,
+    rejectedEquipment: ["Protección solar"],
+  }
+
+  const recalculated = createRecommendations({
+    estimatedDurationMinutes: 240,
+    difficulty: "high",
+    weather: {
+      temperatureC: 30,
+      precipitationMm: 0,
+      windSpeedKmh: 30,
+      windGustKmh: 45,
+    },
+  })
+
+  const resolved = applyRecommendationOverrides(recalculated, overrides)
+
+  assert.equal(initial.hydration.liters, 2.5)
+  assert.equal(recalculated.hydration.liters, 4)
+  assert.equal(resolved.hydration.liters, 2)
+  assert.ok(
+    resolved.equipment.every(({ item }) => item !== "Protección solar"),
+  )
+  assert.ok(
+    resolved.equipment.some(({ item }) => item === "Protección contra el viento"),
+  )
+})
