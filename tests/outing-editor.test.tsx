@@ -41,3 +41,13 @@ test("renders the complete TOMG-14 outing form surface", () => {
   assert.ok(html.includes("Ropa cómoda"))
   assert.ok(html.includes("Agua"))
 })
+
+test("renders validation guidance for required fields and responsible roles", () => {
+  const html = renderToStaticMarkup(<OutingEditor />)
+
+  assert.ok(html.includes("El título es obligatorio"))
+  assert.ok(html.includes("El lugar de encuentro es obligatorio"))
+  assert.ok(html.includes("La distancia debe ser mayor que cero"))
+  assert.ok(html.includes("La dificultad es obligatoria"))
+  assert.ok(html.includes("Debe haber al menos un responsable"))
+})
