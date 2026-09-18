@@ -37,3 +37,14 @@ test("outing editor exposes explicit saved-place management controls", async () 
   assert.match(source, /Latitud/)
   assert.match(source, /Longitud/)
 })
+
+test("selecting a frequent place restores its management coordinates", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /getSelectedPlaceManagementFields/)
+  assert.match(source, /setLatitude\(managementFields\.latitude\)/)
+  assert.match(source, /setLongitude\(managementFields\.longitude\)/)
+})
