@@ -154,6 +154,10 @@ test("semantically invalid persisted places are ignored", () => {
       { ...place, id: "bad-latitude-range", latitude: 91 },
       { ...place, id: "bad-longitude-range", longitude: -181 },
       { ...place, id: "bad-route", route: { difficulty: "extreme" } },
+      { ...place, id: "bad-maps-url", mapsUrl: 42 },
+      { ...place, id: "bad-distance", route: { distanceKm: "far" } },
+      { ...place, id: "bad-elevation", route: { elevationGainM: Number.NaN } },
+      { ...place, id: "bad-duration", route: { estimatedDurationMinutes: -1 } },
     ]),
   )
 
