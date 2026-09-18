@@ -92,3 +92,24 @@ export function createOutingEditorFrequentPlaceModel(
     select: port.select,
   }
 }
+
+export interface FrequentPlaceSelectorPresentation {
+  options: FrequentPlaceOption[]
+  disabled: boolean
+  placeholder: string
+}
+
+export function getFrequentPlaceSelectorPresentation(
+  repository: PlaceRepository,
+): FrequentPlaceSelectorPresentation {
+  const options = getFrequentPlaceOptions(repository)
+  const disabled = options.length === 0
+
+  return {
+    options,
+    disabled,
+    placeholder: disabled
+      ? "No hay lugares frecuentes guardados"
+      : "Seleccionar lugar frecuente",
+  }
+}
