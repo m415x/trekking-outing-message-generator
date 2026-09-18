@@ -194,3 +194,19 @@ test("preserves explicit manual choices when recommendations are recalculated", 
     resolved.equipment.some(({ item }) => item === "Protección contra el viento"),
   )
 })
+
+
+test("allows the hydration recommendation to be explicitly rejected", async () => {
+  const { applyRecommendationOverrides } = await import("../lib/recommendations")
+
+  const recommendations = createRecommendations({
+    estimatedDurationMinutes: 180,
+    difficulty: "moderate",
+  })
+
+  const resolved = applyRecommendationOverrides(recommendations, {
+    rejectHydration: true,
+  })
+
+  assert.equal(resolved.hydration, undefined)
+})
