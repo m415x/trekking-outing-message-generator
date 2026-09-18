@@ -6,8 +6,18 @@ import {
   createFrequentPlaceEditorPort,
   type FrequentPlaceEditorPort,
 } from "../lib/frequent-place-editor"
+import { loadOutingConditions } from "../lib/outing-conditions-service"
+import { createOpenMeteoProvider } from "../lib/open-meteo"
 import { LocalStoragePlaceRepository } from "../lib/place-repository"
-import { OutingEditor } from "./outing-editor"
+import {
+  OutingEditor,
+  type OutingConditionsLoader,
+} from "./outing-editor"
+
+const weatherProvider = createOpenMeteoProvider()
+const conditionsLoader: OutingConditionsLoader = {
+  load: (request) => loadOutingConditions(request, weatherProvider),
+}
 
 export function PersistentOutingEditor() {
   const [frequentPlaces, setPort] = useState<FrequentPlaceEditorPort>()
@@ -25,5 +35,10 @@ export function PersistentOutingEditor() {
     return <p>Cargando lugares frecuentes…</p>
   }
 
-  return <OutingEditor frequentPlaces={frequentPlaces} />
+  return (
+    <OutingEditor
+      frequentPlaces={frequentPlaces}
+      conditionsLoader={conditionsLoader}
+    />
+  )
 }
