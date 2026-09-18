@@ -25,10 +25,13 @@ export function selectOutingWindowWeather(
 
   return {
     temperatureC: Math.max(...selected.map(({ temperatureC }) => temperatureC)),
-    precipitationMm: selected.reduce(
-      (total, { precipitationMm }) => total + precipitationMm,
-      0,
-    ),
+    precipitationMm:
+      Math.round(
+        selected.reduce(
+          (total, { precipitationMm }) => total + precipitationMm,
+          0,
+        ) * 10,
+      ) / 10,
     windSpeedKmh: Math.max(...selected.map(({ windSpeedKmh }) => windSpeedKmh)),
     windGustKmh: Math.max(...selected.map(({ windGustKmh }) => windGustKmh)),
   }
