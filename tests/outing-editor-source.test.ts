@@ -362,3 +362,20 @@ test("weather effect does not synchronously mirror external request state into R
     /useEffect\(\(\) => \{[\s\S]*?setConditionsLoading\(true\)[\s\S]*?conditionsLoader\.load/,
   )
 })
+
+
+test("requirement checkboxes keep compact controls on narrow layouts", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(
+    source,
+    /DEFAULT_REQUIREMENTS\.map[\s\S]*?<label key=\{requirement\} className="flex items-start gap-3"[\s\S]*?<input[\s\S]*?className="mt-1 h-4 w-4 shrink-0/,
+  )
+  assert.doesNotMatch(
+    source,
+    /type="checkbox"[\s\S]{0,180}className="w-full/,
+  )
+})
