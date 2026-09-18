@@ -56,3 +56,17 @@ export function getFrequentPlaceOptions(
     label: place.name,
   }))
 }
+
+export interface FrequentPlaceEditorPort {
+  load(): FrequentPlaceEditorState
+  select(placeId: string, event: TrekkingEvent): FrequentPlaceSelectionResult
+}
+
+export function createFrequentPlaceEditorPort(
+  repository: PlaceRepository,
+): FrequentPlaceEditorPort {
+  return {
+    load: () => createFrequentPlaceEditorState(repository),
+    select: (placeId, event) => selectFrequentPlace(repository, placeId, event),
+  }
+}
