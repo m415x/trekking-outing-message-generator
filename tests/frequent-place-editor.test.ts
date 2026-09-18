@@ -14,6 +14,7 @@ import {
   updateFrequentPlace,
   removeFrequentPlace,
   createPlaceFromEvent,
+  validatePlaceCandidate,
 } from "../lib/frequent-place-editor"
 import { createEmptyTrekkingEvent } from "../lib/trekking-event"
 
@@ -176,4 +177,23 @@ test("creates a saved place candidate from reusable outing data and explicit coo
     mapsUrl: "https://maps.example/palo-seco",
     route: event.route,
   })
+})
+
+test("place candidate validation requires a name and finite coordinates", () => {
+  assert.deepEqual(validatePlaceCandidate(place), {})
+
+  assert.deepEqual(
+    validatePlaceCandidate({ ...place, name: "   " }),
+    { name: "Ingresá el nombre del lugar" },
+  )
+
+  assert.deepEqual(
+    validatePlaceCandidate({ ...place, latitude: Number.NaN }),
+    { latitude: "Ingresá una latitud válida" },
+  )
+
+  assert.deepEqual(
+    validatePlaceCandidate({ ...place, longitude: Number.POSITIVE_INFINITY }),
+    { longitude: "Ingresá una longitud válida" },
+  )
 })
