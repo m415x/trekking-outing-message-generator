@@ -2,6 +2,8 @@
 
 import { useState } from "react"
 
+import type { FrequentPlaceEditorPort } from "../lib/frequent-place-editor"
+
 import {
   createEmptyTrekkingEvent,
   DIFFICULTIES,
@@ -14,9 +16,15 @@ import { toggleRequirement } from "../lib/outing-form"
 import { getValidationPresentation } from "../lib/validation-presentation"
 import { MessagePreview } from "./message-preview"
 
-export function OutingEditor() {
+export interface OutingEditorProps {
+  frequentPlaces?: FrequentPlaceEditorPort
+}
+
+export function OutingEditor({ frequentPlaces }: OutingEditorProps) {
   const [event, setEvent] = useState<TrekkingEvent>(() => createEmptyTrekkingEvent())
   const [customRequirement, setCustomRequirement] = useState("")
+  const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null)
+  const frequentPlaceState = frequentPlaces?.load()
   const validation = getValidationPresentation(event)
 
   function updateEvent(next: Partial<TrekkingEvent>) {
@@ -147,6 +155,38 @@ export function OutingEditor() {
 
         <fieldset className="space-y-4">
           <legend className="text-lg font-semibold text-slate-950">Inicio y recorrido</legend>
+          <label className="block space-y-2 text-sm font-medium text-slate-800">
+            Lugar frecuente
+            <select
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 disabled:bg-slate-100 disabled:text-slate-500"
+              value={selectedPlaceId ?? ""}
+              disabled={!frequentPlaces || (frequentPlaceState?.places.length ?? 0) === 0}
+              onChange={(e) => {
+                const placeId = e.target.value
+                if (!frequentPlaces || !placeId) {
+                  setSelectedPlaceId(null)
+                  return
+                }
+
+                setEvent((current) => {
+                  const result = frequentPlaces.select(placeId, current)
+                  setSelectedPlaceId(result.selectedPlaceId)
+                  return result.event
+                })
+              }}
+            >
+              <option value="">
+                {(frequentPlaceState?.places.length ?? 0) === 0
+                  ? "No hay lugares frecuentes guardados"
+                  : "Seleccionar lugar frecuente"}
+              </option>
+              {frequentPlaceState?.places.map((place) => (
+                <option key={place.id} value={place.id}>
+                  {place.name}
+                </option>
+              ))}
+            </select>
+          </label>
           <label className="block space-y-2 text-sm font-medium text-slate-800">
             Fecha de inicio del trekking
             <input
