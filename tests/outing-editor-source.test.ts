@@ -24,3 +24,16 @@ test("client composition wires local persistence into the outing editor", async 
   assert.match(source, /createFrequentPlaceEditorPort/)
   assert.match(source, /<OutingEditor frequentPlaces=/)
 })
+
+test("outing editor exposes explicit saved-place management controls", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /Guardar lugar/)
+  assert.match(source, /Actualizar lugar/)
+  assert.match(source, /Eliminar lugar/)
+  assert.match(source, /Latitud/)
+  assert.match(source, /Longitud/)
+})
