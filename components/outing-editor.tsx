@@ -18,13 +18,15 @@ import {
 import { addCustomRequirement, setEstimatedDuration, setMeetingDate } from "../lib/outing-editor-state"
 import { toggleRequirement } from "../lib/outing-form"
 import { getValidationPresentation } from "../lib/validation-presentation"
+import type { OutingConditions } from "../lib/outing-conditions"
 import { MessagePreview } from "./message-preview"
 
 export interface OutingEditorProps {
   frequentPlaces?: FrequentPlaceEditorPort
+  conditions?: OutingConditions
 }
 
-export function OutingEditor({ frequentPlaces }: OutingEditorProps) {
+export function OutingEditor({ frequentPlaces, conditions }: OutingEditorProps) {
   const [event, setEvent] = useState<TrekkingEvent>(() => createEmptyTrekkingEvent())
   const [customRequirement, setCustomRequirement] = useState("")
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null)
@@ -164,9 +166,25 @@ export function OutingEditor({ frequentPlaces }: OutingEditorProps) {
 
         <fieldset className="space-y-4">
           <legend className="text-lg font-semibold text-slate-950">Clima y luz solar</legend>
-          <p className="text-sm text-slate-600">Pronóstico no disponible</p>
-          <p className="text-sm text-slate-600">No se pudo consultar el pronóstico</p>
-          <p className="text-sm text-slate-600">Margen de luz</p>
+          {conditions?.forecastStatus === "available" && (
+            <div className="space-y-2 text-sm text-slate-600">
+              <p>Temperatura: {conditions.weather.temperatureC} °C</p>
+              <p>Amanecer: {conditions.sunrise.time}</p>
+              <p>Atardecer: {conditions.sunset.time}</p>
+              <p>Margen de luz</p>
+            </div>
+          )}
+          {conditions?.forecastStatus === "unavailable" && (
+            <div className="space-y-2 text-sm text-slate-600">
+              <p>Pronóstico no disponible</p>
+              <p>Amanecer: {conditions.sunrise.time}</p>
+              <p>Atardecer: {conditions.sunset.time}</p>
+              <p>Margen de luz</p>
+            </div>
+          )}
+          {conditions?.forecastStatus === "error" && (
+            <p className="text-sm text-slate-600">No se pudo consultar el pronóstico</p>
+          )}
         </fieldset>
 
         <fieldset className="space-y-4">
