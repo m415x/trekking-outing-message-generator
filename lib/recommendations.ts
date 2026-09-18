@@ -45,6 +45,44 @@ function hydrationRateLitersPerHour(input: RecommendationInput): number {
   return 0.5
 }
 
+function equipmentRecommendations(
+  input: RecommendationInput,
+): EquipmentRecommendation[] {
+  const equipment: EquipmentRecommendation[] = []
+
+  if (
+    input.daylightStatus === "approachingSunset" ||
+    input.daylightStatus === "afterSunset"
+  ) {
+    equipment.push({
+      kind: "advisory",
+      item: "Linterna frontal",
+      reasons: ["La salida se acerca o extiende más allá del atardecer"],
+    })
+  }
+
+  if (
+    input.weather &&
+    (input.weather.windSpeedKmh >= 25 || input.weather.windGustKmh >= 40)
+  ) {
+    equipment.push({
+      kind: "advisory",
+      item: "Protección contra el viento",
+      reasons: ["Se esperan viento o ráfagas relevantes durante la salida"],
+    })
+  }
+
+  if (input.weather && input.weather.temperatureC >= 25) {
+    equipment.push({
+      kind: "advisory",
+      item: "Protección solar",
+      reasons: ["Se esperan condiciones cálidas durante la salida"],
+    })
+  }
+
+  return equipment
+}
+
 export function createRecommendations(
   input: RecommendationInput,
 ): Recommendations {
@@ -62,6 +100,6 @@ export function createRecommendations(
         `Estimación orientativa de ${rateLitersPerHour} L por hora de actividad`,
       ],
     },
-    equipment: [],
+    equipment: equipmentRecommendations(input),
   }
 }
