@@ -1,5 +1,6 @@
 import type { Difficulty, TrekkingEvent } from "./trekking-event"
 import { DIFFICULTIES } from "./trekking-event"
+import type { Recommendations } from "./recommendations"
 
 function formatSpanishDate(date: string): string {
   const [year, month, day] = date.split("-").map(Number)
@@ -40,7 +41,10 @@ function formatDifficulty(difficulty: Difficulty): string {
   return item ? `${item.emoji} ${item.label}` : difficulty
 }
 
-export function generateWhatsAppMessage(event: TrekkingEvent): string {
+export function generateWhatsAppMessage(
+  event: TrekkingEvent,
+  recommendations?: Recommendations,
+): string {
   const sections: string[] = []
 
   if (event.title.trim()) {
@@ -95,6 +99,14 @@ export function generateWhatsAppMessage(event: TrekkingEvent): string {
   }
   if (routeDetails.length > 0) {
     sections.push(["🥾 *Inicio y recorrido*", ...routeDetails].join("\n"))
+  }
+
+  if (recommendations) {
+    const recommendationLines = [
+      `💧 Agua orientativa: ${recommendations.hydration.liters} L`,
+      ...recommendations.equipment.map(({ item }) => `▪️ ${item}`),
+    ]
+    sections.push(["💡 *Recomendaciones para la salida*", ...recommendationLines].join("\n"))
   }
 
   const requirements = event.requirements.map((item) => item.trim()).filter(Boolean)
