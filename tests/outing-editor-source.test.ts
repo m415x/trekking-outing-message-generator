@@ -379,3 +379,19 @@ test("requirement checkboxes keep compact controls on narrow layouts", async () 
     /type="checkbox"[\s\S]{0,180}className="w-full/,
   )
 })
+
+
+test("saved-place actions use full-width mobile targets and compact desktop sizing", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /className="grid grid-cols-1 gap-2 sm:grid-cols-3"/)
+  for (const label of ["Guardar lugar", "Actualizar lugar", "Eliminar lugar"]) {
+    const buttonPattern = new RegExp(
+      `<button[\\s\\S]{0,180}className="[^"]*w-full[^"]*"[^>]*>[\\s\\S]{0,500}?${label}`,
+    )
+    assert.match(source, buttonPattern)
+  }
+})
