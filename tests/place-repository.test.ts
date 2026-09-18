@@ -107,3 +107,22 @@ test("unavailable storage does not break place loading", () => {
 
   assert.deepEqual(repository.getAll(), [])
 })
+
+test("unavailable storage does not break place save or remove", () => {
+  const storage = {
+    getItem(): string | null {
+      return null
+    },
+    setItem(): void {
+      throw new Error("storage unavailable")
+    },
+    removeItem(): void {
+      throw new Error("storage unavailable")
+    },
+  }
+
+  const repository = new LocalStoragePlaceRepository(storage)
+
+  assert.doesNotThrow(() => repository.save(place))
+  assert.doesNotThrow(() => repository.remove(place.id))
+})
