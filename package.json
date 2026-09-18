@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "test": "tsx --test tests/**/*.test.ts",
-    "tsc": "tsc --noEmit"
+    "tsc": "tsc --noEmit",
+    "test:places": "tsx --test tests/place.test.ts tests/place-selection.test.ts tests/place-repository.test.ts tests/frequent-place-editor.test.ts",
+    "test:editor": "tsx --test tests/outing-editor*.test.ts tests/persistent-outing-editor-source.test.ts"
   },
   "dependencies": {
     "next": "16.3.5",

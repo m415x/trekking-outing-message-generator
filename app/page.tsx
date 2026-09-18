@@ -1,9 +1,9 @@
-import { OutingEditor } from "../components/outing-editor"
+import { PersistentOutingEditor } from "../components/persistent-outing-editor"
 
 export default function Home() {
   return (
     <main>
-      <OutingEditor />
+      <PersistentOutingEditor />
     </main>
   )
 }
