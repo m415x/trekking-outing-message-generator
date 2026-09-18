@@ -9,6 +9,7 @@ import {
   selectFrequentPlace,
   createFrequentPlaceEditorPort,
   createOutingEditorFrequentPlaceModel,
+  getFrequentPlaceSelectorPresentation,
 } from "../lib/frequent-place-editor"
 import { createEmptyTrekkingEvent } from "../lib/trekking-event"
 
@@ -96,4 +97,24 @@ test("outing editor model exposes selector state and applies a saved place", () 
 
   assert.equal(selected.selectedPlaceId, place.id)
   assert.equal(selected.event.trailhead.placeName, place.name)
+})
+
+test("selector presentation distinguishes empty and populated saved places", () => {
+  assert.deepEqual(
+    getFrequentPlaceSelectorPresentation(new StubPlaceRepository([])),
+    {
+      options: [],
+      disabled: true,
+      placeholder: "No hay lugares frecuentes guardados",
+    },
+  )
+
+  assert.deepEqual(
+    getFrequentPlaceSelectorPresentation(new StubPlaceRepository([place])),
+    {
+      options: [{ value: place.id, label: place.name }],
+      disabled: false,
+      placeholder: "Seleccionar lugar frecuente",
+    },
+  )
 })
