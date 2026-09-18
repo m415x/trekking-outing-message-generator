@@ -561,6 +561,7 @@ export function OutingEditor({
           </label>
           <fieldset className="space-y-4">
             <legend className="text-lg font-semibold text-slate-950">Duración</legend>
+            <div className="grid grid-cols-2 gap-3">
             <label className="block space-y-2 text-sm font-medium text-slate-800">
               Horas
               <input
@@ -592,6 +593,7 @@ export function OutingEditor({
                 }}
               />
             </label>
+            </div>
           </fieldset>
 
           <label className="block space-y-2 text-sm font-medium text-slate-800">
