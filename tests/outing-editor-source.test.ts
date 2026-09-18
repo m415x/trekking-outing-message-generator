@@ -270,3 +270,16 @@ test("clears stale external conditions when the weather request becomes incomple
     /if \(\s*!conditionsLoader[\s\S]*?\) \{\s*setLoadedConditions\(undefined\)\s*return/,
   )
 })
+
+
+test("clears previous external conditions while a new valid request is loading", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(
+    source,
+    /let active = true\s*setLoadedConditions\(undefined\)\s*conditionsLoader\.load/,
+  )
+})
