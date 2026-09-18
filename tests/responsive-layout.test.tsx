@@ -24,3 +24,12 @@ test("uses a single-column layout that becomes form and preview columns on large
     "live preview should announce updates accessibly",
   )
 })
+
+test("uses styled cards and explicit validation states", () => {
+  const html = renderToStaticMarkup(<OutingEditor />)
+
+  assert.ok(html.includes("rounded-2xl"))
+  assert.ok(html.includes("border-red-300"))
+  assert.ok(html.includes("text-red-700"))
+  assert.ok(html.includes("bg-white"))
+})
