@@ -20,16 +20,23 @@ function isPlace(value: unknown): value is Place {
   }
 
   const candidate = value as Partial<Place>
+  const route = candidate.route as Place["route"] | undefined
+  const difficulties = new Set(["low", "moderate", "high", "veryHigh"])
 
   return (
     typeof candidate.id === "string" &&
     typeof candidate.name === "string" &&
     typeof candidate.latitude === "number" &&
     Number.isFinite(candidate.latitude) &&
+    candidate.latitude >= -90 &&
+    candidate.latitude <= 90 &&
     typeof candidate.longitude === "number" &&
     Number.isFinite(candidate.longitude) &&
-    typeof candidate.route === "object" &&
-    candidate.route !== null
+    candidate.longitude >= -180 &&
+    candidate.longitude <= 180 &&
+    typeof route === "object" &&
+    route !== null &&
+    (route.difficulty === undefined || difficulties.has(route.difficulty))
   )
 }
 
