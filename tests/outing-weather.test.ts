@@ -46,3 +46,29 @@ test("summarizes weather across the expected outing window", () => {
     windGustKmh: 28,
   })
 })
+
+
+test("includes hourly buckets that overlap the outing boundaries", () => {
+  const weather = selectOutingWindowWeather(
+    [
+      {
+        moment: { date: "2026-09-20", time: "08:00" },
+        temperatureC: 12,
+        precipitationMm: 0.5,
+        windSpeedKmh: 10,
+        windGustKmh: 18,
+      },
+      {
+        moment: { date: "2026-09-20", time: "09:00" },
+        temperatureC: 15,
+        precipitationMm: 0,
+        windSpeedKmh: 12,
+        windGustKmh: 20,
+      },
+    ],
+    { date: "2026-09-20", time: "08:30" },
+    { date: "2026-09-20", time: "09:15" },
+  )
+
+  assert.equal(weather.precipitationMm, 0.5)
+})
