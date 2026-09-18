@@ -2,6 +2,35 @@ import type { EventMoment } from "./trekking-event"
 
 export type DaylightStatus = "safe" | "approachingSunset" | "afterSunset"
 
+export interface OutingWeather {
+  temperatureC: number
+  precipitationMm: number
+  windSpeedKmh: number
+  windGustKmh: number
+}
+
+export interface AvailableOutingConditions {
+  forecastStatus: "available"
+  fetchedAt: string
+  sunrise: EventMoment
+  sunset: EventMoment
+  weather: OutingWeather
+}
+
+export type AvailableOutingConditionsInput = Omit<
+  AvailableOutingConditions,
+  "forecastStatus"
+>
+
+export function createAvailableOutingConditions(
+  input: AvailableOutingConditionsInput,
+): AvailableOutingConditions {
+  return {
+    forecastStatus: "available",
+    ...input,
+  }
+}
+
 function parseLocalMoment(moment: EventMoment): Date {
   return new Date(`${moment.date}T${moment.time}:00`)
 }
