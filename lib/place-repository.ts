@@ -42,11 +42,19 @@ export class LocalStoragePlaceRepository implements PlaceRepository {
             candidateIndex === index ? place : candidate,
           )
 
-    this.storage.setItem(STORAGE_KEY, JSON.stringify(next))
+    try {
+      this.storage.setItem(STORAGE_KEY, JSON.stringify(next))
+    } catch {
+      // Keep the editor usable when client storage is unavailable.
+    }
   }
 
   remove(id: string): void {
     const next = this.getAll().filter((place) => place.id !== id)
-    this.storage.setItem(STORAGE_KEY, JSON.stringify(next))
+    try {
+      this.storage.setItem(STORAGE_KEY, JSON.stringify(next))
+    } catch {
+      // Keep the editor usable when client storage is unavailable.
+    }
   }
 }
