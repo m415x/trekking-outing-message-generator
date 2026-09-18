@@ -70,8 +70,7 @@ export function OutingEditor({
     }
 
     let active = true
-    conditionsLoader
-      .load({
+    conditionsLoader.load({
         latitude: Number(latitude),
         longitude: Number(longitude),
         date: event.trekStart.date,
