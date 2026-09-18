@@ -22,3 +22,12 @@ test("persistent editor exposes an explicit loading state before storage is read
   assert.match(source, /if \(!frequentPlaces\)/)
   assert.match(source, /Cargando lugares frecuentes/)
 })
+
+test("persistent editor does not set component state from an effect", async () => {
+  const source = await readFile(
+    new URL("../components/persistent-outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.doesNotMatch(source, /setFrequentPlaces\(/)
+})
