@@ -600,7 +600,7 @@ export function OutingEditor({
                   step="0.5"
                   value={recommendations.hydration?.liters ?? ""}
                   disabled={rejectHydration}
-                  onChange={(e) => setManualHydrationLiters(Number(e.target.value))}
+                  onChange={(e) =>\n                    setManualHydrationLiters(\n                      e.target.value === "" ? undefined : Number(e.target.value),\n                    )\n                  }
                 />
               </label>
               {recommendations.hydration && (
