@@ -124,3 +124,16 @@ test("outing editor receives conditions through a provider-neutral port", async 
   assert.match(source, /conditions\.sunrise\.time/)
   assert.match(source, /conditions\.sunset\.time/)
 })
+
+
+test("outing editor derives finish and daylight margin from the outing snapshot", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /calculateEstimatedFinish/)
+  assert.match(source, /calculateDaylightMarginMinutes/)
+  assert.match(source, /Fin estimado/)
+  assert.match(source, /Margen de luz:.*min/)
+})
