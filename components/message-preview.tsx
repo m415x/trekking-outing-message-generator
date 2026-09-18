@@ -1,14 +1,16 @@
 "use client"
 
 import type { TrekkingEvent } from "../lib/trekking-event"
+import type { Recommendations } from "../lib/recommendations"
 import { getSharingState } from "../lib/sharing-state"
 
 interface MessagePreviewProps {
   event: TrekkingEvent
+  recommendations?: Recommendations
 }
 
-export function MessagePreview({ event }: MessagePreviewProps) {
-  const { message, canShare } = getSharingState(event)
+export function MessagePreview({ event, recommendations }: MessagePreviewProps) {
+  const { message, canShare } = getSharingState(event, recommendations)
 
   async function copyMessage() {
     if (!canShare) return
