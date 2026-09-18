@@ -126,3 +126,21 @@ test("unavailable storage does not break place save or remove", () => {
   assert.doesNotThrow(() => repository.save(place))
   assert.doesNotThrow(() => repository.remove(place.id))
 })
+
+test("malformed saved place entries are ignored", () => {
+  const storage = new MemoryStorage()
+  storage.setItem(
+    "tomg.places",
+    JSON.stringify([
+      place,
+      null,
+      {},
+      { id: "broken", name: "Broken" },
+      { ...place, id: "bad-latitude", latitude: "not-a-number" },
+    ]),
+  )
+
+  const repository = new LocalStoragePlaceRepository(storage)
+
+  assert.deepEqual(repository.getAll(), [place])
+})
