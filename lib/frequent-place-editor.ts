@@ -191,11 +191,11 @@ export function validatePlaceCandidate(
     errors.name = "Ingresá el nombre del lugar"
   }
 
-  if (!Number.isFinite(place.latitude)) {
+  if (!Number.isFinite(place.latitude) || place.latitude < -90 || place.latitude > 90) {
     errors.latitude = "Ingresá una latitud válida"
   }
 
-  if (!Number.isFinite(place.longitude)) {
+  if (!Number.isFinite(place.longitude) || place.longitude < -180 || place.longitude > 180) {
     errors.longitude = "Ingresá una longitud válida"
   }
 
