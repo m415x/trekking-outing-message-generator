@@ -139,3 +139,25 @@ test("Open-Meteo provider adapter fetches and maps an available forecast", async
   assert.match(requestedUrl, /longitude=-68\.52/)
   assert.equal(result.status, "available")
 })
+
+
+test("Open-Meteo provider reports an unavailable forecast without treating it as an app error", async () => {
+  const fetcher = async () => ({
+    ok: false,
+    status: 400,
+    json: async () => ({
+      reason: "Requested date is outside the allowed range",
+    }),
+  })
+
+  const provider = createOpenMeteoProvider(fetcher)
+  const result = await provider.loadForecast({
+    latitude: -31.53,
+    longitude: -68.52,
+    date: "2026-12-20",
+    trekStart: { date: "2026-12-20", time: "08:30" },
+    estimatedDurationMinutes: 180,
+  })
+
+  assert.equal(result.status, "forecastUnavailable")
+})
