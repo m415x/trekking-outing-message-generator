@@ -286,15 +286,22 @@ export function OutingEditor({
 
         <fieldset className="space-y-4">
           <legend className="text-lg font-semibold text-slate-950">Clima y luz solar</legend>
-          {conditionsLoading && (\n            <p className="text-sm text-slate-600">Cargando pronóstico…</p>\n          )}\n          {displayedConditions?.forecastStatus === "available" && (
+          {conditionsLoading && (
+            <p className="text-sm text-slate-600">Cargando pronóstico…</p>
+          )}
+          {displayedConditions?.forecastStatus === "available" && (
             <div className="space-y-2 text-sm text-slate-600">
               <p>Temperatura: {displayedConditions.weather.temperatureC} °C</p>
               <p>Precipitación: {displayedConditions.weather.precipitationMm} mm</p>
               <p>Viento: {displayedConditions.weather.windSpeedKmh} km/h</p>
               <p>Ráfagas: {displayedConditions.weather.windGustKmh} km/h</p>
               <p>Actualizado: {displayedConditions.fetchedAt}</p>
-              {displayedConditions.sunrise.time && (\n                <p>Amanecer: {displayedConditions.sunrise.time}</p>\n              )}
-              {displayedConditions.sunset.time && (\n                <p>Atardecer: {displayedConditions.sunset.time}</p>\n              )}
+              {displayedConditions.sunrise.time && (
+                <p>Amanecer: {displayedConditions.sunrise.time}</p>
+              )}
+              {displayedConditions.sunset.time && (
+                <p>Atardecer: {displayedConditions.sunset.time}</p>
+              )}
               {estimatedFinish && <p>Fin estimado: {estimatedFinish.time}</p>}
               {daylightMarginMinutes !== undefined && (
                 <p>Margen de luz: {daylightMarginMinutes} min</p>
@@ -310,8 +317,12 @@ export function OutingEditor({
           {displayedConditions?.forecastStatus === "unavailable" && (
             <div className="space-y-2 text-sm text-slate-600">
               <p>Pronóstico no disponible</p>
-              {displayedConditions.sunrise.time && (\n                <p>Amanecer: {displayedConditions.sunrise.time}</p>\n              )}
-              {displayedConditions.sunset.time && (\n                <p>Atardecer: {displayedConditions.sunset.time}</p>\n              )}
+              {displayedConditions.sunrise.time && (
+                <p>Amanecer: {displayedConditions.sunrise.time}</p>
+              )}
+              {displayedConditions.sunset.time && (
+                <p>Atardecer: {displayedConditions.sunset.time}</p>
+              )}
               {estimatedFinish && <p>Fin estimado: {estimatedFinish.time}</p>}
               {daylightMarginMinutes !== undefined && (
                 <p>Margen de luz: {daylightMarginMinutes} min</p>
