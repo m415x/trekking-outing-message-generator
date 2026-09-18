@@ -53,6 +53,24 @@ function toEventMoment(value: string) {
 }
 
 export function mapOpenMeteoResponse(response: OpenMeteoResponse) {
+  const hourlyLength = response.hourly.time.length
+  const hourlySeries = [
+    response.hourly.temperature_2m,
+    response.hourly.precipitation,
+    response.hourly.wind_speed_10m,
+    response.hourly.wind_gusts_10m,
+  ]
+
+  if (
+    hourlyLength === 0 ||
+    hourlySeries.some((series) => series.length !== hourlyLength) ||
+    response.daily.time.length !== 1 ||
+    response.daily.sunrise.length !== 1 ||
+    response.daily.sunset.length !== 1
+  ) {
+    throw new Error("Invalid Open-Meteo response")
+  }
+
   return {
     hourly: response.hourly.time.map((time, index) => ({
       moment: toEventMoment(time),
