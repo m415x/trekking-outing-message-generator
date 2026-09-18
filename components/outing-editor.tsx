@@ -26,6 +26,7 @@ import {
 } from "../lib/outing-conditions"
 import type { OutingConditionsRequest } from "../lib/outing-conditions-service"
 import { MessagePreview } from "./message-preview"
+import { applyRecommendationOverrides, createRecommendations } from "../lib/recommendations"
 
 export interface OutingConditionsLoader {
   load(request: OutingConditionsRequest): Promise<OutingConditions>
@@ -50,6 +51,8 @@ export function OutingEditor({
   const [longitude, setLongitude] = useState("")
   const [placeError, setPlaceError] = useState("")
   const [placesRevision, setPlacesRevision] = useState(0)
+  const [manualHydrationLiters, setManualHydrationLiters] = useState<number | undefined>()
+  const [rejectedEquipment, setRejectedEquipment] = useState<string[]>([])
   const [loadedConditions, setLoadedConditions] = useState<OutingConditions | undefined>(
     conditions,
   )
@@ -110,6 +113,25 @@ export function OutingEditor({
     daylightMarginMinutes !== undefined
       ? getDaylightStatus(daylightMarginMinutes, 60)
       : undefined
+
+  const suggestedRecommendations =
+    event.route.estimatedDurationMinutes !== undefined
+      ? createRecommendations({
+          estimatedDurationMinutes: event.route.estimatedDurationMinutes,
+          difficulty: event.route.difficulty,
+          weather:
+            displayedConditions?.forecastStatus === "available"
+              ? displayedConditions.weather
+              : undefined,
+          daylightStatus,
+        })
+      : undefined
+  const recommendations = suggestedRecommendations
+    ? applyRecommendationOverrides(suggestedRecommendations, {
+        hydrationLiters: manualHydrationLiters,
+        rejectedEquipment,
+      })
+    : undefined
 
   function updateEvent(next: Partial<TrekkingEvent>) {
     setEvent((current) => ({ ...current, ...next }))
@@ -538,6 +560,48 @@ export function OutingEditor({
               <span className="text-sm font-medium text-red-700">{validation.fieldErrors["route.difficulty"]}</span>
             )}
           </label>
+        </fieldset>
+
+        <fieldset className="space-y-4">
+          <legend className="text-lg font-semibold text-slate-950">Recomendaciones</legend>
+          {recommendations ? (
+            <>
+              <label className="block space-y-2 text-sm font-medium text-slate-800">
+                Agua orientativa (L)
+                <input
+                  className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950"
+                  type="number"
+                  min="0"
+                  step="0.5"
+                  value={recommendations.hydration.liters}
+                  onChange={(e) => setManualHydrationLiters(Number(e.target.value))}
+                />
+              </label>
+              <p className="text-sm text-slate-600">
+                Orientativo: {recommendations.hydration.reasons.join(". ")}
+              </p>
+              {recommendations.equipment.map((recommendation) => (
+                <div key={recommendation.item} className="space-y-1 text-sm text-slate-700">
+                  <p>{recommendation.item}</p>
+                  <p>{recommendation.reasons.join(". ")}</p>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setRejectedEquipment((current) => [
+                        ...new Set([...current, recommendation.item]),
+                      ])
+                    }
+                  >
+                    Rechazar
+                  </button>
+                </div>
+              ))}
+            </>
+          ) : (
+            <p className="text-sm text-slate-600">
+              Completá la duración para obtener recomendaciones.
+            </p>
+          )}
         </fieldset>
 
         <fieldset className="space-y-4">
