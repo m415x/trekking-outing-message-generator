@@ -277,8 +277,8 @@ export function OutingEditor({
               <p>Viento: {displayedConditions.weather.windSpeedKmh} km/h</p>
               <p>Ráfagas: {displayedConditions.weather.windGustKmh} km/h</p>
               <p>Actualizado: {displayedConditions.fetchedAt}</p>
-              <p>Amanecer: {displayedConditions.sunrise.time}</p>
-              <p>Atardecer: {displayedConditions.sunset.time}</p>
+              {displayedConditions.sunrise.time && (\n                <p>Amanecer: {displayedConditions.sunrise.time}</p>\n              )}
+              {displayedConditions.sunset.time && (\n                <p>Atardecer: {displayedConditions.sunset.time}</p>\n              )}
               {estimatedFinish && <p>Fin estimado: {estimatedFinish.time}</p>}
               {daylightMarginMinutes !== undefined && (
                 <p>Margen de luz: {daylightMarginMinutes} min</p>
@@ -294,8 +294,8 @@ export function OutingEditor({
           {displayedConditions?.forecastStatus === "unavailable" && (
             <div className="space-y-2 text-sm text-slate-600">
               <p>Pronóstico no disponible</p>
-              <p>Amanecer: {displayedConditions.sunrise.time}</p>
-              <p>Atardecer: {displayedConditions.sunset.time}</p>
+              {displayedConditions.sunrise.time && (\n                <p>Amanecer: {displayedConditions.sunrise.time}</p>\n              )}
+              {displayedConditions.sunset.time && (\n                <p>Atardecer: {displayedConditions.sunset.time}</p>\n              )}
               {estimatedFinish && <p>Fin estimado: {estimatedFinish.time}</p>}
               {daylightMarginMinutes !== undefined && (
                 <p>Margen de luz: {daylightMarginMinutes} min</p>
