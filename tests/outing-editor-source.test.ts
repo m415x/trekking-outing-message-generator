@@ -44,7 +44,7 @@ test("selecting a frequent place restores its management coordinates", async () 
     "utf8",
   )
 
-  assert.match(source, /getSelectedPlaceManagementFields/)
+  assert.match(source, /frequentPlaces\.getManagementFields\(placeId\)/)
   assert.match(source, /setLatitude\(managementFields\.latitude\)/)
   assert.match(source, /setLongitude\(managementFields\.longitude\)/)
 })
@@ -92,5 +92,5 @@ test("updating a selected frequent place refreshes the saved-place options", asy
 
   assert.match(source, /const \[placesRevision, setPlacesRevision\] = useState\(0\)/)
   assert.match(source, /setPlacesRevision\(\(current\) => current \+ 1\)/)
-  assert.match(source, /void placesRevision/)
+  assert.match(source, /const frequentPlaceState = frequentPlaces\?\.load\(\)/)
 })
