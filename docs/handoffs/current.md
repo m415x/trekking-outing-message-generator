@@ -29,7 +29,9 @@ TOMG-3 was developed remote-first with local TDD execution reported by the human
 - TOMG-16 validation/responsive checkpoint: 7 tests passed, 0 failed; TypeScript and ESLint clean.
 - Final responsive visual contract: 2 tests passed, 0 failed; subsequent TypeScript and ESLint checks reported clean.
 
-This is human-reported local execution evidence. The complete TOMG-3 closure gate (`pnpm lint`, `pnpm tsc`, `pnpm test`, `pnpm build`) must still be run after these documentation commits before the story is marked complete or merged.
+This is human-reported local execution evidence.
+
+The complete TOMG-3 closure gate was then run locally after the documentation reconciliation. The human reported `pnpm lint` and `pnpm tsc` clean, `pnpm test` with 21 tests passed and 0 failed, and `pnpm build` completing an optimized production build successfully, including TypeScript, page-data collection, static-page generation, and final optimization.
 
 ## Deferred by design
 
@@ -40,4 +42,4 @@ This is human-reported local execution evidence. The complete TOMG-3 closure gat
 
 ## Closure state
 
-TOMG-12 through TOMG-16 have implementation evidence; Jira reconciliation began during TOMG-17. TOMG-17 owns final documentation, complete validation evidence, remaining Jira reconciliation, and handoff. Do not mark TOMG-3 complete or merge it to `dev` until the full closure gate has actually passed and the remote branch diff/status has been rechecked.
+TOMG-12 through TOMG-16 have implementation evidence and are reconciled as completed in Jira. TOMG-17 is in progress and owns the remaining final Jira/remote-branch reconciliation and handoff. The complete local closure gate has passed by human report; recheck the remote branch diff/status before marking TOMG-17 and TOMG-3 complete or merging to `dev`.
