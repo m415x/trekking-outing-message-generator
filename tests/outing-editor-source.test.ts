@@ -291,9 +291,9 @@ test("degrades rejected weather loads to an explicit error state", async () => {
     "utf8",
   )
 
-  assert.match(source, /\\.catch\\(\\(\\) => \\{/)
-  assert.match(source, /setLoadedConditions\\(\\{ forecastStatus: "error" \\}\\)/)
-  assert.match(source, /setConditionsLoading\\(false\\)/)
+  assert.match(source, /\.catch\(\(\) => \{/)
+  assert.match(source, /setLoadedConditions\(\{ forecastStatus: "error" \}\)/)
+  assert.match(source, /setConditionsLoading\(false\)/)
 })
 
 test("does not render empty sunrise or sunset values", async () => {
