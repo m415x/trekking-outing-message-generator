@@ -4,7 +4,6 @@ import { useState } from "react"
 
 import {
   createPlaceFromEvent,
-  getSelectedPlaceManagementFields,
   validatePlaceCandidate,
   type FrequentPlaceEditorPort,
 } from "../lib/frequent-place-editor"
@@ -34,9 +33,7 @@ export function OutingEditor({ frequentPlaces }: OutingEditorProps) {
   const [longitude, setLongitude] = useState("")
   const [placeError, setPlaceError] = useState("")
   const [placesRevision, setPlacesRevision] = useState(0)
-  void placesRevision
   const frequentPlaceState = frequentPlaces?.load()
-  void getSelectedPlaceManagementFields
   const validation = getValidationPresentation(event)
 
   function updateEvent(next: Partial<TrekkingEvent>) {
