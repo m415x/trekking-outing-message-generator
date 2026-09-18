@@ -153,3 +153,17 @@ test("outing editor exposes all outing-window weather values and forecast freshn
   assert.match(source, /Ráfagas/)
   assert.match(source, /Actualizado/)
 })
+
+
+test("outing editor derives an explicit daylight warning state", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /getDaylightStatus/)
+  assert.match(source, /approachingSunset/)
+  assert.match(source, /afterSunset/)
+  assert.match(source, /Atención: la salida termina cerca del atardecer/)
+  assert.match(source, /Atención: la salida termina después del atardecer/)
+})
