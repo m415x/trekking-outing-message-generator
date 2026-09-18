@@ -89,3 +89,21 @@ test("treats malformed persisted data as empty instead of throwing", () => {
   assert.doesNotThrow(() => repository.getAll())
   assert.deepEqual(repository.getAll(), [])
 })
+
+test("unavailable storage does not break place loading", () => {
+  const storage = {
+    getItem(): string | null {
+      throw new Error("storage unavailable")
+    },
+    setItem(): void {
+      throw new Error("storage unavailable")
+    },
+    removeItem(): void {
+      throw new Error("storage unavailable")
+    },
+  }
+
+  const repository = new LocalStoragePlaceRepository(storage)
+
+  assert.deepEqual(repository.getAll(), [])
+})
