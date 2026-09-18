@@ -70,6 +70,7 @@ export function OutingEditor({
       event.trekStart.time === "" ||
       event.route.estimatedDurationMinutes === undefined
     ) {
+      setLoadedConditions(undefined)
       return
     }
 
