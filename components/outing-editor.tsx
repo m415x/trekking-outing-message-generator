@@ -75,6 +75,7 @@ export function OutingEditor({
     }
 
     let active = true
+    setLoadedConditions(undefined)
     conditionsLoader.load({
         latitude: Number(latitude),
         longitude: Number(longitude),
