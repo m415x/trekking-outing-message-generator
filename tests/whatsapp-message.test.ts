@@ -87,7 +87,7 @@ test("omits empty optional sections and keeps either responsible role", () => {
   assert.doesNotMatch(message, /Desnivel positivo/)
   assert.doesNotMatch(message, /Equipo recomendado/)
   assert.doesNotMatch(message, /Coordinador/)
-  assert.match(message, /Conocedor del camino:\\* Cristian Lahoz/)
+  assert.ok(message.includes("🧭 *Conocedor del camino:* Cristian Lahoz"))
 })
 
 test("generates a tolerant partial preview without invalid placeholder lines", () => {
