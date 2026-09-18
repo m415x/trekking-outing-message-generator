@@ -70,3 +70,25 @@ export function createFrequentPlaceEditorPort(
     select: (placeId, event) => selectFrequentPlace(repository, placeId, event),
   }
 }
+
+export interface OutingEditorFrequentPlaceModel {
+  options: FrequentPlaceOption[]
+  selectedPlaceId: string | null
+  select(placeId: string, event: TrekkingEvent): FrequentPlaceSelectionResult
+}
+
+export function createOutingEditorFrequentPlaceModel(
+  repository: PlaceRepository,
+): OutingEditorFrequentPlaceModel {
+  const port = createFrequentPlaceEditorPort(repository)
+  const state = port.load()
+
+  return {
+    options: state.places.map((place) => ({
+      value: place.id,
+      label: place.name,
+    })),
+    selectedPlaceId: state.selectedPlaceId,
+    select: port.select,
+  }
+}
