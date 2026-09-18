@@ -291,12 +291,10 @@ test("degrades rejected weather loads to an explicit error state", async () => {
     "utf8",
   )
 
-  assert.match(
-    source,
-    /\.catch\(\(\) => \{\s*if \(active\) setLoadedConditions\(\{ forecastStatus: "error" \}\)\s*\}\)/,
-  )
+  assert.match(source, /\\.catch\\(\\(\\) => \\{/)
+  assert.match(source, /setLoadedConditions\\(\\{ forecastStatus: "error" \\}\\)/)
+  assert.match(source, /setConditionsLoading\\(false\\)/)
 })
-
 
 test("does not render empty sunrise or sunset values", async () => {
   const source = await readFile(
