@@ -195,7 +195,7 @@ test("outing editor ignores stale conditions responses after outing inputs chang
   )
 
   assert.match(source, /let active = true/)
-  assert.match(source, /if \(active\) \{\s*setLoadedConditions\(nextConditions\)/)
+  assert.match(source, /if \(active\) \{\s*setLoadedConditions\(\{\s*requestKey: weatherRequestKey,\s*value: nextConditions/)
   assert.match(source, /active = false/)
 })
 
