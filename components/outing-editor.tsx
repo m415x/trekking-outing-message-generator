@@ -33,6 +33,8 @@ export function OutingEditor({ frequentPlaces }: OutingEditorProps) {
   const [latitude, setLatitude] = useState("")
   const [longitude, setLongitude] = useState("")
   const [placeError, setPlaceError] = useState("")
+  const [placesRevision, setPlacesRevision] = useState(0)
+  void placesRevision
   const frequentPlaceState = frequentPlaces?.load()
   void getSelectedPlaceManagementFields
   const validation = getValidationPresentation(event)
@@ -266,6 +268,7 @@ export function OutingEditor({ frequentPlaces }: OutingEditorProps) {
                   return
                 }
                 frequentPlaces.update(candidate)
+                setPlacesRevision((current) => current + 1)
                 setPlaceError("")
               }}
             >
