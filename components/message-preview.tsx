@@ -21,15 +21,15 @@ export function MessagePreview({ event }: MessagePreviewProps) {
   }
 
   return (
-    <section aria-labelledby="message-preview-title" aria-live="polite">
-      <h2 id="message-preview-title">Vista previa</h2>
-      <pre>{message}</pre>
+    <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6" aria-labelledby="message-preview-title" aria-live="polite">
+      <h2 className="text-xl font-semibold text-slate-950" id="message-preview-title">Vista previa</h2>
+      <pre className="mt-4 min-h-72 whitespace-pre-wrap break-words rounded-xl bg-slate-950 p-4 font-sans text-sm leading-6 text-slate-100">{message}</pre>
 
-      <div>
-        <button type="button" disabled={!canShare} onClick={copyMessage}>
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        <button className="rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40" type="button" disabled={!canShare} onClick={copyMessage}>
           Copiar mensaje
         </button>
-        <button type="button" disabled={!canShare} onClick={openWhatsApp}>
+        <button className="rounded-xl bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-40" type="button" disabled={!canShare} onClick={openWhatsApp}>
           Abrir WhatsApp
         </button>
       </div>
