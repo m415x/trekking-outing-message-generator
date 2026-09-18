@@ -52,6 +52,7 @@ export function OutingEditor({
   const [placeError, setPlaceError] = useState("")
   const [placesRevision, setPlacesRevision] = useState(0)
   const [manualHydrationLiters, setManualHydrationLiters] = useState<number | undefined>()
+  const [rejectHydration, setRejectHydration] = useState(false)
   const [rejectedEquipment, setRejectedEquipment] = useState<string[]>([])
   const [loadedConditions, setLoadedConditions] = useState<OutingConditions | undefined>(
     conditions,
@@ -129,6 +130,7 @@ export function OutingEditor({
   const recommendations = suggestedRecommendations
     ? applyRecommendationOverrides(suggestedRecommendations, {
         hydrationLiters: manualHydrationLiters,
+        rejectHydration,
         rejectedEquipment,
       })
     : undefined
@@ -573,13 +575,22 @@ export function OutingEditor({
                   type="number"
                   min="0"
                   step="0.5"
-                  value={recommendations.hydration.liters}
+                  value={recommendations.hydration?.liters ?? ""}
+                  disabled={rejectHydration}
                   onChange={(e) => setManualHydrationLiters(Number(e.target.value))}
                 />
               </label>
-              <p className="text-sm text-slate-600">
-                Orientativo: {recommendations.hydration.reasons.join(". ")}
-              </p>
+              {recommendations.hydration && (
+                <p className="text-sm text-slate-600">
+                  Orientativo: {recommendations.hydration.reasons.join(". ")}
+                </p>
+              )}
+              <button
+                type="button"
+                onClick={() => setRejectHydration((current) => !current)}
+              >
+                {rejectHydration ? "Restaurar agua" : "Rechazar agua"}
+              </button>
               {recommendations.equipment.map((recommendation) => (
                 <div key={recommendation.item} className="space-y-1 text-sm text-slate-700">
                   <p>{recommendation.item}</p>
