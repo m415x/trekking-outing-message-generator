@@ -71,3 +71,15 @@ test("clearing a frequent-place selection resets management identity and coordin
     /if \(!frequentPlaces \|\| !placeId\) \{\s*setSelectedPlaceId\(null\)\s*setPlaceId\(""\)\s*setLatitude\(""\)\s*setLongitude\(""\)/,
   )
 })
+
+test("removing a selected frequent place clears all management fields", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(
+    source,
+    /setSelectedPlaceId\(nextSelection\)\s*setPlaceId\(""\)\s*setLatitude\(""\)\s*setLongitude\(""\)/,
+  )
+})
