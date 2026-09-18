@@ -307,3 +307,14 @@ test("does not render empty sunrise or sunset values", async () => {
   assert.match(source, /displayedConditions\.sunrise\.time\s*&&/)
   assert.match(source, /displayedConditions\.sunset\.time\s*&&/)
 })
+
+
+test("outing editor exposes an explicit loading state for external conditions", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /Cargando pronóstico/)
+  assert.match(source, /conditionsLoading/)
+})
