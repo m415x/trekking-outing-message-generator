@@ -8,6 +8,7 @@ import {
   getFrequentPlaceOptions,
   selectFrequentPlace,
   createFrequentPlaceEditorPort,
+  createOutingEditorFrequentPlaceModel,
 } from "../lib/frequent-place-editor"
 import { createEmptyTrekkingEvent } from "../lib/trekking-event"
 
@@ -81,4 +82,18 @@ test("editor port loads places and applies selection without exposing storage", 
 
   assert.deepEqual(port.load().places, [place])
   assert.equal(port.select(place.id, event).event.trailhead.placeName, place.name)
+})
+
+test("outing editor model exposes selector state and applies a saved place", () => {
+  const repository = new StubPlaceRepository([place])
+  const model = createOutingEditorFrequentPlaceModel(repository)
+  const event = createEmptyTrekkingEvent()
+
+  assert.deepEqual(model.options, [{ value: place.id, label: place.name }])
+  assert.equal(model.selectedPlaceId, null)
+
+  const selected = model.select(place.id, event)
+
+  assert.equal(selected.selectedPlaceId, place.id)
+  assert.equal(selected.event.trailhead.placeName, place.name)
 })
