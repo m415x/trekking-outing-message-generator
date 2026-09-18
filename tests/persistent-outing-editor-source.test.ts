@@ -12,3 +12,13 @@ test("persistent editor defers browser storage access until after mount", async 
   assert.doesNotMatch(source, /useMemo/)
   assert.match(source, /window\.localStorage/)
 })
+
+test("persistent editor exposes an explicit loading state before storage is ready", async () => {
+  const source = await readFile(
+    new URL("../components/persistent-outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /if \(!frequentPlaces\)/)
+  assert.match(source, /Cargando lugares frecuentes/)
+})
