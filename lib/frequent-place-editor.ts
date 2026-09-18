@@ -1,4 +1,5 @@
 import type { PlaceRepository } from "./place-repository"
+import type { Place } from "./place"
 import { selectPlace } from "./place-selection"
 import type { TrekkingEvent } from "./trekking-event"
 
@@ -120,7 +121,7 @@ export interface FrequentPlaceManagementResult {
 
 export function saveFrequentPlace(
   repository: PlaceRepository,
-  place: import("./place").Place,
+  place: Place,
 ): FrequentPlaceManagementResult {
   repository.save(place)
   return { selectedPlaceId: place.id }
@@ -128,7 +129,7 @@ export function saveFrequentPlace(
 
 export function updateFrequentPlace(
   repository: PlaceRepository,
-  place: import("./place").Place,
+  place: Place,
 ): FrequentPlaceManagementResult {
   repository.save(place)
   return { selectedPlaceId: place.id }
@@ -141,4 +142,26 @@ export function removeFrequentPlace(
 ): string | null {
   repository.remove(placeId)
   return selectedPlaceId === placeId ? null : selectedPlaceId
+}
+
+export interface CreatePlaceFromEventInput {
+  id: string
+  latitude: number
+  longitude: number
+}
+
+export function createPlaceFromEvent(
+  event: TrekkingEvent,
+  input: CreatePlaceFromEventInput,
+): Place {
+  return {
+    id: input.id,
+    name: event.trailhead.placeName,
+    latitude: input.latitude,
+    longitude: input.longitude,
+    mapsUrl: event.trailhead.mapsUrl,
+    route: {
+      ...event.route,
+    },
+  }
 }
