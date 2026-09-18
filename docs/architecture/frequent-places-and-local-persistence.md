@@ -73,7 +73,7 @@ Event overrides remain local to the outing until an explicit saved-place action 
 
 ## Testing
 
-Pure domain tests cover Place-to-event copying and non-mutation. Repository tests use a controllable storage boundary rather than requiring a browser. UI tests cover the relevant selection/management surface while the full browser persistence lifecycle remains subject to the story's closure validation and later integrated hardening.
+Pure domain tests cover Place-to-event copying and non-mutation. Repository tests use a controllable storage boundary rather than requiring a browser. UI/source tests cover the selection and management surface. Repository tests cover reload-equivalent persistence across repository instances, malformed data, unavailable storage, and semantic validation of persisted values. Client composition defers browser storage access until after mount and exposes an explicit loading state while the persistence port is initialized.
 
 ## Downstream boundaries
 
