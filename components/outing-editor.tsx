@@ -248,7 +248,7 @@ export function OutingEditor({
         <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">Completá los datos de la salida y revisá el mensaje antes de compartirlo.</p>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-start">
+      <div className="grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-2 lg:items-start">
         <form className="space-y-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6" onSubmit={(e) => e.preventDefault()}>
         <fieldset className="space-y-4">
           <legend className="text-lg font-semibold text-slate-950">Salida</legend>
@@ -758,7 +758,7 @@ export function OutingEditor({
         </fieldset>
         </form>
 
-        <div className="lg:sticky lg:top-6">
+        <div className="min-w-0 lg:sticky lg:top-6">
           <MessagePreview event={event} recommendations={recommendations} />
         </div>
       </div>
