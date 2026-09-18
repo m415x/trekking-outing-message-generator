@@ -42,3 +42,14 @@ test("classifies daylight status using an explicit warning threshold", () => {
   assert.equal(getDaylightStatus(0, 60), "afterSunset")
   assert.equal(getDaylightStatus(-1, 60), "afterSunset")
 })
+
+
+test("keeps daylight calculations independent of the runtime timezone", () => {
+  assert.equal(
+    calculateDaylightMarginMinutes(
+      { date: "2026-09-20", time: "00:15" },
+      { date: "2026-09-19", time: "23:45" },
+    ),
+    -30,
+  )
+})
