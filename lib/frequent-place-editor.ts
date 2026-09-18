@@ -113,3 +113,32 @@ export function getFrequentPlaceSelectorPresentation(
       : "Seleccionar lugar frecuente",
   }
 }
+
+export interface FrequentPlaceManagementResult {
+  selectedPlaceId: string
+}
+
+export function saveFrequentPlace(
+  repository: PlaceRepository,
+  place: import("./place").Place,
+): FrequentPlaceManagementResult {
+  repository.save(place)
+  return { selectedPlaceId: place.id }
+}
+
+export function updateFrequentPlace(
+  repository: PlaceRepository,
+  place: import("./place").Place,
+): FrequentPlaceManagementResult {
+  repository.save(place)
+  return { selectedPlaceId: place.id }
+}
+
+export function removeFrequentPlace(
+  repository: PlaceRepository,
+  placeId: string,
+  selectedPlaceId: string | null,
+): string | null {
+  repository.remove(placeId)
+  return selectedPlaceId === placeId ? null : selectedPlaceId
+}
