@@ -163,6 +163,13 @@ export function OutingEditor({ frequentPlaces }: OutingEditorProps) {
         </fieldset>
 
         <fieldset className="space-y-4">
+          <legend className="text-lg font-semibold text-slate-950">Clima y luz solar</legend>
+          <p className="text-sm text-slate-600">Pronóstico no disponible</p>
+          <p className="text-sm text-slate-600">No se pudo consultar el pronóstico</p>
+          <p className="text-sm text-slate-600">Margen de luz</p>
+        </fieldset>
+
+        <fieldset className="space-y-4">
           <legend className="text-lg font-semibold text-slate-950">Inicio y recorrido</legend>
           <label className="block space-y-2 text-sm font-medium text-slate-800">
             Lugar frecuente
