@@ -13,6 +13,7 @@ import {
   saveFrequentPlace,
   updateFrequentPlace,
   removeFrequentPlace,
+  createPlaceFromEvent,
 } from "../lib/frequent-place-editor"
 import { createEmptyTrekkingEvent } from "../lib/trekking-event"
 
@@ -144,4 +145,35 @@ test("explicit place management saves, updates, and removes through the reposito
   assert.deepEqual(saved, [place, updatedPlace])
   assert.deepEqual(removed, [place.id])
   assert.equal(remainingSelection, null)
+})
+
+test("creates a saved place candidate from reusable outing data and explicit coordinates", () => {
+  const event = createEmptyTrekkingEvent()
+  event.trailhead = {
+    placeName: "Cerro Palo Seco",
+    mapsUrl: "https://maps.example/palo-seco",
+  }
+  event.route = {
+    distanceKm: 14,
+    elevationGainM: 820,
+    estimatedDurationMinutes: 300,
+    difficulty: "high",
+  }
+  event.meeting.location.placeName = "Plaza"
+  event.coordinator = "Coordinador"
+
+  const candidate = createPlaceFromEvent(event, {
+    id: "cerro-palo-seco",
+    latitude: -31.5,
+    longitude: -68.7,
+  })
+
+  assert.deepEqual(candidate, {
+    id: "cerro-palo-seco",
+    name: "Cerro Palo Seco",
+    latitude: -31.5,
+    longitude: -68.7,
+    mapsUrl: "https://maps.example/palo-seco",
+    route: event.route,
+  })
 })
