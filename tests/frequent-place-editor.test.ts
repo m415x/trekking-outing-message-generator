@@ -10,6 +10,9 @@ import {
   createFrequentPlaceEditorPort,
   createOutingEditorFrequentPlaceModel,
   getFrequentPlaceSelectorPresentation,
+  saveFrequentPlace,
+  updateFrequentPlace,
+  removeFrequentPlace,
 } from "../lib/frequent-place-editor"
 import { createEmptyTrekkingEvent } from "../lib/trekking-event"
 
@@ -117,4 +120,28 @@ test("selector presentation distinguishes empty and populated saved places", () 
       placeholder: "Seleccionar lugar frecuente",
     },
   )
+})
+
+test("explicit place management saves, updates, and removes through the repository", () => {
+  const repository = new StubPlaceRepository([])
+  const saved: Place[] = []
+  const removed: string[] = []
+
+  repository.save = (candidate) => {
+    saved.push(candidate)
+  }
+  repository.remove = (id) => {
+    removed.push(id)
+  }
+
+  const created = saveFrequentPlace(repository, place)
+  const updatedPlace = { ...place, name: "Cerro Palo Seco actualizado" }
+  const updated = updateFrequentPlace(repository, updatedPlace)
+  const remainingSelection = removeFrequentPlace(repository, place.id, place.id)
+
+  assert.equal(created.selectedPlaceId, place.id)
+  assert.equal(updated.selectedPlaceId, place.id)
+  assert.deepEqual(saved, [place, updatedPlace])
+  assert.deepEqual(removed, [place.id])
+  assert.equal(remainingSelection, null)
 })
