@@ -21,7 +21,7 @@ export function MessagePreview({ event }: MessagePreviewProps) {
   }
 
   return (
-    <section aria-labelledby="message-preview-title">
+    <section aria-labelledby="message-preview-title" aria-live="polite">
       <h2 id="message-preview-title">Vista previa</h2>
       <pre>{message}</pre>
 
