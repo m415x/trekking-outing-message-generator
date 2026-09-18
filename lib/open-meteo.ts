@@ -110,10 +110,18 @@ export function createOpenMeteoProvider(
 
       if (!response.ok) {
         if (response.status === 400) {
+          const body = (await response.json()) as Partial<OpenMeteoResponse>
+          const sunrise = body.daily?.sunrise?.[0]
+          const sunset = body.daily?.sunset?.[0]
+
           return {
             status: "forecastUnavailable",
-            sunrise: { date: request.date, time: "" },
-            sunset: { date: request.date, time: "" },
+            sunrise: sunrise
+              ? toEventMoment(sunrise)
+              : { date: request.date, time: "" },
+            sunset: sunset
+              ? toEventMoment(sunset)
+              : { date: request.date, time: "" },
           }
         }
         throw new Error("Open-Meteo request failed")
