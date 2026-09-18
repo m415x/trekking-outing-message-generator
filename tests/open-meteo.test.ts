@@ -74,3 +74,27 @@ test("maps an Open-Meteo response into provider-neutral hourly and daylight data
     sunset: { date: "2026-09-20", time: "19:28" },
   })
 })
+
+
+test("rejects malformed Open-Meteo responses instead of leaking partial provider data", async () => {
+  const { mapOpenMeteoResponse } = await import("../lib/open-meteo")
+
+  assert.throws(
+    () =>
+      mapOpenMeteoResponse({
+        hourly: {
+          time: ["2026-09-20T08:00", "2026-09-20T09:00"],
+          temperature_2m: [12.5],
+          precipitation: [0, 0.3],
+          wind_speed_10m: [10, 12],
+          wind_gusts_10m: [18, 22],
+        },
+        daily: {
+          time: ["2026-09-20"],
+          sunrise: ["2026-09-20T07:12"],
+          sunset: ["2026-09-20T19:28"],
+        },
+      }),
+    /invalid/i,
+  )
+})
