@@ -81,10 +81,11 @@ export function OutingEditor() {
   }
 
   return (
-    <section>
+    <section className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
       <h1>Generador de salidas de trekking</h1>
 
-      <form onSubmit={(e) => e.preventDefault()}>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-start">
+        <form onSubmit={(e) => e.preventDefault()}>
         <fieldset>
           <legend>Salida</legend>
           <label>
@@ -335,9 +336,12 @@ export function OutingEditor() {
             Agregar
           </button>
         </fieldset>
-      </form>
+        </form>
 
-      <MessagePreview event={event} />
+        <div className="lg:sticky lg:top-6">
+          <MessagePreview event={event} />
+        </div>
+      </div>
     </section>
   )
 }
