@@ -267,9 +267,12 @@ test("clears stale external conditions when the weather request becomes incomple
     "utf8",
   )
 
+  assert.match(source, /weatherRequestIsValid/)
+  assert.match(source, /weatherRequestKey/)
+  assert.match(source, /loadedConditionsMatchRequest/)
   assert.match(
     source,
-    /if \(\s*!conditionsLoader[\s\S]*?\) \{\s*setLoadedConditions\(undefined\)\s*return/,
+    /loadedConditionsMatchRequest \? loadedConditions\.value : undefined/,
   )
 })
 
@@ -282,8 +285,9 @@ test("clears previous external conditions while a new valid request is loading",
 
   assert.match(
     source,
-    /let active = true\s*setConditionsLoading\(true\)\s*setLoadedConditions\(undefined\)\s*conditionsLoader\.load/,
+    /conditionsLoading =[\s\S]*?weatherRequestKey !== undefined[\s\S]*?!loadedConditionsMatchRequest/,
   )
+  assert.match(source, /let active = true\s*conditionsLoader\.load/)
 })
 
 
@@ -294,8 +298,7 @@ test("degrades rejected weather loads to an explicit error state", async () => {
   )
 
   assert.match(source, /\.catch\(\(\) => \{/)
-  assert.match(source, /setLoadedConditions\(\{ forecastStatus: "error" \}\)/)
-  assert.match(source, /setConditionsLoading\(false\)/)
+  assert.match(source, /value: \{ forecastStatus: "error" \}/)
 })
 
 test("does not render empty sunrise or sunset values", async () => {
