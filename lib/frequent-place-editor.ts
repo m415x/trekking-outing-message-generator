@@ -64,6 +64,7 @@ export interface FrequentPlaceEditorPort {
   save(place: Place): FrequentPlaceManagementResult
   update(place: Place): FrequentPlaceManagementResult
   remove(placeId: string, selectedPlaceId: string | null): string | null
+  getManagementFields(placeId: string): SelectedPlaceManagementFields | null
 }
 
 export function createFrequentPlaceEditorPort(
@@ -76,6 +77,8 @@ export function createFrequentPlaceEditorPort(
     update: (place) => updateFrequentPlace(repository, place),
     remove: (placeId, selectedPlaceId) =>
       removeFrequentPlace(repository, placeId, selectedPlaceId),
+    getManagementFields: (placeId) =>
+      getSelectedPlaceManagementFields(repository, placeId),
   }
 }
 
