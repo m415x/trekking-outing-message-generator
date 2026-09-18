@@ -417,3 +417,16 @@ test("editor and preview allow long content to shrink without horizontal page ov
     /<pre className="[^"]*min-w-0[^"]*whitespace-pre-wrap[^"]*break-words[^"]*"/,
   )
 })
+
+
+test("duration controls share a compact responsive row", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(
+    source,
+    /<legend[^>]*>Duración<\/legend>\s*<div className="grid grid-cols-2 gap-3">[\s\S]*?Horas[\s\S]*?Minutos[\s\S]*?<\/div>/,
+  )
+})
