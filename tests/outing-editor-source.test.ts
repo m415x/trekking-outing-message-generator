@@ -94,3 +94,17 @@ test("updating a selected frequent place refreshes the saved-place options", asy
   assert.match(source, /setPlacesRevision\(\(current\) => current \+ 1\)/)
   assert.match(source, /const frequentPlaceState = frequentPlaces\?\.load\(\)/)
 })
+
+
+test("outing editor exposes weather and daylight states without coupling to Open-Meteo", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /Clima y luz solar/)
+  assert.match(source, /Pronóstico no disponible/)
+  assert.match(source, /No se pudo consultar el pronóstico/)
+  assert.match(source, /Margen de luz/)
+  assert.doesNotMatch(source, /OpenMeteo|open-meteo|api\.open-meteo/)
+})
