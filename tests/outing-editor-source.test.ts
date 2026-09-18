@@ -22,7 +22,7 @@ test("client composition wires local persistence into the outing editor", async 
 
   assert.match(source, /LocalStoragePlaceRepository/)
   assert.match(source, /createFrequentPlaceEditorPort/)
-  assert.match(source, /<OutingEditor frequentPlaces=/)
+  assert.match(source, /<OutingEditor[\s\S]*frequentPlaces=/)
 })
 
 test("outing editor exposes explicit saved-place management controls", async () => {
