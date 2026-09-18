@@ -17,6 +17,21 @@ export interface AvailableOutingConditions {
   weather: OutingWeather
 }
 
+export interface ForecastUnavailableOutingConditions {
+  forecastStatus: "unavailable"
+  sunrise: EventMoment
+  sunset: EventMoment
+}
+
+export interface OutingConditionsError {
+  forecastStatus: "error"
+}
+
+export type OutingConditions =
+  | AvailableOutingConditions
+  | ForecastUnavailableOutingConditions
+  | OutingConditionsError
+
 export type AvailableOutingConditionsInput = Omit<
   AvailableOutingConditions,
   "forecastStatus"
@@ -28,6 +43,21 @@ export function createAvailableOutingConditions(
   return {
     forecastStatus: "available",
     ...input,
+  }
+}
+
+export function createForecastUnavailableOutingConditions(
+  daylight: Omit<ForecastUnavailableOutingConditions, "forecastStatus">,
+): ForecastUnavailableOutingConditions {
+  return {
+    forecastStatus: "unavailable",
+    ...daylight,
+  }
+}
+
+export function createOutingConditionsError(): OutingConditionsError {
+  return {
+    forecastStatus: "error",
   }
 }
 
