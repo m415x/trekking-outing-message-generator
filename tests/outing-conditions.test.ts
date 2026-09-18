@@ -83,3 +83,27 @@ test("defines provider-neutral weather and daylight data for an outing", async (
     },
   })
 })
+
+
+test("represents forecast unavailability separately from provider failure", async () => {
+  const {
+    createForecastUnavailableOutingConditions,
+    createOutingConditionsError,
+  } = await import("../lib/outing-conditions")
+
+  assert.deepEqual(
+    createForecastUnavailableOutingConditions({
+      sunrise: { date: "2026-10-20", time: "06:45" },
+      sunset: { date: "2026-10-20", time: "19:55" },
+    }),
+    {
+      forecastStatus: "unavailable",
+      sunrise: { date: "2026-10-20", time: "06:45" },
+      sunset: { date: "2026-10-20", time: "19:55" },
+    },
+  )
+
+  assert.deepEqual(createOutingConditionsError(), {
+    forecastStatus: "error",
+  })
+})
