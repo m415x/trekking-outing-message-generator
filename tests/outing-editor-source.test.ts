@@ -176,8 +176,10 @@ test("outing editor requests conditions from outing coordinates without provider
   )
 
   assert.match(source, /conditionsLoader\?: OutingConditionsLoader/)
-  assert.match(source, /latitude: Number\(latitude\)/)
-  assert.match(source, /longitude: Number\(longitude\)/)
+  assert.match(source, /const latitudeNumber = Number\(latitude\)/)
+  assert.match(source, /const longitudeNumber = Number\(longitude\)/)
+  assert.match(source, /latitude: latitudeNumber/)
+  assert.match(source, /longitude: longitudeNumber/)
   assert.match(source, /trekStart: event\.trekStart/)
   assert.match(source, /estimatedDurationMinutes: event\.route\.estimatedDurationMinutes/)
   assert.match(source, /conditionsLoader\.load/)
