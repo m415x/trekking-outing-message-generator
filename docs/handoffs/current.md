@@ -2,44 +2,37 @@
 
 ## Reliable starting point
 
-TOMG-3 implements the manual trekking-outing workflow on `tomg-3-create-outings-and-whatsapp-messages`. The story branch was created from `dev` at `4c443d83fcb60b70c83ec1aad51a3cfb9f31a472`; remote reconciliation on 2026-09-17 showed it 44 commits ahead and 0 behind before final documentation commits.
+TOMG-4 implements reusable frequent places and local client persistence on `tomg-4-manage-frequent-places`. Reconstruct future work from `AGENTS.md`, current code/tests, durable architecture/product docs, and Jira; this handoff is a lower-authority operational summary.
 
-The next implementation story after TOMG-3 closure is TOMG-4, which owns reusable `Place` data and local persistence. Before starting it, follow the story bootstrap in `AGENTS.md` and reconstruct state from current `dev`, durable docs, code/tests, and Jira rather than this handoff alone.
+TOMG-3 remains the baseline for manual `TrekkingEvent` editing, validation, preview, and deterministic WhatsApp message generation. TOMG-4 adds reusable `Place` data without merging it into dated outing state.
 
-## Implemented TOMG-3 contract
+## Implemented TOMG-4 contract
 
-- `TrekkingEvent` models meeting and trek start as distinct complete local moments.
-- Meeting point and trailhead are distinct locations; weather geography remains reserved for the trailhead/route in TOMG-5.
-- Meeting tolerance is explicit domain state and defaults to 15 minutes.
-- Route data includes distance, optional elevation gain, duration in minutes, and the four agreed difficulty values.
-- Default requirements can be deselected and custom per-outing requirements added without persistence.
-- Coordinator and Conocedor del camino are independent roles; at least one is required for final sharing.
-- Validation and deterministic WhatsApp generation are pure domain behavior.
-- Partial events render a progressive preview; Copy and WhatsApp remain disabled until final validation succeeds.
-- The editor uses a responsive single-column/mobile and two-column/large-screen layout with explicit validation guidance.
+- `Place` is separate from `TrekkingEvent` and represents trek/trailhead geography plus reusable route defaults.
+- A place stores stable `id`, name, latitude/longitude, optional Maps URL, and optional distance, elevation gain, estimated duration, and difficulty.
+- Selecting a saved place copies reusable values into the current event snapshot without changing meeting data, dates/times, requirements, Coordinator, or Conocedor del camino.
+- Later outing edits remain event-local. Saved place data changes only through explicit save/update/remove actions.
+- `PlaceRepository` isolates consumers from persistence; the MVP implementation uses `localStorage` behind that boundary.
+- Persistence reads are defensive against unavailable storage, malformed JSON, malformed entries, invalid coordinate ranges, invalid route values, and invalid difficulty values.
+- Browser storage composition is deferred until after client mount and exposes a loading state while the persistence port is initialized.
+- The editor supports empty state, selection/prefill, explicit create/update/remove, stable selected-place coordinates, coherent deselection/removal state, and option refresh after update.
 
-See `docs/architecture/trekking-event-and-message-generation.md` for the concrete contract and `docs/architecture/domain-model.md` for cross-story ownership boundaries.
+See `docs/architecture/frequent-places-and-local-persistence.md` for the concrete contract.
 
 ## Human-reported execution evidence
 
-TOMG-3 was developed remote-first with local TDD execution reported by the human. Focused cycles were observed as RED before implementation and GREEN after implementation. Reported checkpoints include:
+TOMG-4 was developed remote-first with focused RED/GREEN cycles executed locally by the human. Repository, domain, editor, persistence-lifecycle, defensive-storage, and management behavior were exercised during implementation.
 
-- TOMG-14 form/editor regression: 8 tests passed, 0 failed; TypeScript and ESLint clean.
-- TOMG-15 sharing/preview regression: 9 tests passed, 0 failed; TypeScript and ESLint clean.
-- TOMG-16 validation/responsive checkpoint: 7 tests passed, 0 failed; TypeScript and ESLint clean.
-- Final responsive visual contract: 2 tests passed, 0 failed; subsequent TypeScript and ESLint checks reported clean.
+During TOMG-23 reconciliation, the human reported `test:places` and `test:editor` GREEN after focused-suite scripts were added. A pre-existing standalone TypeScript blocker in `app/layout.tsx` was isolated and corrected by replacing the generated-global `LayoutProps` dependency with an explicit `ReactNode` prop type. Subsequent focused editor and TypeScript checks were reported GREEN.
 
-This is human-reported local execution evidence.
-
-The complete TOMG-3 closure gate was then run locally after the documentation reconciliation. The human reported `pnpm lint` and `pnpm tsc` clean, `pnpm test` with 21 tests passed and 0 failed, and `pnpm build` completing an optimized production build successfully, including TypeScript, page-data collection, static-page generation, and final optimization.
+The complete TOMG-4 closure gate was then run locally on 2026-09-18. The human reported all four commands GREEN: `pnpm lint`, `pnpm tsc`, `pnpm test`, and `pnpm build`. This is human-reported execution evidence; the remote connector did not execute these commands.
 
 ## Deferred by design
 
-- TOMG-4: reusable `Place` data, repository abstraction, and localStorage persistence.
-- TOMG-5: coordinates, weather/daylight integration, outing-window conditions, estimated finish, and daylight margin.
-- TOMG-6: advisory hydration/equipment recommendations.
-- Database, authentication, and server-side persistence remain outside the MVP unless an approved future story changes that contract.
+- TOMG-5 owns weather/daylight provider integration, temporal calculations, outing-window conditions, estimated finish, and daylight margin. It may consume the saved trailhead coordinates introduced by TOMG-4.
+- TOMG-6 owns advisory hydration/equipment recommendations.
+- Database/backend persistence, authentication, multi-user synchronization, and weather-history storage remain outside the MVP.
 
 ## Closure state
 
-TOMG-12 through TOMG-16 have implementation evidence and are reconciled as completed in Jira. TOMG-17 is in progress and owns the remaining final Jira/remote-branch reconciliation and handoff. The complete local closure gate has passed by human report; recheck the remote branch diff/status before marking TOMG-17 and TOMG-3 complete or merging to `dev`.
+TOMG-4 acceptance criteria are implemented and reconciled against current code/tests and durable architecture. At the time of this handoff update, Jira child issues TOMG-18 through TOMG-23 had not yet been transitioned and TOMG-4 remained En curso. Jira reconciliation and merge to `dev` require explicit human approval. Preserve the story branch after merge.
