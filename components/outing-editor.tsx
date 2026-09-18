@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import {
   createPlaceFromEvent,
@@ -24,14 +24,24 @@ import {
   getDaylightStatus,
   type OutingConditions,
 } from "../lib/outing-conditions"
+import type { OutingConditionsRequest } from "../lib/outing-conditions-service"
 import { MessagePreview } from "./message-preview"
+
+export interface OutingConditionsLoader {
+  load(request: OutingConditionsRequest): Promise<OutingConditions>
+}
 
 export interface OutingEditorProps {
   frequentPlaces?: FrequentPlaceEditorPort
   conditions?: OutingConditions
+  conditionsLoader?: OutingConditionsLoader
 }
 
-export function OutingEditor({ frequentPlaces, conditions }: OutingEditorProps) {
+export function OutingEditor({
+  frequentPlaces,
+  conditions,
+  conditionsLoader,
+}: OutingEditorProps) {
   const [event, setEvent] = useState<TrekkingEvent>(() => createEmptyTrekkingEvent())
   const [customRequirement, setCustomRequirement] = useState("")
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null)
@@ -40,8 +50,48 @@ export function OutingEditor({ frequentPlaces, conditions }: OutingEditorProps) 
   const [longitude, setLongitude] = useState("")
   const [placeError, setPlaceError] = useState("")
   const [placesRevision, setPlacesRevision] = useState(0)
+  const [loadedConditions, setLoadedConditions] = useState<OutingConditions | undefined>(
+    conditions,
+  )
   const frequentPlaceState = frequentPlaces?.load()
   const validation = getValidationPresentation(event)
+  const displayedConditions = conditions ?? loadedConditions
+
+  useEffect(() => {
+    if (
+      !conditionsLoader ||
+      latitude === "" ||
+      longitude === "" ||
+      event.trekStart.date === "" ||
+      event.trekStart.time === "" ||
+      event.route.estimatedDurationMinutes === undefined
+    ) {
+      return
+    }
+
+    let active = true
+    conditionsLoader
+      .load({
+        latitude: Number(latitude),
+        longitude: Number(longitude),
+        date: event.trekStart.date,
+        trekStart: event.trekStart,
+        estimatedDurationMinutes: event.route.estimatedDurationMinutes,
+      })
+      .then((nextConditions) => {
+        if (active) setLoadedConditions(nextConditions)
+      })
+
+    return () => {
+      active = false
+    }
+  }, [
+    conditionsLoader,
+    latitude,
+    longitude,
+    event.trekStart,
+    event.route.estimatedDurationMinutes,
+  ])
   const estimatedFinish =
     event.trekStart.date &&
     event.trekStart.time &&
@@ -53,9 +103,9 @@ export function OutingEditor({ frequentPlaces, conditions }: OutingEditorProps) 
       : undefined
   const daylightMarginMinutes =
     estimatedFinish &&
-    conditions &&
-    conditions.forecastStatus !== "error"
-      ? calculateDaylightMarginMinutes(estimatedFinish, conditions.sunset)
+    displayedConditions &&
+    displayedConditions.forecastStatus !== "error"
+      ? calculateDaylightMarginMinutes(estimatedFinish, displayedConditions.sunset)
       : undefined
   const daylightStatus =
     daylightMarginMinutes !== undefined
@@ -190,15 +240,15 @@ export function OutingEditor({ frequentPlaces, conditions }: OutingEditorProps) 
 
         <fieldset className="space-y-4">
           <legend className="text-lg font-semibold text-slate-950">Clima y luz solar</legend>
-          {conditions?.forecastStatus === "available" && (
+          {displayedConditions?.forecastStatus === "available" && (
             <div className="space-y-2 text-sm text-slate-600">
-              <p>Temperatura: {conditions.weather.temperatureC} °C</p>
-              <p>Precipitación: {conditions.weather.precipitationMm} mm</p>
-              <p>Viento: {conditions.weather.windSpeedKmh} km/h</p>
-              <p>Ráfagas: {conditions.weather.windGustKmh} km/h</p>
-              <p>Actualizado: {conditions.fetchedAt}</p>
-              <p>Amanecer: {conditions.sunrise.time}</p>
-              <p>Atardecer: {conditions.sunset.time}</p>
+              <p>Temperatura: {displayedConditions.weather.temperatureC} °C</p>
+              <p>Precipitación: {displayedConditions.weather.precipitationMm} mm</p>
+              <p>Viento: {displayedConditions.weather.windSpeedKmh} km/h</p>
+              <p>Ráfagas: {displayedConditions.weather.windGustKmh} km/h</p>
+              <p>Actualizado: {displayedConditions.fetchedAt}</p>
+              <p>Amanecer: {displayedConditions.sunrise.time}</p>
+              <p>Atardecer: {displayedConditions.sunset.time}</p>
               {estimatedFinish && <p>Fin estimado: {estimatedFinish.time}</p>}
               {daylightMarginMinutes !== undefined && (
                 <p>Margen de luz: {daylightMarginMinutes} min</p>
@@ -211,11 +261,11 @@ export function OutingEditor({ frequentPlaces, conditions }: OutingEditorProps) 
               )}
             </div>
           )}
-          {conditions?.forecastStatus === "unavailable" && (
+          {displayedConditions?.forecastStatus === "unavailable" && (
             <div className="space-y-2 text-sm text-slate-600">
               <p>Pronóstico no disponible</p>
-              <p>Amanecer: {conditions.sunrise.time}</p>
-              <p>Atardecer: {conditions.sunset.time}</p>
+              <p>Amanecer: {displayedConditions.sunrise.time}</p>
+              <p>Atardecer: {displayedConditions.sunset.time}</p>
               {estimatedFinish && <p>Fin estimado: {estimatedFinish.time}</p>}
               {daylightMarginMinutes !== undefined && (
                 <p>Margen de luz: {daylightMarginMinutes} min</p>
@@ -228,7 +278,7 @@ export function OutingEditor({ frequentPlaces, conditions }: OutingEditorProps) 
               )}
             </div>
           )}
-          {conditions?.forecastStatus === "error" && (
+          {displayedConditions?.forecastStatus === "error" && (
             <p className="text-sm text-slate-600">No se pudo consultar el pronóstico</p>
           )}
         </fieldset>
