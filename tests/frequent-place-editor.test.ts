@@ -213,3 +213,14 @@ test("selected place exposes its stable id and coordinates for explicit updates"
 
   assert.equal(getSelectedPlaceManagementFields(repository, "missing"), null)
 })
+
+test("saved place validation rejects coordinates outside geographic bounds", () => {
+  assert.deepEqual(
+    validatePlaceCandidate({ ...place, latitude: 91 }),
+    { latitude: "Ingresá una latitud válida" },
+  )
+  assert.deepEqual(
+    validatePlaceCandidate({ ...place, longitude: -181 }),
+    { longitude: "Ingresá una longitud válida" },
+  )
+})
