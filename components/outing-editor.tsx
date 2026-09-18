@@ -57,6 +57,7 @@ export function OutingEditor({
   const [loadedConditions, setLoadedConditions] = useState<OutingConditions | undefined>(
     conditions,
   )
+  const [conditionsLoading, setConditionsLoading] = useState(false)
   const frequentPlaceState = frequentPlaces?.load()
   const validation = getValidationPresentation(event)
   const displayedConditions = conditions ?? loadedConditions
@@ -75,6 +76,7 @@ export function OutingEditor({
     }
 
     let active = true
+    setConditionsLoading(true)
     setLoadedConditions(undefined)
     conditionsLoader.load({
         latitude: Number(latitude),
@@ -84,14 +86,21 @@ export function OutingEditor({
         estimatedDurationMinutes: event.route.estimatedDurationMinutes,
       })
       .then((nextConditions) => {
-        if (active) setLoadedConditions(nextConditions)
+        if (active) {
+          setLoadedConditions(nextConditions)
+          setConditionsLoading(false)
+        }
       })
       .catch(() => {
-        if (active) setLoadedConditions({ forecastStatus: "error" })
+        if (active) {
+          setLoadedConditions({ forecastStatus: "error" })
+          setConditionsLoading(false)
+        }
       })
 
     return () => {
       active = false
+      setConditionsLoading(false)
     }
   }, [
     conditionsLoader,
@@ -270,7 +279,7 @@ export function OutingEditor({
 
         <fieldset className="space-y-4">
           <legend className="text-lg font-semibold text-slate-950">Clima y luz solar</legend>
-          {displayedConditions?.forecastStatus === "available" && (
+          {conditionsLoading && (\n            <p className="text-sm text-slate-600">Cargando pronóstico…</p>\n          )}\n          {displayedConditions?.forecastStatus === "available" && (
             <div className="space-y-2 text-sm text-slate-600">
               <p>Temperatura: {displayedConditions.weather.temperatureC} °C</p>
               <p>Precipitación: {displayedConditions.weather.precipitationMm} mm</p>
