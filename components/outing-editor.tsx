@@ -650,6 +650,7 @@ export function OutingEditor({
                 </p>
               )}
               <button
+                className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 transition hover:bg-slate-50 sm:w-auto"
                 type="button"
                 onClick={() => setRejectHydration((current) => !current)}
               >
@@ -660,6 +661,7 @@ export function OutingEditor({
                   <p>{recommendation.item}</p>
                   <p>{recommendation.reasons.join(". ")}</p>
                   <button
+                    className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 transition hover:bg-slate-50 sm:w-auto"
                     type="button"
                     onClick={() =>
                       setRejectedEquipment((current) => [
