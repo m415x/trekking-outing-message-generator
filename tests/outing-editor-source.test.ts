@@ -316,3 +316,14 @@ test("outing editor exposes an explicit loading state for external conditions", 
   assert.match(source, /Cargando pronóstico/)
   assert.match(source, /conditionsLoading/)
 })
+
+
+test("outing editor validates geographic coordinate ranges before loading conditions", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /latitudeNumber >= -90 && latitudeNumber <= 90/)
+  assert.match(source, /longitudeNumber >= -180 && longitudeNumber <= 180/)
+})
