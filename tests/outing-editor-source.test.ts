@@ -137,3 +137,19 @@ test("outing editor derives finish and daylight margin from the outing snapshot"
   assert.match(source, /Fin estimado/)
   assert.match(source, /Margen de luz:.*min/)
 })
+
+
+test("outing editor exposes all outing-window weather values and forecast freshness", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /conditions\.weather\.precipitationMm/)
+  assert.match(source, /conditions\.weather\.windSpeedKmh/)
+  assert.match(source, /conditions\.weather\.windGustKmh/)
+  assert.match(source, /conditions\.fetchedAt/)
+  assert.match(source, /Precipitación/)
+  assert.match(source, /Ráfagas/)
+  assert.match(source, /Actualizado/)
+})
