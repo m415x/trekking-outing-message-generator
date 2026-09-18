@@ -342,3 +342,20 @@ test("clearing manual hydration restores the suggested value instead of forcing 
     /e\.target\.value === "" \? undefined : Number\(e\.target\.value\)/,
   )
 })
+
+
+test("weather effect does not synchronously mirror external request state into React state", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.doesNotMatch(
+    source,
+    /useEffect\(\(\) => \{[\s\S]*?setLoadedConditions\(undefined\)[\s\S]*?conditionsLoader\.load/,
+  )
+  assert.doesNotMatch(
+    source,
+    /useEffect\(\(\) => \{[\s\S]*?setConditionsLoading\(true\)[\s\S]*?conditionsLoader\.load/,
+  )
+})
