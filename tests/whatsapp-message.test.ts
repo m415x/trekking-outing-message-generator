@@ -3,6 +3,7 @@ import test from "node:test"
 
 import { createEmptyTrekkingEvent } from "../lib/trekking-event"
 import { generateWhatsAppMessage } from "../lib/whatsapp-message"
+import type { Recommendations } from "../lib/recommendations"
 
 function completeEvent() {
   const event = createEmptyTrekkingEvent()
@@ -104,4 +105,28 @@ test("generates a tolerant partial preview without invalid placeholder lines", (
   const emptyMessage = generateWhatsAppMessage(createEmptyTrekkingEvent())
   assert.ok(emptyMessage.startsWith("🎒 *Equipo recomendado*"))
   assert.doesNotMatch(emptyMessage, /Invalid|NaN|undefined/)
+})
+
+
+test("includes only accepted current recommendations in the generated message", () => {
+  const recommendations: Recommendations = {
+    hydration: {
+      kind: "advisory",
+      liters: 2,
+      reasons: ["Elección manual"],
+    },
+    equipment: [
+      {
+        kind: "advisory",
+        item: "Protección contra el viento",
+        reasons: ["Viento previsto"],
+      },
+    ],
+  }
+
+  const message = generateWhatsAppMessage(completeEvent(), recommendations)
+
+  assert.match(message, /Agua orientativa: 2 L/)
+  assert.match(message, /Protección contra el viento/)
+  assert.doesNotMatch(message, /Protección solar/)
 })
