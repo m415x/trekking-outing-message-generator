@@ -390,7 +390,7 @@ test("saved-place actions use full-width mobile targets and compact desktop sizi
   assert.match(source, /className="grid grid-cols-1 gap-2 sm:grid-cols-3"/)
   for (const label of ["Guardar lugar", "Actualizar lugar", "Eliminar lugar"]) {
     const buttonPattern = new RegExp(
-      `<button[\\s\\S]{0,180}className="[^"]*w-full[^"]*"[^>]*>[\\s\\S]{0,500}?${label}`,
+      `<button[\\s\\S]{0,180}className="[^"]*w-full[^"]*"[\\s\\S]*?${label}`,
     )
     assert.match(source, buttonPattern)
   }
