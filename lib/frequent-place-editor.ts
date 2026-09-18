@@ -198,3 +198,26 @@ export function validatePlaceCandidate(
 
   return errors
 }
+
+export interface SelectedPlaceManagementFields {
+  id: string
+  latitude: string
+  longitude: string
+}
+
+export function getSelectedPlaceManagementFields(
+  repository: PlaceRepository,
+  placeId: string,
+): SelectedPlaceManagementFields | null {
+  const place = repository.getAll().find((candidate) => candidate.id === placeId)
+
+  if (!place) {
+    return null
+  }
+
+  return {
+    id: place.id,
+    latitude: String(place.latitude),
+    longitude: String(place.longitude),
+  }
+}
