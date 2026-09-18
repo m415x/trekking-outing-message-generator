@@ -108,3 +108,19 @@ test("outing editor exposes weather and daylight states without coupling to Open
   assert.match(source, /Margen de luz/)
   assert.doesNotMatch(source, /OpenMeteo|open-meteo|api\.open-meteo/)
 })
+
+
+test("outing editor receives conditions through a provider-neutral port", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /conditions\?: OutingConditions/)
+  assert.match(source, /conditions\.forecastStatus === "available"/)
+  assert.match(source, /conditions\.forecastStatus === "unavailable"/)
+  assert.match(source, /conditions\.forecastStatus === "error"/)
+  assert.match(source, /conditions\.weather\.temperatureC/)
+  assert.match(source, /conditions\.sunrise\.time/)
+  assert.match(source, /conditions\.sunset\.time/)
+})
