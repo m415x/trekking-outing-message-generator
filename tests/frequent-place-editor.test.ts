@@ -5,6 +5,7 @@ import type { Place } from "../lib/place"
 import type { PlaceRepository } from "../lib/place-repository"
 import {
   createFrequentPlaceEditorState,
+  getFrequentPlaceOptions,
   selectFrequentPlace,
 } from "../lib/frequent-place-editor"
 import { createEmptyTrekkingEvent } from "../lib/trekking-event"
@@ -39,6 +40,14 @@ test("loads frequent places through the repository boundary", () => {
     places: [place],
     selectedPlaceId: null,
   })
+})
+
+test("exposes saved places as selector options", () => {
+  assert.deepEqual(
+    getFrequentPlaceOptions(new StubPlaceRepository([place])),
+    [{ value: place.id, label: place.name }],
+  )
+  assert.deepEqual(getFrequentPlaceOptions(new StubPlaceRepository([])), [])
 })
 
 test("selecting an editor place prefills the outing and records the selection", () => {
