@@ -18,7 +18,11 @@ import {
 import { addCustomRequirement, setEstimatedDuration, setMeetingDate } from "../lib/outing-editor-state"
 import { toggleRequirement } from "../lib/outing-form"
 import { getValidationPresentation } from "../lib/validation-presentation"
-import type { OutingConditions } from "../lib/outing-conditions"
+import {
+  calculateDaylightMarginMinutes,
+  calculateEstimatedFinish,
+  type OutingConditions,
+} from "../lib/outing-conditions"
 import { MessagePreview } from "./message-preview"
 
 export interface OutingEditorProps {
@@ -37,6 +41,21 @@ export function OutingEditor({ frequentPlaces, conditions }: OutingEditorProps) 
   const [placesRevision, setPlacesRevision] = useState(0)
   const frequentPlaceState = frequentPlaces?.load()
   const validation = getValidationPresentation(event)
+  const estimatedFinish =
+    event.trekStart.date &&
+    event.trekStart.time &&
+    event.route.estimatedDurationMinutes !== undefined
+      ? calculateEstimatedFinish(
+          event.trekStart,
+          event.route.estimatedDurationMinutes,
+        )
+      : undefined
+  const daylightMarginMinutes =
+    estimatedFinish &&
+    conditions &&
+    conditions.forecastStatus !== "error"
+      ? calculateDaylightMarginMinutes(estimatedFinish, conditions.sunset)
+      : undefined
 
   function updateEvent(next: Partial<TrekkingEvent>) {
     setEvent((current) => ({ ...current, ...next }))
@@ -171,7 +190,10 @@ export function OutingEditor({ frequentPlaces, conditions }: OutingEditorProps) 
               <p>Temperatura: {conditions.weather.temperatureC} °C</p>
               <p>Amanecer: {conditions.sunrise.time}</p>
               <p>Atardecer: {conditions.sunset.time}</p>
-              <p>Margen de luz</p>
+              {estimatedFinish && <p>Fin estimado: {estimatedFinish.time}</p>}
+              {daylightMarginMinutes !== undefined && (
+                <p>Margen de luz: {daylightMarginMinutes} min</p>
+              )}
             </div>
           )}
           {conditions?.forecastStatus === "unavailable" && (
@@ -179,7 +201,10 @@ export function OutingEditor({ frequentPlaces, conditions }: OutingEditorProps) 
               <p>Pronóstico no disponible</p>
               <p>Amanecer: {conditions.sunrise.time}</p>
               <p>Atardecer: {conditions.sunset.time}</p>
-              <p>Margen de luz</p>
+              {estimatedFinish && <p>Fin estimado: {estimatedFinish.time}</p>}
+              {daylightMarginMinutes !== undefined && (
+                <p>Margen de luz: {daylightMarginMinutes} min</p>
+              )}
             </div>
           )}
           {conditions?.forecastStatus === "error" && (
