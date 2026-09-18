@@ -12,7 +12,7 @@ test("keeps partial preview available while sharing stays disabled", () => {
 
   assert.ok(state.message.includes("🥾 *CERRO PALO SECO*"))
   assert.equal(state.canShare, false)
-  assert.ok(state.validation.errors.length > 0)
+  assert.ok(Object.keys(state.validation.errors).length > 0)
 })
 
 test("enables sharing for a valid event using the same generated message", () => {
