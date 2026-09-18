@@ -165,3 +165,29 @@ export function createPlaceFromEvent(
     },
   }
 }
+
+export interface PlaceCandidateValidation {
+  name?: string
+  latitude?: string
+  longitude?: string
+}
+
+export function validatePlaceCandidate(
+  place: Place,
+): PlaceCandidateValidation {
+  const errors: PlaceCandidateValidation = {}
+
+  if (!place.name.trim()) {
+    errors.name = "Ingresá el nombre del lugar"
+  }
+
+  if (!Number.isFinite(place.latitude)) {
+    errors.latitude = "Ingresá una latitud válida"
+  }
+
+  if (!Number.isFinite(place.longitude)) {
+    errors.longitude = "Ingresá una longitud válida"
+  }
+
+  return errors
+}
