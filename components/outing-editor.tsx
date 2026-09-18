@@ -81,54 +81,63 @@ export function OutingEditor() {
   }
 
   return (
-    <section className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-      <h1>Generador de salidas de trekking</h1>
+    <section className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mb-8">
+        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-700">Pircas Trek</p>
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">Generador de salidas de trekking</h1>
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">Completá los datos de la salida y revisá el mensaje antes de compartirlo.</p>
+      </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-start">
-        <form onSubmit={(e) => e.preventDefault()}>
-        <fieldset>
-          <legend>Salida</legend>
-          <label>
+        <form className="space-y-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6" onSubmit={(e) => e.preventDefault()}>
+        <fieldset className="space-y-4">
+          <legend className="text-lg font-semibold text-slate-950">Salida</legend>
+          <label className="block space-y-2 text-sm font-medium text-slate-800">
             Nombre de la salida
             <input
+              className={`w-full rounded-xl border bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:ring-2 ${validation.fieldErrors.title ? "border-red-300 focus:border-red-500 focus:ring-red-100" : "border-slate-300 focus:border-emerald-600 focus:ring-emerald-100"}`}
               value={event.title}
               onChange={(e) => updateEvent({ title: e.target.value })}
             />
-            {validation.fieldErrors.title && <span>{validation.fieldErrors.title}</span>}
+            {validation.fieldErrors.title && <span className="text-sm font-medium text-red-700">{validation.fieldErrors.title}</span>}
           </label>
         </fieldset>
 
-        <fieldset>
-          <legend>Encuentro</legend>
-          <label>
+        <fieldset className="space-y-4">
+          <legend className="text-lg font-semibold text-slate-950">Encuentro</legend>
+          <label className="block space-y-2 text-sm font-medium text-slate-800">
             Fecha de encuentro
             <input
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
               type="date"
               value={event.meeting.date}
               onChange={(e) => updateMeeting("date", e.target.value)}
             />
           </label>
-          <label>
+          <label className="block space-y-2 text-sm font-medium text-slate-800">
             Hora de encuentro
             <input
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
               type="time"
               value={event.meeting.time}
               onChange={(e) => updateMeeting("time", e.target.value)}
             />
           </label>
-          <label>
+          <label className="block space-y-2 text-sm font-medium text-slate-800">
             Lugar de encuentro
             <input
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
               value={event.meeting.location.placeName}
               onChange={(e) => updateMeeting("placeName", e.target.value)}
             />
             {validation.fieldErrors["meeting.location.placeName"] && (
-              <span>{validation.fieldErrors["meeting.location.placeName"]}</span>
+              <span className="text-sm font-medium text-red-700">{validation.fieldErrors["meeting.location.placeName"]}</span>
             )}
           </label>
-          <label>
+          <label className="block space-y-2 text-sm font-medium text-slate-800">
             Enlace de Google Maps del encuentro
             <input
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
               type="url"
               value={event.meeting.location.mapsUrl ?? ""}
               onChange={(e) => updateMeeting("mapsUrl", e.target.value)}
@@ -136,11 +145,12 @@ export function OutingEditor() {
           </label>
         </fieldset>
 
-        <fieldset>
-          <legend>Inicio y recorrido</legend>
-          <label>
+        <fieldset className="space-y-4">
+          <legend className="text-lg font-semibold text-slate-950">Inicio y recorrido</legend>
+          <label className="block space-y-2 text-sm font-medium text-slate-800">
             Fecha de inicio del trekking
             <input
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
               type="date"
               value={event.trekStart.date}
               onChange={(e) =>
@@ -151,9 +161,10 @@ export function OutingEditor() {
               }
             />
           </label>
-          <label>
+          <label className="block space-y-2 text-sm font-medium text-slate-800">
             Hora de inicio del trekking
             <input
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
               type="time"
               value={event.trekStart.time}
               onChange={(e) =>
@@ -164,24 +175,27 @@ export function OutingEditor() {
               }
             />
           </label>
-          <label>
+          <label className="block space-y-2 text-sm font-medium text-slate-800">
             Inicio del sendero
             <input
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
               value={event.trailhead.placeName}
               onChange={(e) => updateTrailhead("placeName", e.target.value)}
             />
           </label>
-          <label>
+          <label className="block space-y-2 text-sm font-medium text-slate-800">
             Enlace de Google Maps del sendero
             <input
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
               type="url"
               value={event.trailhead.mapsUrl ?? ""}
               onChange={(e) => updateTrailhead("mapsUrl", e.target.value)}
             />
           </label>
-          <label>
+          <label className="block space-y-2 text-sm font-medium text-slate-800">
             Distancia
             <input
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
               type="number"
               min="0"
               step="0.1"
@@ -189,12 +203,13 @@ export function OutingEditor() {
               onChange={(e) => updateRoute("distanceKm", e.target.value)}
             />
             {validation.fieldErrors["route.distanceKm"] && (
-              <span>{validation.fieldErrors["route.distanceKm"]}</span>
+              <span className="text-sm font-medium text-red-700">{validation.fieldErrors["route.distanceKm"]}</span>
             )}
           </label>
-          <label>
+          <label className="block space-y-2 text-sm font-medium text-slate-800">
             Desnivel positivo
             <input
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
               type="number"
               min="0"
               step="1"
@@ -202,11 +217,12 @@ export function OutingEditor() {
               onChange={(e) => updateRoute("elevationGainM", e.target.value)}
             />
           </label>
-          <fieldset>
-            <legend>Duración</legend>
-            <label>
+          <fieldset className="space-y-4">
+            <legend className="text-lg font-semibold text-slate-950">Duración</legend>
+            <label className="block space-y-2 text-sm font-medium text-slate-800">
               Horas
               <input
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
                 type="number"
                 min="0"
                 step="1"
@@ -218,9 +234,10 @@ export function OutingEditor() {
                 }}
               />
             </label>
-            <label>
+            <label className="block space-y-2 text-sm font-medium text-slate-800">
               Minutos
               <input
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
                 type="number"
                 min="0"
                 max="59"
@@ -235,9 +252,10 @@ export function OutingEditor() {
             </label>
           </fieldset>
 
-          <label>
+          <label className="block space-y-2 text-sm font-medium text-slate-800">
             Dificultad
             <select
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
               value={event.route.difficulty ?? ""}
               onChange={(e) =>
                 setEvent((current) => ({
@@ -257,35 +275,38 @@ export function OutingEditor() {
               ))}
             </select>
             {validation.fieldErrors["route.difficulty"] && (
-              <span>{validation.fieldErrors["route.difficulty"]}</span>
+              <span className="text-sm font-medium text-red-700">{validation.fieldErrors["route.difficulty"]}</span>
             )}
           </label>
         </fieldset>
 
-        <fieldset>
-          <legend>Responsables</legend>
-          <label>
+        <fieldset className="space-y-4">
+          <legend className="text-lg font-semibold text-slate-950">Responsables</legend>
+          <label className="block space-y-2 text-sm font-medium text-slate-800">
             Coordinador
             <input
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
               value={event.coordinator ?? ""}
               onChange={(e) => updateEvent({ coordinator: e.target.value })}
             />
           </label>
-          <label>
+          <label className="block space-y-2 text-sm font-medium text-slate-800">
             Conocedor del camino
             <input
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
               value={event.routeKnower ?? ""}
               onChange={(e) => updateEvent({ routeKnower: e.target.value })}
             />
           </label>
-          {validation.responsibleError && <p>{validation.responsibleError}</p>}
+          {validation.responsibleError && <p className="text-sm font-medium text-red-700">{validation.responsibleError}</p>}
         </fieldset>
 
-        <fieldset>
-          <legend>Requisitos</legend>
+        <fieldset className="space-y-4">
+          <legend className="text-lg font-semibold text-slate-950">Requisitos</legend>
           {DEFAULT_REQUIREMENTS.map((requirement) => (
             <label key={requirement}>
               <input
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
                 type="checkbox"
                 checked={event.requirements.includes(requirement)}
                 onChange={(e) =>
@@ -308,6 +329,7 @@ export function OutingEditor() {
             .map((requirement) => (
               <label key={requirement}>
                 <input
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
                   type="checkbox"
                   checked
                   onChange={(e) =>
@@ -325,14 +347,15 @@ export function OutingEditor() {
               </label>
             ))}
 
-          <label>
+          <label className="block space-y-2 text-sm font-medium text-slate-800">
             Agregar requisito
             <input
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
               value={customRequirement}
               onChange={(e) => setCustomRequirement(e.target.value)}
             />
           </label>
-          <button type="button" onClick={addRequirement}>
+          <button className="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-700" type="button" onClick={addRequirement}>
             Agregar
           </button>
         </fieldset>
