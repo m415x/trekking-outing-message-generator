@@ -92,6 +92,7 @@ export function mapOpenMeteoResponse(response: OpenMeteoResponse) {
 
 interface FetchResponse {
   ok: boolean
+  status?: number
   json(): Promise<unknown>
 }
 
@@ -108,6 +109,13 @@ export function createOpenMeteoProvider(
       const response = await fetcher(url.toString())
 
       if (!response.ok) {
+        if (response.status === 400) {
+          return {
+            status: "forecastUnavailable",
+            sunrise: { date: request.date, time: "" },
+            sunset: { date: request.date, time: "" },
+          }
+        }
         throw new Error("Open-Meteo request failed")
       }
 
