@@ -62,7 +62,29 @@ export function createOutingConditionsError(): OutingConditionsError {
 }
 
 function parseLocalMoment(moment: EventMoment): Date {
-  return new Date(`${moment.date}T${moment.time}:00`)
+  const match =
+    /^(\d{4})-(\d{2})-(\d{2})$/.exec(moment.date) &&
+    /^(\d{2}):(\d{2})$/.exec(moment.time)
+
+  if (!match) {
+    throw new Error("Invalid local moment")
+  }
+
+  const [year, month, day] = moment.date.split("-").map(Number)
+  const [hours, minutes] = moment.time.split(":").map(Number)
+  const value = new Date(year, month - 1, day, hours, minutes)
+
+  if (
+    value.getFullYear() !== year ||
+    value.getMonth() !== month - 1 ||
+    value.getDate() !== day ||
+    value.getHours() !== hours ||
+    value.getMinutes() !== minutes
+  ) {
+    throw new Error("Invalid local moment")
+  }
+
+  return value
 }
 
 function formatLocalMoment(value: Date): EventMoment {
@@ -82,6 +104,10 @@ export function calculateEstimatedFinish(
   trekStart: EventMoment,
   estimatedDurationMinutes: number,
 ): EventMoment {
+  if (!Number.isFinite(estimatedDurationMinutes) || estimatedDurationMinutes < 0) {
+    throw new Error("Invalid estimated duration")
+  }
+
   const finish = parseLocalMoment(trekStart)
   finish.setMinutes(finish.getMinutes() + estimatedDurationMinutes)
 
