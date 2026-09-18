@@ -96,7 +96,7 @@ test("returns available outing-window conditions with freshness metadata", async
     sunrise: { date: "2026-09-20", time: "07:12" },
     sunset: { date: "2026-09-20", time: "19:28" },
     weather: {
-      temperatureC: 15,
+      temperatureC: 20,
       precipitationMm: 0.5,
       windSpeedKmh: 16,
       windGustKmh: 28,
