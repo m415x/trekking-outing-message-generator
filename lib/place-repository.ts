@@ -22,6 +22,9 @@ function isPlace(value: unknown): value is Place {
   const candidate = value as Partial<Place>
   const route = candidate.route as Place["route"] | undefined
   const difficulties = new Set(["low", "moderate", "high", "veryHigh"])
+  const isOptionalFiniteNonNegativeNumber = (value: unknown) =>
+    value === undefined ||
+    (typeof value === "number" && Number.isFinite(value) && value >= 0)
 
   return (
     typeof candidate.id === "string" &&
@@ -34,8 +37,12 @@ function isPlace(value: unknown): value is Place {
     Number.isFinite(candidate.longitude) &&
     candidate.longitude >= -180 &&
     candidate.longitude <= 180 &&
+    (candidate.mapsUrl === undefined || typeof candidate.mapsUrl === "string") &&
     typeof route === "object" &&
     route !== null &&
+    isOptionalFiniteNonNegativeNumber(route.distanceKm) &&
+    isOptionalFiniteNonNegativeNumber(route.elevationGainM) &&
+    isOptionalFiniteNonNegativeNumber(route.estimatedDurationMinutes) &&
     (route.difficulty === undefined || difficulties.has(route.difficulty))
   )
 }
