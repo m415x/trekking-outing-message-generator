@@ -26,6 +26,31 @@ export interface Recommendations {
   equipment: EquipmentRecommendation[]
 }
 
+export interface RecommendationOverrides {
+  hydrationLiters?: number
+  rejectedEquipment?: string[]
+}
+
+export function applyRecommendationOverrides(
+  recommendations: Recommendations,
+  overrides: RecommendationOverrides,
+): Recommendations {
+  const rejectedEquipment = new Set(overrides.rejectedEquipment ?? [])
+
+  return {
+    hydration:
+      overrides.hydrationLiters === undefined
+        ? recommendations.hydration
+        : {
+            ...recommendations.hydration,
+            liters: overrides.hydrationLiters,
+          },
+    equipment: recommendations.equipment.filter(
+      ({ item }) => !rejectedEquipment.has(item),
+    ),
+  }
+}
+
 function hydrationRateLitersPerHour(input: RecommendationInput): number {
   const isHighDifficulty =
     input.difficulty === "high" || input.difficulty === "veryHigh"
