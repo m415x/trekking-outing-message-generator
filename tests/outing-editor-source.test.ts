@@ -83,3 +83,14 @@ test("removing a selected frequent place clears all management fields", async ()
     /setSelectedPlaceId\(nextSelection\)\s*setPlaceId\(""\)\s*setLatitude\(""\)\s*setLongitude\(""\)/,
   )
 })
+
+test("updating a selected frequent place refreshes the saved-place options", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /const \[placesRevision, setPlacesRevision\] = useState\(0\)/)
+  assert.match(source, /setPlacesRevision\(\(current\) => current \+ 1\)/)
+  assert.match(source, /void placesRevision/)
+})
