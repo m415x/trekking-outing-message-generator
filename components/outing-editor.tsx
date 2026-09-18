@@ -11,11 +11,13 @@ import {
 } from "../lib/trekking-event"
 import { addCustomRequirement, setEstimatedDuration, setMeetingDate } from "../lib/outing-editor-state"
 import { toggleRequirement } from "../lib/outing-form"
+import { getValidationPresentation } from "../lib/validation-presentation"
 import { MessagePreview } from "./message-preview"
 
 export function OutingEditor() {
   const [event, setEvent] = useState<TrekkingEvent>(() => createEmptyTrekkingEvent())
   const [customRequirement, setCustomRequirement] = useState("")
+  const validation = getValidationPresentation(event)
 
   function updateEvent(next: Partial<TrekkingEvent>) {
     setEvent((current) => ({ ...current, ...next }))
@@ -91,6 +93,7 @@ export function OutingEditor() {
               value={event.title}
               onChange={(e) => updateEvent({ title: e.target.value })}
             />
+            {validation.fieldErrors.title && <span>{validation.fieldErrors.title}</span>}
           </label>
         </fieldset>
 
@@ -118,6 +121,9 @@ export function OutingEditor() {
               value={event.meeting.location.placeName}
               onChange={(e) => updateMeeting("placeName", e.target.value)}
             />
+            {validation.fieldErrors["meeting.location.placeName"] && (
+              <span>{validation.fieldErrors["meeting.location.placeName"]}</span>
+            )}
           </label>
           <label>
             Enlace de Google Maps del encuentro
@@ -181,6 +187,9 @@ export function OutingEditor() {
               value={event.route.distanceKm ?? ""}
               onChange={(e) => updateRoute("distanceKm", e.target.value)}
             />
+            {validation.fieldErrors["route.distanceKm"] && (
+              <span>{validation.fieldErrors["route.distanceKm"]}</span>
+            )}
           </label>
           <label>
             Desnivel positivo
@@ -246,6 +255,9 @@ export function OutingEditor() {
                 </option>
               ))}
             </select>
+            {validation.fieldErrors["route.difficulty"] && (
+              <span>{validation.fieldErrors["route.difficulty"]}</span>
+            )}
           </label>
         </fieldset>
 
@@ -265,6 +277,7 @@ export function OutingEditor() {
               onChange={(e) => updateEvent({ routeKnower: e.target.value })}
             />
           </label>
+          {validation.responsibleError && <p>{validation.responsibleError}</p>}
         </fieldset>
 
         <fieldset>
