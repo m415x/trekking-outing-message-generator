@@ -98,3 +98,41 @@ test("rejects malformed Open-Meteo responses instead of leaking partial provider
     /invalid/i,
   )
 })
+
+
+test("Open-Meteo provider adapter fetches and maps an available forecast", async () => {
+  let requestedUrl = ""
+  const fetcher = async (url: string) => {
+    requestedUrl = url
+    return {
+      ok: true,
+      json: async () => ({
+        hourly: {
+          time: ["2026-09-20T08:00"],
+          temperature_2m: [12],
+          precipitation: [0],
+          wind_speed_10m: [10],
+          wind_gusts_10m: [18],
+        },
+        daily: {
+          time: ["2026-09-20"],
+          sunrise: ["2026-09-20T07:20"],
+          sunset: ["2026-09-20T19:25"],
+        },
+      }),
+    }
+  }
+
+  const provider = createOpenMeteoProvider(fetcher)
+  const result = await provider.loadForecast({
+    latitude: -31.53,
+    longitude: -68.52,
+    date: "2026-09-20",
+    trekStart: { date: "2026-09-20", time: "08:30" },
+    estimatedDurationMinutes: 180,
+  })
+
+  assert.match(requestedUrl, /latitude=-31\.53/)
+  assert.match(requestedUrl, /longitude=-68\.52/)
+  assert.equal(result.status, "available")
+})
