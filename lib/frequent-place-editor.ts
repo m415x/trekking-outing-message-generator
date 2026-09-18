@@ -42,3 +42,17 @@ export function selectFrequentPlace(
     event: result.event,
   }
 }
+
+export interface FrequentPlaceOption {
+  value: string
+  label: string
+}
+
+export function getFrequentPlaceOptions(
+  repository: PlaceRepository,
+): FrequentPlaceOption[] {
+  return repository.getAll().map((place) => ({
+    value: place.id,
+    label: place.name,
+  }))
+}
