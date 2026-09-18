@@ -137,3 +137,22 @@ test("rejects invalid temporal inputs instead of normalizing them silently", () 
     /invalid/i,
   )
 })
+
+
+test("calculates local moments without depending on daylight-saving transitions", () => {
+  assert.deepEqual(
+    calculateEstimatedFinish(
+      { date: "2026-11-01", time: "01:30" },
+      120,
+    ),
+    { date: "2026-11-01", time: "03:30" },
+  )
+
+  assert.equal(
+    calculateDaylightMarginMinutes(
+      { date: "2026-11-01", time: "01:30" },
+      { date: "2026-11-01", time: "03:30" },
+    ),
+    120,
+  )
+})
