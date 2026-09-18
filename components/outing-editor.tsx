@@ -698,9 +698,9 @@ export function OutingEditor({
         <fieldset className="space-y-4">
           <legend className="text-lg font-semibold text-slate-950">Requisitos</legend>
           {DEFAULT_REQUIREMENTS.map((requirement) => (
-            <label key={requirement}>
+            <label key={requirement} className="flex items-start gap-3">
               <input
-              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                className="mt-1 h-4 w-4 shrink-0"
                 type="checkbox"
                 checked={event.requirements.includes(requirement)}
                 onChange={(e) =>
@@ -721,9 +721,9 @@ export function OutingEditor({
           {event.requirements
             .filter((requirement) => !DEFAULT_REQUIREMENTS.includes(requirement as (typeof DEFAULT_REQUIREMENTS)[number]))
             .map((requirement) => (
-              <label key={requirement}>
+              <label key={requirement} className="flex items-start gap-3">
                 <input
-              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                  className="mt-1 h-4 w-4 shrink-0"
                   type="checkbox"
                   checked
                   onChange={(e) =>
