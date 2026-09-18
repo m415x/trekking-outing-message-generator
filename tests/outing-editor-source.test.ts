@@ -167,3 +167,20 @@ test("outing editor derives an explicit daylight warning state", async () => {
   assert.match(source, /Atención: la salida termina cerca del atardecer/)
   assert.match(source, /Atención: la salida termina después del atardecer/)
 })
+
+
+test("outing editor requests conditions from outing coordinates without provider coupling", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /conditionsLoader\?: OutingConditionsLoader/)
+  assert.match(source, /latitude: Number\(latitude\)/)
+  assert.match(source, /longitude: Number\(longitude\)/)
+  assert.match(source, /trekStart: event\.trekStart/)
+  assert.match(source, /estimatedDurationMinutes: event\.route\.estimatedDurationMinutes/)
+  assert.match(source, /conditionsLoader\.load/)
+  assert.doesNotMatch(source, /fetch\(/)
+  assert.doesNotMatch(source, /api\.open-meteo/)
+})
