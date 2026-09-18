@@ -70,6 +70,7 @@ test("includes hourly buckets that overlap the outing boundaries", () => {
     { date: "2026-09-20", time: "09:15" },
   )
 
+  assert.ok(weather)
   assert.equal(weather.precipitationMm, 0.5)
 })
 
