@@ -9,6 +9,7 @@ Documentation describes current contracts and durable rationale; Jira remains au
 ### Architecture
 
 - [`architecture/domain-model.md`](architecture/domain-model.md) — stable domain ownership boundaries, including `Place` versus `TrekkingEvent`.
+- [`architecture/trekking-event-and-message-generation.md`](architecture/trekking-event-and-message-generation.md) — concrete TOMG-3 event, validation, message-generation, preview, and sharing contract.
 - [`architecture/external-data-and-recommendations.md`](architecture/external-data-and-recommendations.md) — temporal external-data and advisory-recommendation boundaries.
 - [`architecture/validation.md`](architecture/validation.md) — baseline validation commands and evidence provenance rules.
 
