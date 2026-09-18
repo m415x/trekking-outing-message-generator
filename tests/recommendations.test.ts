@@ -21,6 +21,7 @@ test("creates explainable advisory recommendations independently from UI state",
 
   const recommendations = createRecommendations(input)
 
+  assert.ok(recommendations.hydration)
   assert.equal(recommendations.hydration.kind, "advisory")
   assert.equal(recommendations.hydration.liters, 1.5)
   assert.ok(recommendations.hydration.reasons.length > 0)
@@ -99,6 +100,7 @@ test("uses contextual hydration bands and rounds carried water upward to 0.5 L",
 
   for (const { name, input, expectedLiters } of cases) {
     const recommendation = createRecommendations(input).hydration
+    assert.ok(recommendation, name)
     assert.equal(recommendation.liters, expectedLiters, name)
     assert.ok(recommendation.reasons.length > 0, name)
   }
@@ -184,6 +186,9 @@ test("preserves explicit manual choices when recommendations are recalculated", 
 
   const resolved = applyRecommendationOverrides(recalculated, overrides)
 
+  assert.ok(initial.hydration)
+  assert.ok(recalculated.hydration)
+  assert.ok(resolved.hydration)
   assert.equal(initial.hydration.liters, 2.5)
   assert.equal(recalculated.hydration.liters, 4)
   assert.equal(resolved.hydration.liters, 2)
