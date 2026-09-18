@@ -225,3 +225,13 @@ test("outing editor presents editable and rejectable contextual recommendations"
   assert.match(source, /Rechazar/)
   assert.match(source, /Orientativo/)
 })
+
+
+test("outing editor passes resolved recommendations to the message preview", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /<MessagePreview event=\{event\} recommendations=\{recommendations\} \/>/)
+})
