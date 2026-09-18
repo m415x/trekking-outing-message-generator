@@ -54,37 +54,54 @@ export function OutingEditor({
   const [manualHydrationLiters, setManualHydrationLiters] = useState<number | undefined>()
   const [rejectHydration, setRejectHydration] = useState(false)
   const [rejectedEquipment, setRejectedEquipment] = useState<string[]>([])
-  const [loadedConditions, setLoadedConditions] = useState<OutingConditions | undefined>(
-    conditions,
-  )
-  const [conditionsLoading, setConditionsLoading] = useState(false)
+  const [loadedConditions, setLoadedConditions] = useState<{
+    requestKey: string
+    value: OutingConditions
+  }>()
   const frequentPlaceState = frequentPlaces?.load()
   const validation = getValidationPresentation(event)
-  const displayedConditions = conditions ?? loadedConditions
+  const latitudeNumber = Number(latitude)
+  const longitudeNumber = Number(longitude)
+  const coordinatesAreValid =
+    latitudeNumber >= -90 && latitudeNumber <= 90 &&
+    longitudeNumber >= -180 && longitudeNumber <= 180
+  const weatherRequestIsValid =
+    Boolean(conditionsLoader) &&
+    latitude !== "" &&
+    longitude !== "" &&
+    coordinatesAreValid &&
+    event.trekStart.date !== "" &&
+    event.trekStart.time !== "" &&
+    event.route.estimatedDurationMinutes !== undefined
+  const weatherRequestKey = weatherRequestIsValid
+    ? [
+        latitudeNumber,
+        longitudeNumber,
+        event.trekStart.date,
+        event.trekStart.time,
+        event.route.estimatedDurationMinutes,
+      ].join("|")
+    : undefined
+  const loadedConditionsMatchRequest =
+    weatherRequestKey !== undefined &&
+    loadedConditions?.requestKey === weatherRequestKey
+  const displayedConditions =
+    conditions ?? (loadedConditionsMatchRequest ? loadedConditions.value : undefined)
+  const conditionsLoading =
+    conditions === undefined &&
+    weatherRequestKey !== undefined &&
+    !loadedConditionsMatchRequest
 
   useEffect(() => {
-    const latitudeNumber = Number(latitude)
-    const longitudeNumber = Number(longitude)
-    const coordinatesAreValid =
-      latitudeNumber >= -90 && latitudeNumber <= 90 &&
-      longitudeNumber >= -180 && longitudeNumber <= 180
-
     if (
       !conditionsLoader ||
-      latitude === "" ||
-      longitude === "" ||
-      !coordinatesAreValid ||
-      event.trekStart.date === "" ||
-      event.trekStart.time === "" ||
+      weatherRequestKey === undefined ||
       event.route.estimatedDurationMinutes === undefined
     ) {
-      setLoadedConditions(undefined)
       return
     }
 
     let active = true
-    setConditionsLoading(true)
-    setLoadedConditions(undefined)
     conditionsLoader.load({
         latitude: latitudeNumber,
         longitude: longitudeNumber,
@@ -94,25 +111,29 @@ export function OutingEditor({
       })
       .then((nextConditions) => {
         if (active) {
-          setLoadedConditions(nextConditions)
-          setConditionsLoading(false)
+          setLoadedConditions({
+            requestKey: weatherRequestKey,
+            value: nextConditions,
+          })
         }
       })
       .catch(() => {
         if (active) {
-          setLoadedConditions({ forecastStatus: "error" })
-          setConditionsLoading(false)
+          setLoadedConditions({
+            requestKey: weatherRequestKey,
+            value: { forecastStatus: "error" },
+          })
         }
       })
 
     return () => {
       active = false
-      setConditionsLoading(false)
     }
   }, [
     conditionsLoader,
-    latitude,
-    longitude,
+    weatherRequestKey,
+    latitudeNumber,
+    longitudeNumber,
     event.trekStart,
     event.route.estimatedDurationMinutes,
   ])
