@@ -2,7 +2,11 @@
 
 import { useState } from "react"
 
-import type { FrequentPlaceEditorPort } from "../lib/frequent-place-editor"
+import {
+  createPlaceFromEvent,
+  validatePlaceCandidate,
+  type FrequentPlaceEditorPort,
+} from "../lib/frequent-place-editor"
 
 import {
   createEmptyTrekkingEvent,
@@ -24,6 +28,10 @@ export function OutingEditor({ frequentPlaces }: OutingEditorProps) {
   const [event, setEvent] = useState<TrekkingEvent>(() => createEmptyTrekkingEvent())
   const [customRequirement, setCustomRequirement] = useState("")
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null)
+  const [placeId, setPlaceId] = useState("")
+  const [latitude, setLatitude] = useState("")
+  const [longitude, setLongitude] = useState("")
+  const [placeError, setPlaceError] = useState("")
   const frequentPlaceState = frequentPlaces?.load()
   const validation = getValidationPresentation(event)
 
@@ -187,6 +195,86 @@ export function OutingEditor({ frequentPlaces }: OutingEditorProps) {
               ))}
             </select>
           </label>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <label className="block space-y-2 text-sm font-medium text-slate-800">
+              Latitud
+              <input
+                className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950"
+                type="number"
+                step="any"
+                value={latitude}
+                onChange={(e) => setLatitude(e.target.value)}
+              />
+            </label>
+            <label className="block space-y-2 text-sm font-medium text-slate-800">
+              Longitud
+              <input
+                className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950"
+                type="number"
+                step="any"
+                value={longitude}
+                onChange={(e) => setLongitude(e.target.value)}
+              />
+            </label>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                if (!frequentPlaces) return
+                const candidate = createPlaceFromEvent(event, {
+                  id: placeId.trim() || crypto.randomUUID(),
+                  latitude: latitude === "" ? Number.NaN : Number(latitude),
+                  longitude: longitude === "" ? Number.NaN : Number(longitude),
+                })
+                const errors = validatePlaceCandidate(candidate)
+                if (Object.keys(errors).length > 0) {
+                  setPlaceError(Object.values(errors)[0] ?? "")
+                  return
+                }
+                const result = frequentPlaces.save(candidate)
+                setSelectedPlaceId(result.selectedPlaceId)
+                setPlaceId(result.selectedPlaceId)
+                setPlaceError("")
+              }}
+            >
+              Guardar lugar
+            </button>
+            <button
+              type="button"
+              disabled={!selectedPlaceId}
+              onClick={() => {
+                if (!frequentPlaces || !selectedPlaceId) return
+                const candidate = createPlaceFromEvent(event, {
+                  id: selectedPlaceId,
+                  latitude: latitude === "" ? Number.NaN : Number(latitude),
+                  longitude: longitude === "" ? Number.NaN : Number(longitude),
+                })
+                const errors = validatePlaceCandidate(candidate)
+                if (Object.keys(errors).length > 0) {
+                  setPlaceError(Object.values(errors)[0] ?? "")
+                  return
+                }
+                frequentPlaces.update(candidate)
+                setPlaceError("")
+              }}
+            >
+              Actualizar lugar
+            </button>
+            <button
+              type="button"
+              disabled={!selectedPlaceId}
+              onClick={() => {
+                if (!frequentPlaces || !selectedPlaceId) return
+                const nextSelection = frequentPlaces.remove(selectedPlaceId, selectedPlaceId)
+                setSelectedPlaceId(nextSelection)
+                setPlaceId("")
+              }}
+            >
+              Eliminar lugar
+            </button>
+          </div>
+          {placeError && <p className="text-sm font-medium text-red-700">{placeError}</p>}
           <label className="block space-y-2 text-sm font-medium text-slate-800">
             Fecha de inicio del trekking
             <input
