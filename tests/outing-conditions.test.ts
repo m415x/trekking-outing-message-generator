@@ -53,3 +53,33 @@ test("keeps daylight calculations independent of the runtime timezone", () => {
     -30,
   )
 })
+
+
+test("defines provider-neutral weather and daylight data for an outing", async () => {
+  const { createAvailableOutingConditions } = await import("../lib/outing-conditions")
+
+  const conditions = createAvailableOutingConditions({
+    fetchedAt: "2026-09-18T15:00:00Z",
+    sunrise: { date: "2026-09-20", time: "07:15" },
+    sunset: { date: "2026-09-20", time: "19:30" },
+    weather: {
+      temperatureC: 18,
+      precipitationMm: 0.4,
+      windSpeedKmh: 22,
+      windGustKmh: 38,
+    },
+  })
+
+  assert.deepEqual(conditions, {
+    forecastStatus: "available",
+    fetchedAt: "2026-09-18T15:00:00Z",
+    sunrise: { date: "2026-09-20", time: "07:15" },
+    sunset: { date: "2026-09-20", time: "19:30" },
+    weather: {
+      temperatureC: 18,
+      precipitationMm: 0.4,
+      windSpeedKmh: 22,
+      windGustKmh: 38,
+    },
+  })
+})
