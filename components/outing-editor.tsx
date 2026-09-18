@@ -4,6 +4,7 @@ import { useState } from "react"
 
 import {
   createPlaceFromEvent,
+  getSelectedPlaceManagementFields,
   validatePlaceCandidate,
   type FrequentPlaceEditorPort,
 } from "../lib/frequent-place-editor"
@@ -33,6 +34,7 @@ export function OutingEditor({ frequentPlaces }: OutingEditorProps) {
   const [longitude, setLongitude] = useState("")
   const [placeError, setPlaceError] = useState("")
   const frequentPlaceState = frequentPlaces?.load()
+  void getSelectedPlaceManagementFields
   const validation = getValidationPresentation(event)
 
   function updateEvent(next: Partial<TrekkingEvent>) {
@@ -176,11 +178,16 @@ export function OutingEditor({ frequentPlaces }: OutingEditorProps) {
                   return
                 }
 
-                setEvent((current) => {
-                  const result = frequentPlaces.select(placeId, current)
-                  setSelectedPlaceId(result.selectedPlaceId)
-                  return result.event
-                })
+                const result = frequentPlaces.select(placeId, event)
+                setEvent(result.event)
+                setSelectedPlaceId(result.selectedPlaceId)
+
+                const managementFields = frequentPlaces.getManagementFields(placeId)
+                if (managementFields) {
+                  setPlaceId(managementFields.id)
+                  setLatitude(managementFields.latitude)
+                  setLongitude(managementFields.longitude)
+                }
               }}
             >
               <option value="">
