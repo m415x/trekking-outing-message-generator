@@ -21,6 +21,18 @@ When implemented, outing-window conditions should be preferred over unrelated da
 
 External data should expose freshness/provenance sufficiently for the UI to avoid presenting stale or unavailable forecast data as current fact.
 
+## Implemented TOMG-5 weather/daylight contract
+
+TOMG-5 implements provider-neutral outing conditions with three presentation states: available forecast, forecast unavailable, and provider/application error. Available conditions contain outing-window weather, sunrise/sunset, and a fetch timestamp; unavailable conditions retain sunrise/sunset when the provider supplies astronomical data.
+
+Open-Meteo is isolated behind an adapter. Requests use the outing trailhead coordinates and outing date; React UI consumes an `OutingConditionsLoader` rather than provider-specific request/response structures. HTTP/provider failures degrade without blocking manual outing editing.
+
+Hourly weather is summarized over buckets overlapping the trek-start-to-estimated-finish window. The summary uses maximum temperature, wind speed and gust, and summed precipitation. Estimated finish and daylight margin use local civil date/time arithmetic without treating those values as UTC instants.
+
+The current MVP daylight warning threshold is 60 minutes before sunset. A negative daylight margin is the explicit after-sunset state. This threshold is product behavior and should be changed deliberately with tests if future requirements change.
+
+Weather remains temporal and is not persisted into `Place`. Selecting a frequent place supplies reusable trailhead coordinates and route defaults; the current outing drives each weather request.
+
 ## Recommendations
 
 Recommendations are derived advice, not authoritative event state. They may use event choices, route information, weather/daylight data, and other inputs introduced by their owning story.
