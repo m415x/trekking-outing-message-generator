@@ -61,6 +61,9 @@ export function getFrequentPlaceOptions(
 export interface FrequentPlaceEditorPort {
   load(): FrequentPlaceEditorState
   select(placeId: string, event: TrekkingEvent): FrequentPlaceSelectionResult
+  save(place: Place): FrequentPlaceManagementResult
+  update(place: Place): FrequentPlaceManagementResult
+  remove(placeId: string, selectedPlaceId: string | null): string | null
 }
 
 export function createFrequentPlaceEditorPort(
@@ -69,6 +72,10 @@ export function createFrequentPlaceEditorPort(
   return {
     load: () => createFrequentPlaceEditorState(repository),
     select: (placeId, event) => selectFrequentPlace(repository, placeId, event),
+    save: (place) => saveFrequentPlace(repository, place),
+    update: (place) => updateFrequentPlace(repository, place),
+    remove: (placeId, selectedPlaceId) =>
+      removeFrequentPlace(repository, placeId, selectedPlaceId),
   }
 }
 
