@@ -103,3 +103,50 @@ test("uses contextual hydration bands and rounds carried water upward to 0.5 L",
     assert.ok(recommendation.reasons.length > 0, name)
   }
 })
+
+
+test("recommends contextual equipment from explicit weather and daylight rules", () => {
+  const headlamp = createRecommendations({
+    estimatedDurationMinutes: 180,
+    difficulty: "moderate",
+    daylightStatus: "approachingSunset",
+  }).equipment
+  assert.ok(headlamp.some(({ item }) => item === "Linterna frontal"))
+
+  const windProtection = createRecommendations({
+    estimatedDurationMinutes: 180,
+    difficulty: "moderate",
+    weather: {
+      temperatureC: 18,
+      precipitationMm: 0,
+      windSpeedKmh: 25,
+      windGustKmh: 40,
+    },
+  }).equipment
+  assert.ok(
+    windProtection.some(({ item }) => item === "Protección contra el viento"),
+  )
+
+  const sunProtection = createRecommendations({
+    estimatedDurationMinutes: 180,
+    difficulty: "moderate",
+    weather: {
+      temperatureC: 25,
+      precipitationMm: 0,
+      windSpeedKmh: 5,
+      windGustKmh: 10,
+    },
+  }).equipment
+  assert.ok(
+    sunProtection.some(({ item }) => item === "Protección solar"),
+  )
+
+  for (const recommendation of [
+    ...headlamp,
+    ...windProtection,
+    ...sunProtection,
+  ]) {
+    assert.equal(recommendation.kind, "advisory")
+    assert.ok(recommendation.reasons.length > 0)
+  }
+})
