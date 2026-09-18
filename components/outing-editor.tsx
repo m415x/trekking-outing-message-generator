@@ -361,7 +361,7 @@ export function OutingEditor({ frequentPlaces }: OutingEditorProps) {
                 type="number"
                 min="0"
                 step="1"
-                defaultValue="0"
+                value={Math.floor((event.route.estimatedDurationMinutes ?? 0) / 60)}
                 onChange={(e) => {
                   const hours = Number(e.target.value)
                   const minutes = (event.route.estimatedDurationMinutes ?? 0) % 60
@@ -377,7 +377,7 @@ export function OutingEditor({ frequentPlaces }: OutingEditorProps) {
                 min="0"
                 max="59"
                 step="1"
-                defaultValue="0"
+                value={(event.route.estimatedDurationMinutes ?? 0) % 60}
                 onChange={(e) => {
                   const minutes = Number(e.target.value)
                   const hours = Math.floor((event.route.estimatedDurationMinutes ?? 0) / 60)
