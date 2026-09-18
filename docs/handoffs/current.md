@@ -2,37 +2,40 @@
 
 ## Reliable starting point
 
-TOMG-4 implements reusable frequent places and local client persistence on `tomg-4-manage-frequent-places`. Reconstruct future work from `AGENTS.md`, current code/tests, durable architecture/product docs, and Jira; this handoff is a lower-authority operational summary.
+TOMG-5 is implemented on `tomg-5-add-weather-daylight` and is in closure/reconciliation. Reconstruct future work from `AGENTS.md`, current code/tests, durable architecture/product docs, and Jira; this handoff is a lower-authority operational summary.
 
-TOMG-3 remains the baseline for manual `TrekkingEvent` editing, validation, preview, and deterministic WhatsApp message generation. TOMG-4 adds reusable `Place` data without merging it into dated outing state.
+TOMG-4 is complete and merged into `dev`. Its preserved story branch is `tomg-4-manage-frequent-places`; the merge commit on `dev` is `afc7d72d1567b4afcb8f16aa9eeca21adc96a83c`. Jira TOMG-4 and children TOMG-18 through TOMG-23 are Listo.
 
-## Implemented TOMG-4 contract
+## Implemented TOMG-5 contract
 
-- `Place` is separate from `TrekkingEvent` and represents trek/trailhead geography plus reusable route defaults.
-- A place stores stable `id`, name, latitude/longitude, optional Maps URL, and optional distance, elevation gain, estimated duration, and difficulty.
-- Selecting a saved place copies reusable values into the current event snapshot without changing meeting data, dates/times, requirements, Coordinator, or Conocedor del camino.
-- Later outing edits remain event-local. Saved place data changes only through explicit save/update/remove actions.
-- `PlaceRepository` isolates consumers from persistence; the MVP implementation uses `localStorage` behind that boundary.
-- Persistence reads are defensive against unavailable storage, malformed JSON, malformed entries, invalid coordinate ranges, invalid route values, and invalid difficulty values.
-- Browser storage composition is deferred until after client mount and exposes a loading state while the persistence port is initialized.
-- The editor supports empty state, selection/prefill, explicit create/update/remove, stable selected-place coordinates, coherent deselection/removal state, and option refresh after update.
+- Weather/daylight requests use the outing trailhead coordinates and outing date, not a hard-coded city or meeting point.
+- Open-Meteo is behind a provider adapter; React UI consumes a provider-neutral `OutingConditionsLoader`.
+- Conditions distinguish available forecast, forecast unavailable, and provider/application error.
+- Available weather summarizes hourly buckets overlapping trek start through estimated finish: maximum temperature, wind speed and gust, plus summed precipitation.
+- Sunrise/sunset remain available in the unavailable-forecast state when supplied by the provider.
+- Estimated finish and daylight margin are derived from local civil moments and route duration.
+- The MVP “approaching sunset” warning threshold is 60 minutes; a negative margin is the after-sunset state.
+- The UI shows weather values, freshness, sunrise/sunset, estimated finish, daylight margin, and explicit near/after-sunset warnings.
+- Weather is temporal external data and is not persisted as stable `Place` truth.
+- Optional external-data failure does not block the manual outing workflow.
+- The production composition is `createOpenMeteoProvider()` → `loadOutingConditions()` → provider-neutral editor loader.
 
-See `docs/architecture/frequent-places-and-local-persistence.md` for the concrete contract.
+See `docs/architecture/external-data-and-recommendations.md` for the current contract.
 
-## Human-reported execution evidence
+## Development evidence
 
-TOMG-4 was developed remote-first with focused RED/GREEN cycles executed locally by the human. Repository, domain, editor, persistence-lifecycle, defensive-storage, and management behavior were exercised during implementation.
+TOMG-5 was developed remote-first with focused RED/GREEN cycles. Focused test execution was performed locally by the human and reported back to the agent; the repository connector did not execute those tests.
 
-During TOMG-23 reconciliation, the human reported `test:places` and `test:editor` GREEN after focused-suite scripts were added. A pre-existing standalone TypeScript blocker in `app/layout.tsx` was isolated and corrected by replacing the generated-global `LayoutProps` dependency with an explicit `ReactNode` prop type. Subsequent focused editor and TypeScript checks were reported GREEN.
+Human-reported focused GREEN evidence includes temporal calculations, provider-neutral condition states, Open-Meteo request/response mapping and provider adapter behavior, outing-window weather selection, conditions-service degradation, UI presentation/warnings, stale-response protection, and production composition.
 
-The complete TOMG-4 closure gate was then run locally on 2026-09-18. The human reported all four commands GREEN: `pnpm lint`, `pnpm tsc`, `pnpm test`, and `pnpm build`. This is human-reported execution evidence; the remote connector did not execute these commands.
+The complete TOMG-5 closure gate has not yet been recorded. Before closing the story, run and record `pnpm lint`, `pnpm tsc`, `pnpm test`, and `pnpm build` against the final story branch.
 
 ## Deferred by design
 
-- TOMG-5 owns weather/daylight provider integration, temporal calculations, outing-window conditions, estimated finish, and daylight margin. It may consume the saved trailhead coordinates introduced by TOMG-4.
 - TOMG-6 owns advisory hydration/equipment recommendations.
 - Database/backend persistence, authentication, multi-user synchronization, and weather-history storage remain outside the MVP.
+- Provider/API behavior may evolve; provider-specific changes must remain behind the adapter boundary.
 
 ## Closure state
 
-TOMG-4 acceptance criteria are implemented and reconciled against current code/tests and durable architecture. At the time of this handoff update, Jira child issues TOMG-18 through TOMG-23 had not yet been transitioned and TOMG-4 remained En curso. Jira reconciliation and merge to `dev` require explicit human approval. Preserve the story branch after merge.
+TOMG-24 through TOMG-28 are implemented; TOMG-24 through TOMG-28 are Listo in Jira. TOMG-29 owns final documentation reconciliation, validation evidence, handoff, and story closure. Do not mark TOMG-5 complete or merge it to `dev` until the full closure gate is human-reported GREEN and final Jira/review reconciliation is complete. Preserve the story branch after merge.
