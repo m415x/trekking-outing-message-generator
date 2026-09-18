@@ -52,3 +52,22 @@ export function addCustomRequirement(
     requirements: [...current.requirements, normalized],
   }
 }
+
+export function setMeetingDate(
+  current: TrekkingEvent,
+  date: string,
+): TrekkingEvent {
+  return {
+    ...current,
+    meeting: {
+      ...current.meeting,
+      date,
+    },
+    trekStart: current.trekStart.date
+      ? current.trekStart
+      : {
+          ...current.trekStart,
+          date,
+        },
+  }
+}
