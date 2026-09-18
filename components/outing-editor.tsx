@@ -21,6 +21,7 @@ import { getValidationPresentation } from "../lib/validation-presentation"
 import {
   calculateDaylightMarginMinutes,
   calculateEstimatedFinish,
+  getDaylightStatus,
   type OutingConditions,
 } from "../lib/outing-conditions"
 import { MessagePreview } from "./message-preview"
@@ -55,6 +56,10 @@ export function OutingEditor({ frequentPlaces, conditions }: OutingEditorProps) 
     conditions &&
     conditions.forecastStatus !== "error"
       ? calculateDaylightMarginMinutes(estimatedFinish, conditions.sunset)
+      : undefined
+  const daylightStatus =
+    daylightMarginMinutes !== undefined
+      ? getDaylightStatus(daylightMarginMinutes, 60)
       : undefined
 
   function updateEvent(next: Partial<TrekkingEvent>) {
@@ -198,6 +203,12 @@ export function OutingEditor({ frequentPlaces, conditions }: OutingEditorProps) 
               {daylightMarginMinutes !== undefined && (
                 <p>Margen de luz: {daylightMarginMinutes} min</p>
               )}
+              {daylightStatus === "approachingSunset" && (
+                <p>Atención: la salida termina cerca del atardecer</p>
+              )}
+              {daylightStatus === "afterSunset" && (
+                <p>Atención: la salida termina después del atardecer</p>
+              )}
             </div>
           )}
           {conditions?.forecastStatus === "unavailable" && (
@@ -208,6 +219,12 @@ export function OutingEditor({ frequentPlaces, conditions }: OutingEditorProps) 
               {estimatedFinish && <p>Fin estimado: {estimatedFinish.time}</p>}
               {daylightMarginMinutes !== undefined && (
                 <p>Margen de luz: {daylightMarginMinutes} min</p>
+              )}
+              {daylightStatus === "approachingSunset" && (
+                <p>Atención: la salida termina cerca del atardecer</p>
+              )}
+              {daylightStatus === "afterSunset" && (
+                <p>Atención: la salida termina después del atardecer</p>
               )}
             </div>
           )}
