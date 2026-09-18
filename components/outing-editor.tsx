@@ -279,6 +279,8 @@ export function OutingEditor({ frequentPlaces }: OutingEditorProps) {
                 const nextSelection = frequentPlaces.remove(selectedPlaceId, selectedPlaceId)
                 setSelectedPlaceId(nextSelection)
                 setPlaceId("")
+                setLatitude("")
+                setLongitude("")
               }}
             >
               Eliminar lugar
