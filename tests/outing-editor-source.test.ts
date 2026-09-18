@@ -430,3 +430,20 @@ test("duration controls share a compact responsive row", async () => {
     /<legend[^>]*>Duración<\/legend>\s*<div className="grid grid-cols-2 gap-3">[\s\S]*?Horas[\s\S]*?Minutos[\s\S]*?<\/div>/,
   )
 })
+
+
+test("recommendation actions provide full-width mobile touch targets", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(
+    source,
+    /<button\s+className="w-full rounded-xl border border-slate-300[^"]*sm:w-auto"\s+type="button"\s+onClick=\{\(\) => setRejectHydration/,
+  )
+  assert.match(
+    source,
+    /recommendations\.equipment\.map[\s\S]*?<button\s+className="w-full rounded-xl border border-slate-300[^"]*sm:w-auto"\s+type="button"/,
+  )
+})
