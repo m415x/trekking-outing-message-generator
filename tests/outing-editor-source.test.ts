@@ -184,3 +184,15 @@ test("outing editor requests conditions from outing coordinates without provider
   assert.doesNotMatch(source, /fetch\(/)
   assert.doesNotMatch(source, /api\.open-meteo/)
 })
+
+
+test("outing editor ignores stale conditions responses after outing inputs change", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /let active = true/)
+  assert.match(source, /if \(active\) setLoadedConditions\(nextConditions\)/)
+  assert.match(source, /active = false/)
+})
