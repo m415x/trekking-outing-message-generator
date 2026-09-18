@@ -15,6 +15,7 @@ import {
   removeFrequentPlace,
   createPlaceFromEvent,
   validatePlaceCandidate,
+  getSelectedPlaceManagementFields,
 } from "../lib/frequent-place-editor"
 import { createEmptyTrekkingEvent } from "../lib/trekking-event"
 
@@ -196,4 +197,19 @@ test("place candidate validation requires a name and finite coordinates", () => 
     validatePlaceCandidate({ ...place, longitude: Number.POSITIVE_INFINITY }),
     { longitude: "Ingresá una longitud válida" },
   )
+})
+
+test("selected place exposes its stable id and coordinates for explicit updates", () => {
+  const repository = new StubPlaceRepository([place])
+
+  assert.deepEqual(
+    getSelectedPlaceManagementFields(repository, place.id),
+    {
+      id: place.id,
+      latitude: String(place.latitude),
+      longitude: String(place.longitude),
+    },
+  )
+
+  assert.equal(getSelectedPlaceManagementFields(repository, "missing"), null)
 })
