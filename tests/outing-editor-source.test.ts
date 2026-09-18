@@ -283,3 +283,16 @@ test("clears previous external conditions while a new valid request is loading",
     /let active = true\s*setLoadedConditions\(undefined\)\s*conditionsLoader\.load/,
   )
 })
+
+
+test("degrades rejected weather loads to an explicit error state", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(
+    source,
+    /\.catch\(\(\) => \{\s*if \(active\) setLoadedConditions\(\{ forecastStatus: "error" \}\)\s*\}\)/,
+  )
+})
