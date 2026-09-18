@@ -107,3 +107,33 @@ test("represents forecast unavailability separately from provider failure", asyn
     forecastStatus: "error",
   })
 })
+
+
+test("rejects invalid temporal inputs instead of normalizing them silently", () => {
+  assert.throws(
+    () =>
+      calculateEstimatedFinish(
+        { date: "2026-02-30", time: "08:00" },
+        60,
+      ),
+    /invalid/i,
+  )
+
+  assert.throws(
+    () =>
+      calculateEstimatedFinish(
+        { date: "2026-09-20", time: "25:00" },
+        60,
+      ),
+    /invalid/i,
+  )
+
+  assert.throws(
+    () =>
+      calculateEstimatedFinish(
+        { date: "2026-09-20", time: "08:00" },
+        -1,
+      ),
+    /invalid/i,
+  )
+})
