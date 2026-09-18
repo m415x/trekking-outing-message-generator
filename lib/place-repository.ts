@@ -18,12 +18,12 @@ export class LocalStoragePlaceRepository implements PlaceRepository {
   constructor(private readonly storage: StorageLike) {}
 
   getAll(): Place[] {
-    const raw = this.storage.getItem(STORAGE_KEY)
-    if (!raw) {
-      return []
-    }
-
     try {
+      const raw = this.storage.getItem(STORAGE_KEY)
+      if (!raw) {
+        return []
+      }
+
       const parsed = JSON.parse(raw)
       return Array.isArray(parsed) ? parsed : []
     } catch {
