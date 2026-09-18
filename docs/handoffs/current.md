@@ -28,7 +28,7 @@ TOMG-5 was developed remote-first with focused RED/GREEN cycles. Focused test ex
 
 Human-reported focused GREEN evidence includes temporal calculations, provider-neutral condition states, Open-Meteo request/response mapping and provider adapter behavior, outing-window weather selection, conditions-service degradation, UI presentation/warnings, stale-response protection, and production composition.
 
-The complete TOMG-5 closure gate has not yet been recorded. Before closing the story, run and record `pnpm lint`, `pnpm tsc`, `pnpm test`, and `pnpm build` against the final story branch.
+The complete TOMG-5 closure gate was run locally on 2026-09-18. The human reported GREEN for `pnpm lint`, `pnpm tsc`, `pnpm test`, and `pnpm build`. During the gate, `pnpm tsc` initially exposed a test-only optional-value narrowing issue in `tests/outing-weather.test.ts`; after adding the explicit assertion, TypeScript, the full test suite, and the production build were reported GREEN. This is human-reported execution evidence; the remote connector did not execute these commands.
 
 ## Deferred by design
 
@@ -38,4 +38,4 @@ The complete TOMG-5 closure gate has not yet been recorded. Before closing the s
 
 ## Closure state
 
-TOMG-24 through TOMG-28 are implemented; TOMG-24 through TOMG-28 are Listo in Jira. TOMG-29 owns final documentation reconciliation, validation evidence, handoff, and story closure. Do not mark TOMG-5 complete or merge it to `dev` until the full closure gate is human-reported GREEN and final Jira/review reconciliation is complete. Preserve the story branch after merge.
+TOMG-24 through TOMG-28 are implemented and Listo in Jira. TOMG-29 documentation reconciliation and the full human-reported closure gate are complete. Final Jira reconciliation and review/merge of TOMG-5 to `dev` remain; preserve the story branch after merge.
