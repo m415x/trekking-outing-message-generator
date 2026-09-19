@@ -31,3 +31,16 @@ test("persistent editor does not set component state from an effect", async () =
 
   assert.doesNotMatch(source, /setFrequentPlaces\(/)
 })
+
+
+test("frequent-place initialization exposes an accessible loading status", async () => {
+  const source = await readFile(
+    new URL("../components/persistent-outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(
+    source,
+    /<p role="status" aria-live="polite">Cargando lugares frecuentes…<\/p>/,
+  )
+})
