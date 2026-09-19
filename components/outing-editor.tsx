@@ -290,10 +290,12 @@ export function OutingEditor({
             <input
               className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
               value={event.meeting.location.placeName}
+              aria-invalid={Boolean(validation.fieldErrors["meeting.location.placeName"])}
+              aria-describedby={validation.fieldErrors["meeting.location.placeName"] ? "meeting-place-error" : undefined}
               onChange={(e) => updateMeeting("placeName", e.target.value)}
             />
             {validation.fieldErrors["meeting.location.placeName"] && (
-              <span className="text-sm font-medium text-red-700">{validation.fieldErrors["meeting.location.placeName"]}</span>
+              <span id="meeting-place-error" role="alert" className="text-sm font-medium text-red-700">{validation.fieldErrors["meeting.location.placeName"]}</span>
             )}
           </label>
           <label className="block space-y-2 text-sm font-medium text-slate-800">
@@ -544,10 +546,12 @@ export function OutingEditor({
               min="0"
               step="0.1"
               value={event.route.distanceKm ?? ""}
+              aria-invalid={Boolean(validation.fieldErrors["route.distanceKm"])}
+              aria-describedby={validation.fieldErrors["route.distanceKm"] ? "distance-error" : undefined}
               onChange={(e) => updateRoute("distanceKm", e.target.value)}
             />
             {validation.fieldErrors["route.distanceKm"] && (
-              <span className="text-sm font-medium text-red-700">{validation.fieldErrors["route.distanceKm"]}</span>
+              <span id="distance-error" role="alert" className="text-sm font-medium text-red-700">{validation.fieldErrors["route.distanceKm"]}</span>
             )}
           </label>
           <label className="block space-y-2 text-sm font-medium text-slate-800">
@@ -603,6 +607,8 @@ export function OutingEditor({
             <select
               className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
               value={event.route.difficulty ?? ""}
+              aria-invalid={Boolean(validation.fieldErrors["route.difficulty"])}
+              aria-describedby={validation.fieldErrors["route.difficulty"] ? "difficulty-error" : undefined}
               onChange={(e) =>
                 setEvent((current) => ({
                   ...current,
@@ -621,7 +627,7 @@ export function OutingEditor({
               ))}
             </select>
             {validation.fieldErrors["route.difficulty"] && (
-              <span className="text-sm font-medium text-red-700">{validation.fieldErrors["route.difficulty"]}</span>
+              <span id="difficulty-error" role="alert" className="text-sm font-medium text-red-700">{validation.fieldErrors["route.difficulty"]}</span>
             )}
           </label>
         </fieldset>
@@ -690,6 +696,7 @@ export function OutingEditor({
             <input
               className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
               value={event.coordinator ?? ""}
+              aria-describedby={validation.responsibleError ? "responsible-error" : undefined}
               onChange={(e) => updateEvent({ coordinator: e.target.value })}
             />
           </label>
@@ -698,10 +705,11 @@ export function OutingEditor({
             <input
               className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
               value={event.routeKnower ?? ""}
+              aria-describedby={validation.responsibleError ? "responsible-error" : undefined}
               onChange={(e) => updateEvent({ routeKnower: e.target.value })}
             />
           </label>
-          {validation.responsibleError && <p className="text-sm font-medium text-red-700">{validation.responsibleError}</p>}
+          {validation.responsibleError && <p id="responsible-error" role="alert" className="text-sm font-medium text-red-700">{validation.responsibleError}</p>}
         </fieldset>
 
         <fieldset className="space-y-4">
