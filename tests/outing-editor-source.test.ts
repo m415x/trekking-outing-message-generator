@@ -580,7 +580,10 @@ test("equipment rejection actions have recommendation-specific accessible names"
 
 
 test("TOMG-7 keeps weather location simple by default and exposes coordinates only as an advanced option", async () => {
-  const source = await readFile(\n    new URL("../components/outing-editor.tsx", import.meta.url),\n    "utf8",\n  )
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
 
   assert.match(source, /Ubicación para clima y luz solar/)
   assert.match(source, /Departamento de San Juan/)
@@ -589,7 +592,10 @@ test("TOMG-7 keeps weather location simple by default and exposes coordinates on
 })
 
 test("TOMG-7 places the trailhead name before frequent-place management actions", async () => {
-  const source = await readFile(\n    new URL("../components/outing-editor.tsx", import.meta.url),\n    "utf8",\n  )
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
 
   const trailhead = source.indexOf("Inicio del sendero")
   const save = source.indexOf("Guardar lugar")
