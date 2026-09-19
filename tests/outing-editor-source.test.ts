@@ -637,3 +637,16 @@ test("TOMG-7 keeps rejected contextual equipment visible and allows restoring it
   assert.match(source, /line-through/)
   assert.match(source, /Restaurar/)
 })
+
+
+test("TOMG-7 provides a clipboard fallback and copy feedback", async () => {
+  const source = await readFile(
+    new URL("../components/message-preview.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /navigator\.clipboard/)
+  assert.match(source, /document\.execCommand\("copy"\)/)
+  assert.match(source, /Mensaje copiado/)
+  assert.match(source, /No se pudo copiar/)
+})
