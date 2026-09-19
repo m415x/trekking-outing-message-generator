@@ -1,5 +1,7 @@
 "use client"
 
+import { useState } from "react"
+
 import type { TrekkingEvent } from "../lib/trekking-event"
 import type { Recommendations } from "../lib/recommendations"
 import type { OutingConditions } from "../lib/outing-conditions"
@@ -9,19 +11,51 @@ import { generateWhatsAppMessage } from "../lib/whatsapp-message"
 interface MessagePreviewProps {
   event: TrekkingEvent
   recommendations?: Recommendations
+  conditions?: OutingConditions
 }
 
-export function MessagePreview({ event, recommendations }: MessagePreviewProps) {
-  const { message, canShare } = getSharingState(event, recommendations)
+export function MessagePreview({
+  event,
+  recommendations,
+  conditions,
+}: MessagePreviewProps) {
+  const { message, canShare, validation } = getSharingState(event, recommendations)
+  const previewMessage = validation.isValid
+    ? generateWhatsAppMessage(event, recommendations, conditions)
+    : message
+  const [copyStatus, setCopyStatus] = useState("")
 
   async function copyMessage() {
     if (!canShare) return
-    await navigator.clipboard.writeText(previewMessage)
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(previewMessage)
+      } else {
+        const textarea = document.createElement("textarea")
+        textarea.value = previewMessage
+        textarea.setAttribute("readonly", "")
+        textarea.style.position = "fixed"
+        textarea.style.opacity = "0"
+        document.body.appendChild(textarea)
+        textarea.select()
+        const copied = document.execCommand("copy")
+        textarea.remove()
+        if (!copied) throw new Error("Copy command failed")
+      }
+      setCopyStatus("Mensaje copiado")
+    } catch {
+      setCopyStatus("No se pudo copiar")
+    }
   }
 
   function openWhatsApp() {
     if (!canShare) return
-    window.open(`https://wa.me/?text=${encodeURIComponent(previewMessage)}`, "_blank", "noopener,noreferrer")
+    window.open(
+      `https://wa.me/?text=${encodeURIComponent(previewMessage)}`,
+      "_blank",
+      "noopener,noreferrer",
+    )
   }
 
   return (
@@ -37,6 +71,7 @@ export function MessagePreview({ event, recommendations }: MessagePreviewProps) 
           Abrir WhatsApp
         </button>
       </div>
+      {copyStatus && <p className="mt-3 text-sm text-slate-600" role="status">{copyStatus}</p>}
     </section>
   )
 }
