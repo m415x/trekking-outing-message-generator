@@ -81,6 +81,8 @@ test("returns available outing-window conditions with freshness metadata", async
           {
             moment: { date: "2026-09-20", time: "10:00" },
             temperatureC: 20,
+      temperatureMinC: 12,
+      temperatureMaxC: 20,
             precipitationMm: 0,
             windSpeedKmh: 8,
             windGustKmh: 12,
@@ -99,6 +101,7 @@ test("returns available outing-window conditions with freshness metadata", async
       temperatureC: 20,
       precipitationMm: 0.5,
       windSpeedKmh: 16,
+      windDirectionDegrees: undefined,
       windGustKmh: 28,
     },
   })
