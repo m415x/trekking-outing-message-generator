@@ -604,3 +604,23 @@ test("TOMG-7 places the trailhead name before frequent-place management actions"
   assert.ok(save >= 0)
   assert.ok(trailhead < save)
 })
+
+
+test("TOMG-7 offers all San Juan departments as simple weather locations", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  for (const department of [
+    "Albardón", "Angaco", "Calingasta", "Capital", "Caucete",
+    "Chimbas", "Iglesia", "Jáchal", "9 de Julio", "Pocito",
+    "Rawson", "Rivadavia", "San Martín", "Santa Lucía", "Sarmiento",
+    "Ullum", "Valle Fértil", "25 de Mayo", "Zonda",
+  ]) {
+    assert.match(source, new RegExp(department))
+  }
+  assert.match(source, /SAN_JUAN_WEATHER_LOCATIONS/)
+  assert.match(source, /setLatitude\(String\(location\.latitude\)\)/)
+  assert.match(source, /setLongitude\(String\(location\.longitude\)\)/)
+})
