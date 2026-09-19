@@ -415,6 +415,7 @@ export function OutingEditor({
                 type="number"
                 step="any"
                 value={latitude}
+                aria-describedby={placeError ? "place-error" : undefined}
                 onChange={(e) => setLatitude(e.target.value)}
               />
             </label>
@@ -425,6 +426,7 @@ export function OutingEditor({
                 type="number"
                 step="any"
                 value={longitude}
+                aria-describedby={placeError ? "place-error" : undefined}
                 onChange={(e) => setLongitude(e.target.value)}
               />
             </label>
@@ -492,7 +494,7 @@ export function OutingEditor({
               Eliminar lugar
             </button>
           </div>
-          {placeError && <p className="text-sm font-medium text-red-700">{placeError}</p>}
+          {placeError && <p id="place-error" role="alert" className="text-sm font-medium text-red-700">{placeError}</p>}
           <label className="block space-y-2 text-sm font-medium text-slate-800">
             Fecha de inicio del trekking
             <input
