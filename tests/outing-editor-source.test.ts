@@ -444,7 +444,7 @@ test("recommendation actions provide full-width mobile touch targets", async () 
   )
   assert.match(
     source,
-    /suggestedRecommendations\.equipment\.map[\s\S]*?<button\s+className="w-full rounded-xl border border-slate-300[^"]*sm:w-auto[^"]*"\s+type="button"/,
+    /suggestedRecommendations\\?\\.equipment\\.map[\s\S]*?<button\s+className="w-full rounded-xl border border-slate-300[^"]*sm:w-auto[^"]*"\s+type="button"/,
   )
 })
 
@@ -632,7 +632,7 @@ test("TOMG-7 keeps rejected contextual equipment visible and allows restoring it
     "utf8",
   )
 
-  assert.match(source, /suggestedRecommendations\.equipment\.map/)
+  assert.match(source, /suggestedRecommendations\\?\\.equipment\\.map/)
   assert.match(source, /rejectedEquipment\.includes\(recommendation\.item\)/)
   assert.match(source, /line-through/)
   assert.match(source, /Restaurar/)
