@@ -551,3 +551,16 @@ test("all editor action buttons expose explicit keyboard focus styling", async (
     assert.match(button, /focus-visible:ring-2/)
   }
 })
+
+
+test("place save action is disabled when persistence is unavailable", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(
+    source,
+    /Guardar lugar[\s\S]*?disabled=\{!frequentPlaces\}/,
+  )
+})
