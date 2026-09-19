@@ -1,6 +1,7 @@
 import type { Difficulty, TrekkingEvent } from "./trekking-event"
 import { DIFFICULTIES } from "./trekking-event"
-import type { Recommendations } from "./recommendations"\nimport type { OutingConditions } from "./outing-conditions"
+import type { Recommendations } from "./recommendations"
+import type { OutingConditions } from "./outing-conditions"
 
 function formatSpanishDate(date: string): string {
   const [year, month, day] = date.split("-").map(Number)
