@@ -115,5 +115,10 @@ test("shares the same resolved recommendations that the user accepted", async ()
   assert.equal(state.canShare, true)
   assert.match(state.message, /Agua orientativa: 2 L/)
   assert.match(state.message, /Protección contra el viento/)
-  assert.doesNotMatch(state.message, /💡 \*Recomendaciones para la salida\*[\s\S]*?▪️ Protección solar/)
+  const recommendationsSection = state.message
+    .split("\\n\\n")
+    .find((section) => section.startsWith("💡 *Recomendaciones para la salida*"))
+
+  assert.ok(recommendationsSection)
+  assert.doesNotMatch(recommendationsSection, /Protección solar/)
 })
