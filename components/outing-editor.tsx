@@ -70,7 +70,7 @@ export function OutingEditor({ frequentPlaces, conditions, conditionsLoader }: O
   const [weatherLocationMode, setWeatherLocationMode] = useState('department')
   const [weatherDepartment, setWeatherDepartment] = useState('')
   const [placeError, setPlaceError] = useState('')
-  const [placesRevision, setPlacesRevision] = useState(0)
+  const [, setPlacesRevision] = useState(0)
   const [manualHydrationLiters, setManualHydrationLiters] = useState<number | undefined>()
   const [rejectHydration, setRejectHydration] = useState(false)
   const [rejectedEquipment, setRejectedEquipment] = useState<string[]>([])

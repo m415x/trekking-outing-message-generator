@@ -37,9 +37,13 @@ class StubPlaceRepository implements PlaceRepository {
     return this.places
   }
 
-  save(_place: Place): void {}
+  save(place: Place): void {
+    void place
+  }
 
-  remove(_id: string): void {}
+  remove(id: string): void {
+    void id
+  }
 }
 
 test("loads frequent places through the repository boundary", () => {

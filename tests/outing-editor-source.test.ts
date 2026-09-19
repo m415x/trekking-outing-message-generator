@@ -94,7 +94,7 @@ test("updating a selected frequent place refreshes the saved-place options", asy
     "utf8",
   ))
 
-  assert.match(source, /const \[placesRevision, setPlacesRevision\] = useState\(0\)/)
+  assert.match(source, /const \[\s*, setPlacesRevision\] = useState\(0\)/)
   assert.match(source, /setPlacesRevision\(\(current\) => current \+ 1\)/)
   assert.match(source, /const frequentPlaceState = frequentPlaces\?\.load\(\)/)
 })
