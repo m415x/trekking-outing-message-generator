@@ -19,11 +19,9 @@ export function MessagePreview({
   recommendations,
   conditions,
 }: MessagePreviewProps) {
-  const { message, canShare, validation } = getSharingState(event, recommendations)
+  const { canShare } = getSharingState(event, recommendations)
   const generatedMessage = generateWhatsAppMessage(event, recommendations, conditions)
-  const previewMessage = validation.isValid
-    ? generatedMessage
-    : [message, generatedMessage].filter(Boolean).join("\n\n")
+  const previewMessage = generatedMessage
   const [copyStatus, setCopyStatus] = useState("")
 
   async function copyMessage() {
