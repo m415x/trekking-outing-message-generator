@@ -28,6 +28,28 @@ import type { OutingConditionsRequest } from "../lib/outing-conditions-service"
 import { MessagePreview } from "./message-preview"
 import { applyRecommendationOverrides, createRecommendations } from "../lib/recommendations"
 
+const SAN_JUAN_WEATHER_LOCATIONS = [
+  { name: "Albardón", latitude: -31.4372, longitude: -68.5256 },
+  { name: "Angaco", latitude: -31.4394, longitude: -68.1301 },
+  { name: "Calingasta", latitude: -31.3308, longitude: -69.4202 },
+  { name: "Capital", latitude: -31.5375, longitude: -68.5364 },
+  { name: "Caucete", latitude: -31.6518, longitude: -68.2811 },
+  { name: "Chimbas", latitude: -31.4833, longitude: -68.5333 },
+  { name: "Iglesia", latitude: -30.4131, longitude: -69.2054 },
+  { name: "Jáchal", latitude: -30.2406, longitude: -68.7469 },
+  { name: "9 de Julio", latitude: -31.6692, longitude: -68.3908 },
+  { name: "Pocito", latitude: -31.6833, longitude: -68.5833 },
+  { name: "Rawson", latitude: -31.5897, longitude: -68.5314 },
+  { name: "Rivadavia", latitude: -31.5333, longitude: -68.6000 },
+  { name: "San Martín", latitude: -31.5156, longitude: -68.3525 },
+  { name: "Santa Lucía", latitude: -31.5399, longitude: -68.4950 },
+  { name: "Sarmiento", latitude: -32.0694, longitude: -68.6917 },
+  { name: "Ullum", latitude: -31.4561, longitude: -68.7000 },
+  { name: "Valle Fértil", latitude: -30.6335, longitude: -67.4682 },
+  { name: "25 de Mayo", latitude: -31.9750, longitude: -68.3639 },
+  { name: "Zonda", latitude: -31.5456, longitude: -68.7314 },
+] as const
+
 export interface OutingConditionsLoader {
   load(request: OutingConditionsRequest): Promise<OutingConditions>
 }
@@ -49,7 +71,7 @@ export function OutingEditor({
   const [placeId, setPlaceId] = useState("")
   const [latitude, setLatitude] = useState("")
   const [longitude, setLongitude] = useState("")
-  const [weatherLocationMode, setWeatherLocationMode] = useState("department")
+  const [weatherLocationMode, setWeatherLocationMode] = useState("department")\n  const [weatherDepartment, setWeatherDepartment] = useState("")
   const [placeError, setPlaceError] = useState("")
   const [placesRevision, setPlacesRevision] = useState(0)
   const [manualHydrationLiters, setManualHydrationLiters] = useState<number | undefined>()
@@ -314,8 +336,34 @@ export function OutingEditor({
           <legend className="text-lg font-semibold text-slate-950">Clima y luz solar</legend>
           <label className="block space-y-2 text-sm font-medium text-slate-800">
             Ubicación para clima y luz solar
-            <select value={weatherLocationMode} onChange={(e) => setWeatherLocationMode(e.target.value)} className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5">
-              <option value="department">Departamento de San Juan</option>
+            <select
+              value={weatherLocationMode === "custom" ? "custom" : weatherDepartment}
+              onChange={(e) => {
+                if (e.target.value === "custom") {
+                  setWeatherLocationMode("custom")
+                  setWeatherDepartment("")
+                  setLatitude("")
+                  setLongitude("")
+                  return
+                }
+                const location = SAN_JUAN_WEATHER_LOCATIONS.find(
+                  (candidate) => candidate.name === e.target.value,
+                )
+                setWeatherLocationMode("department")
+                setWeatherDepartment(e.target.value)
+                if (location) {
+                  setLatitude(String(location.latitude))
+                  setLongitude(String(location.longitude))
+                }
+              }}
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5"
+            >
+              <option value="">Departamento de San Juan</option>
+              {SAN_JUAN_WEATHER_LOCATIONS.map((location) => (
+                <option key={location.name} value={location.name}>
+                  {location.name}
+                </option>
+              ))}
               <option value="custom">Otra ubicación</option>
             </select>
           </label>
