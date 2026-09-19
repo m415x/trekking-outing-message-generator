@@ -186,7 +186,7 @@ test("outing editor requests conditions from outing coordinates without provider
   assert.match(source, /longitude: longitudeNumber/)
   assert.match(source, /trekStart: event\.trekStart/)
   assert.match(source, /estimatedDurationMinutes: event\.route\.estimatedDurationMinutes/)
-  assert.match(source, /conditionsLoader\.load/)
+  assert.match(source, /conditionsLoader\s*\.load/)
   assert.doesNotMatch(source, /fetch\(/)
   assert.doesNotMatch(source, /api\.open-meteo/)
 })
@@ -291,7 +291,7 @@ test("clears previous external conditions while a new valid request is loading",
     source,
     /conditionsLoading =[\s\S]*?weatherRequestKey !== undefined[\s\S]*?!loadedConditionsMatchRequest/,
   )
-  assert.match(source, /let active = true\s*conditionsLoader\.load/)
+  assert.match(source, /let active = true\s*conditionsLoader\s*\.load/)
 })
 
 
@@ -463,7 +463,7 @@ test("validation errors are programmatically associated with their form controls
   assert.match(source, /aria-describedby=\{validation\.fieldErrors\.title \? "title-error" : undefined\}/)
   assert.match(
     source,
-    /id="title-error"[^>]*role="alert"[^>]*>\{validation\.fieldErrors\.title\}/,
+    /id="title-error"[^>]*role="alert"[^>]*>[\s\S]*?\{validation\.fieldErrors\.title\}/,
   )
 })
 
@@ -480,7 +480,7 @@ test("remaining validation errors are associated with their controls", async () 
     ["route.difficulty", "difficulty-error"],
   ]) {
     assert.match(source, new RegExp(`aria-invalid=\\{Boolean\\(validation\\.fieldErrors\\["${field}"\\]\\)\\}`))
-    assert.match(source, new RegExp(`aria-describedby=\\{validation\\.fieldErrors\\["${field}"\\] \\? "${errorId}" : undefined\\}`))
+    assert.match(source, new RegExp(`aria-describedby=\\{\\s*validation\\.fieldErrors\\["${field}"\\]\\s*\\?\\s*"${errorId}"\\s*:\\s*undefined\\s*\\}`))
     assert.match(source, new RegExp(`id="${errorId}"[^>]*role="alert"`))
   }
 
@@ -500,7 +500,7 @@ test("place-management validation feedback is announced accessibly", async () =>
 
   assert.match(
     source,
-    /\{placeError && <p id="place-error" role="alert"[^>]*>\{placeError\}<\/p>\}/,
+    /\{placeError && \(\s*<p id="place-error" role="alert"[^>]*>[\s\S]*?\{placeError\}[\s\S]*?<\/p>\s*\)\}/,
   )
   assert.match(
     source,
