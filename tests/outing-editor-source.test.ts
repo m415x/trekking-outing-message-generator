@@ -447,3 +447,18 @@ test("recommendation actions provide full-width mobile touch targets", async () 
     /recommendations\.equipment\.map[\s\S]*?<button\s+className="w-full rounded-xl border border-slate-300[^"]*sm:w-auto"\s+type="button"/,
   )
 })
+
+
+test("validation errors are programmatically associated with their form controls", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /aria-invalid=\{Boolean\(validation\.fieldErrors\.title\)\}/)
+  assert.match(source, /aria-describedby=\{validation\.fieldErrors\.title \? "title-error" : undefined\}/)
+  assert.match(
+    source,
+    /id="title-error"[^>]*role="alert"[^>]*>\{validation\.fieldErrors\.title\}/,
+  )
+})
