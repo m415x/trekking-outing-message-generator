@@ -257,9 +257,11 @@ export function OutingEditor({
             <input
               className={`w-full rounded-xl border bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:ring-2 ${validation.fieldErrors.title ? "border-red-300 focus:border-red-500 focus:ring-red-100" : "border-slate-300 focus:border-emerald-600 focus:ring-emerald-100"}`}
               value={event.title}
+              aria-invalid={Boolean(validation.fieldErrors.title)}
+              aria-describedby={validation.fieldErrors.title ? "title-error" : undefined}
               onChange={(e) => updateEvent({ title: e.target.value })}
             />
-            {validation.fieldErrors.title && <span className="text-sm font-medium text-red-700">{validation.fieldErrors.title}</span>}
+            {validation.fieldErrors.title && <span id="title-error" role="alert" className="text-sm font-medium text-red-700">{validation.fieldErrors.title}</span>}
           </label>
         </fieldset>
 
