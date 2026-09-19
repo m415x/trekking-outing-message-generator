@@ -115,10 +115,18 @@ test("shares the same resolved recommendations that the user accepted", async ()
   assert.equal(state.canShare, true)
   assert.match(state.message, /Agua orientativa: 2 L/)
   assert.match(state.message, /Protección contra el viento/)
-  const recommendationsSection = state.message
-    .split("\\n\\n")
-    .find((section) => section.startsWith("💡 *Recomendaciones para la salida*"))
+  const recommendationsStart = state.message.indexOf(
+    "💡 *Recomendaciones para la salida*",
+  )
+  const requirementsStart = state.message.indexOf(
+    "🎒 *Equipo recomendado*",
+    recommendationsStart,
+  )
+  const recommendationsSection = state.message.slice(
+    recommendationsStart,
+    requirementsStart === -1 ? undefined : requirementsStart,
+  )
 
-  assert.ok(recommendationsSection)
+  assert.ok(recommendationsStart >= 0)
   assert.doesNotMatch(recommendationsSection, /Protección solar/)
 })
