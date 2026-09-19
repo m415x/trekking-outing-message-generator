@@ -503,3 +503,16 @@ test("place-management validation feedback is announced accessibly", async () =>
     /aria-describedby=\{placeError \? "place-error" : undefined\}/,
   )
 })
+
+
+test("asynchronous weather status is exposed as a live status region", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(
+    source,
+    /<div role="status" aria-live="polite" className="space-y-2 text-sm text-slate-600">[\s\S]*?conditionsLoading/,
+  )
+})
