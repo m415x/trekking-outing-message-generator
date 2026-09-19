@@ -130,3 +130,23 @@ test("shares the same resolved recommendations that the user accepted", async ()
   assert.ok(recommendationsStart >= 0)
   assert.doesNotMatch(recommendationsSection, /Protección solar/)
 })
+
+
+test("keeps sharing blocked after recommendations are resolved when the outing is invalid", async () => {
+  const { createRecommendations } = await import("../lib/recommendations")
+
+  const event = createEmptyTrekkingEvent()
+  event.title = "Cerro Palo Seco"
+  event.route.estimatedDurationMinutes = 240
+
+  const recommendations = createRecommendations({
+    estimatedDurationMinutes: event.route.estimatedDurationMinutes,
+    difficulty: "high",
+  })
+
+  const state = getSharingState(event, recommendations)
+
+  assert.equal(state.canShare, false)
+  assert.equal(state.validation.isValid, false)
+  assert.match(state.message, /Agua orientativa:/)
+})
