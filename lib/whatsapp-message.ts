@@ -42,6 +42,13 @@ function formatDifficulty(difficulty: Difficulty): string {
   return item ? `${item.emoji} ${item.label}` : difficulty
 }
 
+function formatWindDirection(degrees: number | undefined): string {
+  if (degrees === undefined || !Number.isFinite(degrees)) return ""
+  const directions = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSO", "SO", "OSO", "O", "ONO", "NO", "NNO"]
+  const normalized = ((degrees % 360) + 360) % 360
+  return directions[Math.round(normalized / 22.5) % 16]
+}
+
 export function generateWhatsAppMessage(
   event: TrekkingEvent,
   recommendations?: Recommendations,
@@ -107,8 +114,11 @@ export function generateWhatsAppMessage(
     const conditionLines = [
       ...(conditions.forecastStatus === "available"
         ? [
-            `🌡️ Temperatura: ${conditions.weather.temperatureC} °C`,
-            `💨 Viento: ${conditions.weather.windSpeedKmh} km/h`,
+            `🌡️ Temperatura: ${conditions.weather.temperatureMaxC ?? conditions.weather.temperatureC}/${conditions.weather.temperatureMinC ?? conditions.weather.temperatureC} °C`,
+            `💨 Viento: ${conditions.weather.windSpeedKmh} km/h${formatWindDirection(conditions.weather.windDirectionDegrees) ? ` ${formatWindDirection(conditions.weather.windDirectionDegrees)}` : ""}`,
+            ...(conditions.weather.windGustKmh >= 30
+              ? [`💨 Ráfagas: ${conditions.weather.windGustKmh} km/h`]
+              : []),
           ]
         : ["Pronóstico no disponible"]),
       ...(conditions.sunrise.time ? [`🌅 Amanecer: ${conditions.sunrise.time}`] : []),
