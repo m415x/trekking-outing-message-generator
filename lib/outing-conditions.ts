@@ -4,9 +4,12 @@ export type DaylightStatus = "safe" | "approachingSunset" | "afterSunset"
 
 export interface OutingWeather {
   temperatureC: number
+  temperatureMinC?: number
+  temperatureMaxC?: number
   precipitationMm: number
   windSpeedKmh: number
   windGustKmh: number
+  windDirectionDegrees?: number
 }
 
 export interface AvailableOutingConditions {
