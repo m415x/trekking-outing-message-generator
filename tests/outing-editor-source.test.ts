@@ -462,3 +462,27 @@ test("validation errors are programmatically associated with their form controls
     /id="title-error"[^>]*role="alert"[^>]*>\{validation\.fieldErrors\.title\}/,
   )
 })
+
+
+test("remaining validation errors are associated with their controls", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  for (const [field, errorId] of [
+    ["meeting.location.placeName", "meeting-place-error"],
+    ["route.distanceKm", "distance-error"],
+    ["route.difficulty", "difficulty-error"],
+  ]) {
+    assert.match(source, new RegExp(`aria-invalid=\\{Boolean\\(validation\\.fieldErrors\\["${field}"\\]\\)\\}`))
+    assert.match(source, new RegExp(`aria-describedby=\\{validation\\.fieldErrors\\["${field}"\\] \\? "${errorId}" : undefined\\}`))
+    assert.match(source, new RegExp(`id="${errorId}"[^>]*role="alert"`))
+  }
+
+  assert.match(
+    source,
+    /aria-describedby=\{validation\.responsibleError \? "responsible-error" : undefined\}/,
+  )
+  assert.match(source, /id="responsible-error"[^>]*role="alert"/)
+})
