@@ -676,6 +676,7 @@ export function OutingEditor({
                   <button
                     className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 transition hover:bg-slate-50 sm:w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
                     type="button"
+                    aria-label={`Rechazar ${recommendation.item}`}
                     onClick={() =>
                       setRejectedEquipment((current) => [
                         ...new Set([...current, recommendation.item]),
