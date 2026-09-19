@@ -589,7 +589,7 @@ test("TOMG-7 keeps weather location simple by default and exposes coordinates on
 })
 
 test("TOMG-7 places the trailhead name before frequent-place management actions", async () => {
-  const source = await readSource("components/outing-editor.tsx")
+  const source = await readFile(\n    new URL("../components/outing-editor.tsx", import.meta.url),\n    "utf8",\n  )
 
   const trailhead = source.indexOf("Inicio del sendero")
   const save = source.indexOf("Guardar lugar")
