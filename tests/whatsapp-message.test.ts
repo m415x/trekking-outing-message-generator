@@ -177,3 +177,49 @@ test("preserves WhatsApp formatting and Unicode through URL encoding", () => {
   assert.match(decoded, /🥾 \*CERRO PALO SECO\*/)
   assert.doesNotMatch(decoded, /�/)
 })
+
+
+test("formats richer weather with min/max, compass wind, and significant gusts", () => {
+  const conditions = {
+    forecastStatus: "available" as const,
+    fetchedAt: "2026-09-18T18:00:00Z",
+    sunrise: { date: "2026-09-20", time: "07:42" },
+    sunset: { date: "2026-09-20", time: "19:18" },
+    weather: {
+      temperatureC: 27,
+      temperatureMinC: 12,
+      temperatureMaxC: 27,
+      precipitationMm: 0,
+      windSpeedKmh: 22,
+      windGustKmh: 34,
+      windDirectionDegrees: 250,
+    },
+  }
+
+  const message = generateWhatsAppMessage(completeEvent(), undefined, conditions)
+
+  assert.match(message, /🌡️ Temperatura: 27\/12 °C/)
+  assert.match(message, /💨 Viento: 22 km\/h OSO/)
+  assert.match(message, /💨 Ráfagas: 34 km\/h/)
+})
+
+test("omits gusts below 30 km/h from the shared weather block", () => {
+  const conditions = {
+    forecastStatus: "available" as const,
+    fetchedAt: "2026-09-18T18:00:00Z",
+    sunrise: { date: "2026-09-20", time: "07:42" },
+    sunset: { date: "2026-09-20", time: "19:18" },
+    weather: {
+      temperatureC: 24,
+      temperatureMinC: 10,
+      temperatureMaxC: 24,
+      precipitationMm: 0,
+      windSpeedKmh: 18,
+      windGustKmh: 29,
+      windDirectionDegrees: 90,
+    },
+  }
+
+  const message = generateWhatsAppMessage(completeEvent(), undefined, conditions)
+  assert.doesNotMatch(message, /Ráfagas:/)
+})
