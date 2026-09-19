@@ -650,3 +650,23 @@ test("TOMG-7 provides a clipboard fallback and copy feedback", async () => {
   assert.match(source, /Mensaje copiado/)
   assert.match(source, /No se pudo copiar/)
 })
+
+
+test("TOMG-7 keeps available weather visible while required outing fields are incomplete", async () => {
+  const editor = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+  const preview = await readFile(
+    new URL("../components/message-preview.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(editor, /<MessagePreview[\s\S]*conditions=\{displayedConditions\}/)
+  assert.match(preview, /generateWhatsAppMessage\(event, recommendations, conditions\)/)
+  assert.match(preview, /canShare/)
+  assert.doesNotMatch(
+    preview,
+    /validation\.isValid\s*\?\s*generateWhatsAppMessage\(event, recommendations, conditions\)\s*:\s*message/,
+  )
+})
