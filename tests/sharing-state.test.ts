@@ -36,3 +36,44 @@ test("enables sharing for a valid event using the same generated message", () =>
   assert.ok(state.message.includes("🔴 Alta"))
   assert.ok(state.message.includes("*Coordinador:* Cristian Lahoz"))
 })
+
+
+test("keeps a valid outing shareable when external conditions are unavailable", async () => {
+  const { loadOutingConditions } = await import("../lib/outing-conditions-service")
+
+  const event = createEmptyTrekkingEvent()
+  event.title = "Cerro Palo Seco"
+  event.meeting.date = "2026-09-20"
+  event.meeting.time = "08:00"
+  event.meeting.location.placeName = "Arco de Zonda"
+  event.trekStart.date = "2026-09-20"
+  event.trekStart.time = "09:30"
+  event.trailhead.placeName = "Cerro Palo Seco"
+  event.route.distanceKm = 14
+  event.route.estimatedDurationMinutes = 420
+  event.route.difficulty = "high"
+  event.coordinator = "Cristian Lahoz"
+
+  const conditions = await loadOutingConditions(
+    {
+      latitude: -31.5375,
+      longitude: -68.5364,
+      date: event.trekStart.date,
+      trekStart: event.trekStart,
+      estimatedDurationMinutes: event.route.estimatedDurationMinutes,
+    },
+    {
+      loadForecast: async () => {
+        throw new Error("network failure")
+      },
+    },
+  )
+
+  assert.deepEqual(conditions, { forecastStatus: "error" })
+
+  const state = getSharingState(event)
+
+  assert.equal(state.canShare, true)
+  assert.equal(state.validation.isValid, true)
+  assert.ok(state.message.includes("🥾 *CERRO PALO SECO*"))
+})
