@@ -166,3 +166,14 @@ test("includes available weather and daylight conditions in the generated messag
   assert.match(message, /Amanecer: 07:42/)
   assert.match(message, /Atardecer: 19:18/)
 })
+
+
+test("preserves WhatsApp formatting and Unicode through URL encoding", () => {
+  const message = generateWhatsAppMessage(completeEvent())
+  const encoded = encodeURIComponent(message)
+  const decoded = decodeURIComponent(encoded)
+
+  assert.equal(decoded, message)
+  assert.match(decoded, /🥾 \*CERRO PALO SECO\*/)
+  assert.doesNotMatch(decoded, /�/)
+})
