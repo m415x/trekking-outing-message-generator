@@ -45,6 +45,7 @@ function formatDifficulty(difficulty: Difficulty): string {
 export function generateWhatsAppMessage(
   event: TrekkingEvent,
   recommendations?: Recommendations,
+  conditions?: OutingConditions,
 ): string {
   const sections: string[] = []
 
