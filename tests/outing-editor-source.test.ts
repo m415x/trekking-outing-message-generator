@@ -670,3 +670,17 @@ test("TOMG-7 keeps available weather visible while required outing fields are in
     /validation\.isValid\s*\?\s*generateWhatsAppMessage\(event, recommendations, conditions\)\s*:\s*message/,
   )
 })
+
+
+test("TOMG-7 does not duplicate generated content in an invalid partial preview", async () => {
+  const preview = await readFile(
+    new URL("../components/message-preview.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.doesNotMatch(
+    preview,
+    /\[message, generatedMessage\]\.filter\(Boolean\)\.join\("\\n\\n"\)/,
+  )
+  assert.match(preview, /previewMessage\s*=\s*generatedMessage/)
+})
