@@ -437,6 +437,7 @@ export function OutingEditor({
             <button
               className="w-full rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
               type="button"
+              disabled={!frequentPlaces}
               onClick={() => {
                 if (!frequentPlaces) return
                 const candidate = createPlaceFromEvent(event, {
