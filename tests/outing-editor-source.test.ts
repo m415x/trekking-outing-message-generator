@@ -561,6 +561,6 @@ test("place save action is disabled when persistence is unavailable", async () =
 
   assert.match(
     source,
-    /Guardar lugar[\s\S]*?disabled=\{!frequentPlaces\}/,
+    /disabled=\{!frequentPlaces\}[\s\S]*?>[\s\S]*?Guardar lugar/,
   )
 })
