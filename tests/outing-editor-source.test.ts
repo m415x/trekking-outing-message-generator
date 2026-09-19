@@ -516,3 +516,24 @@ test("asynchronous weather status is exposed as a live status region", async () 
     /<div role="status" aria-live="polite" className="space-y-2 text-sm text-slate-600">[\s\S]*?conditionsLoading/,
   )
 })
+
+
+test("disabled controls retain visible keyboard focus styling", async () => {
+  const editorSource = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+  const previewSource = await readFile(
+    new URL("../components/message-preview.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(
+    editorSource,
+    /className="w-full rounded-xl border border-slate-300[^"]*focus-visible:ring-2[^"]*"\s+type="button"\s+disabled=\{!selectedPlaceId\}/,
+  )
+  assert.match(
+    previewSource,
+    /className="rounded-xl[^"]*focus-visible:ring-2[^"]*disabled:cursor-not-allowed/,
+  )
+})
