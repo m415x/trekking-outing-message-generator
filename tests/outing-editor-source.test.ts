@@ -402,14 +402,14 @@ test("saved-place actions use full-width mobile targets and compact desktop sizi
 
 
 test("editor and preview allow long content to shrink without horizontal page overflow", async () => {
-  const editorSource = await readFile(
+  const editorSource = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
-  const previewSource = await readFile(
+  ))
+  const previewSource = normalizeSource(await readFile(
     new URL("../components/message-preview.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(
     editorSource,
@@ -523,14 +523,14 @@ test("asynchronous weather status is exposed as a live status region", async () 
 
 
 test("disabled controls retain visible keyboard focus styling", async () => {
-  const editorSource = await readFile(
+  const editorSource = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
-  const previewSource = await readFile(
+  ))
+  const previewSource = normalizeSource(await readFile(
     new URL("../components/message-preview.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(
     editorSource,
