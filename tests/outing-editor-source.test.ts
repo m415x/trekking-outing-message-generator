@@ -684,3 +684,15 @@ test("TOMG-7 does not duplicate generated content in an invalid partial preview"
   )
   assert.match(preview, /previewMessage\s*=\s*generatedMessage/)
 })
+
+
+test("TOMG-7 restores saved elevation gain when selecting a frequent place", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /const result = frequentPlaces\.select\(placeId, event\)/)
+  assert.match(source, /setEvent\(result\.event\)/)
+  assert.match(source, /value=\{event\.route\.elevationGainM \?\? ""\}/)
+})
