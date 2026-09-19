@@ -564,3 +564,16 @@ test("place save action is disabled when persistence is unavailable", async () =
     /disabled=\{!frequentPlaces\}[\s\S]*?>[\s\S]*?Guardar lugar/,
   )
 })
+
+
+test("equipment rejection actions have recommendation-specific accessible names", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(
+    source,
+    /aria-label=\{\`Rechazar \$\{recommendation\.item\}\`\}/,
+  )
+})
