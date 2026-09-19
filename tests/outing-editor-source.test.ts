@@ -440,11 +440,11 @@ test("recommendation actions provide full-width mobile touch targets", async () 
 
   assert.match(
     source,
-    /<button\s+className="w-full rounded-xl border border-slate-300[^"]*sm:w-auto"\s+type="button"\s+onClick=\{\(\) => setRejectHydration/,
+    /<button\s+className="w-full rounded-xl border border-slate-300[^"]*sm:w-auto[^"]*"\s+type="button"\s+onClick=\{\(\) => setRejectHydration/,
   )
   assert.match(
     source,
-    /recommendations\.equipment\.map[\s\S]*?<button\s+className="w-full rounded-xl border border-slate-300[^"]*sm:w-auto"\s+type="button"/,
+    /recommendations\.equipment\.map[\s\S]*?<button\s+className="w-full rounded-xl border border-slate-300[^"]*sm:w-auto[^"]*"\s+type="button"/,
   )
 })
 
