@@ -311,8 +311,9 @@ export function OutingEditor({
 
         <fieldset className="space-y-4">
           <legend className="text-lg font-semibold text-slate-950">Clima y luz solar</legend>
+          <div role="status" aria-live="polite" className="space-y-2 text-sm text-slate-600">
           {conditionsLoading && (
-            <p className="text-sm text-slate-600">Cargando pronóstico…</p>
+            <p>Cargando pronóstico…</p>
           )}
           {displayedConditions?.forecastStatus === "available" && (
             <div className="space-y-2 text-sm text-slate-600">
@@ -361,8 +362,9 @@ export function OutingEditor({
             </div>
           )}
           {displayedConditions?.forecastStatus === "error" && (
-            <p className="text-sm text-slate-600">No se pudo consultar el pronóstico</p>
+            <p>No se pudo consultar el pronóstico</p>
           )}
+          </div>
         </fieldset>
 
         <fieldset className="space-y-4">
