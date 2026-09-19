@@ -537,3 +537,17 @@ test("disabled controls retain visible keyboard focus styling", async () => {
     /className="rounded-xl[^"]*focus-visible:ring-2[^"]*disabled:cursor-not-allowed/,
   )
 })
+
+
+test("all editor action buttons expose explicit keyboard focus styling", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  const buttonTags = source.match(/<button[\s\S]*?>/g) ?? []
+  assert.ok(buttonTags.length > 0)
+  for (const button of buttonTags) {
+    assert.match(button, /focus-visible:ring-2/)
+  }
+})
