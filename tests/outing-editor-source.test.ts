@@ -486,3 +486,20 @@ test("remaining validation errors are associated with their controls", async () 
   )
   assert.match(source, /id="responsible-error"[^>]*role="alert"/)
 })
+
+
+test("place-management validation feedback is announced accessibly", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(
+    source,
+    /\{placeError && <p id="place-error" role="alert"[^>]*>\{placeError\}<\/p>\}/,
+  )
+  assert.match(
+    source,
+    /aria-describedby=\{placeError \? "place-error" : undefined\}/,
+  )
+})
