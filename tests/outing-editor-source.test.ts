@@ -2,11 +2,15 @@ import assert from "node:assert/strict"
 import { readFile } from "node:fs/promises"
 import test from "node:test"
 
+function normalizeSource(source: string): string {
+  return source.replace(/'/g, '"')
+}
+
 test("outing editor renders the frequent-place selector through its port", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(source, /FrequentPlaceEditorPort/)
   assert.match(source, /Lugar frecuente/)
@@ -26,10 +30,10 @@ test("client composition wires local persistence into the outing editor", async 
 })
 
 test("outing editor exposes explicit saved-place management controls", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(source, /Guardar lugar/)
   assert.match(source, /Actualizar lugar/)
@@ -39,10 +43,10 @@ test("outing editor exposes explicit saved-place management controls", async () 
 })
 
 test("selecting a frequent place restores its management coordinates", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(source, /frequentPlaces\.getManagementFields\(placeId\)/)
   assert.match(source, /setLatitude\(managementFields\.latitude\)/)
@@ -50,10 +54,10 @@ test("selecting a frequent place restores its management coordinates", async () 
 })
 
 test("estimated duration inputs are controlled by the event route snapshot", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.doesNotMatch(source, /defaultValue="0"/)
   assert.match(source, /value=\{Math\.floor\(\(event\.route\.estimatedDurationMinutes \?\? 0\) \/ 60\)\}/)
@@ -61,10 +65,10 @@ test("estimated duration inputs are controlled by the event route snapshot", asy
 })
 
 test("clearing a frequent-place selection resets management identity and coordinates", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(
     source,
@@ -73,10 +77,10 @@ test("clearing a frequent-place selection resets management identity and coordin
 })
 
 test("removing a selected frequent place clears all management fields", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(
     source,
@@ -85,10 +89,10 @@ test("removing a selected frequent place clears all management fields", async ()
 })
 
 test("updating a selected frequent place refreshes the saved-place options", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(source, /const \[placesRevision, setPlacesRevision\] = useState\(0\)/)
   assert.match(source, /setPlacesRevision\(\(current\) => current \+ 1\)/)
@@ -97,10 +101,10 @@ test("updating a selected frequent place refreshes the saved-place options", asy
 
 
 test("outing editor exposes weather and daylight states without coupling to Open-Meteo", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(source, /Clima y luz solar/)
   assert.match(source, /Pronóstico no disponible/)
@@ -111,10 +115,10 @@ test("outing editor exposes weather and daylight states without coupling to Open
 
 
 test("outing editor receives conditions through a provider-neutral port", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(source, /conditions\?: OutingConditions/)
   assert.match(source, /displayedConditions\?\.forecastStatus === "available"/)
@@ -127,10 +131,10 @@ test("outing editor receives conditions through a provider-neutral port", async 
 
 
 test("outing editor derives finish and daylight margin from the outing snapshot", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(source, /calculateEstimatedFinish/)
   assert.match(source, /calculateDaylightMarginMinutes/)
@@ -140,10 +144,10 @@ test("outing editor derives finish and daylight margin from the outing snapshot"
 
 
 test("outing editor exposes all outing-window weather values and forecast freshness", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(source, /displayedConditions\.weather\.precipitationMm/)
   assert.match(source, /displayedConditions\.weather\.windSpeedKmh/)
@@ -156,10 +160,10 @@ test("outing editor exposes all outing-window weather values and forecast freshn
 
 
 test("outing editor derives an explicit daylight warning state", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(source, /getDaylightStatus/)
   assert.match(source, /approachingSunset/)
@@ -170,10 +174,10 @@ test("outing editor derives an explicit daylight warning state", async () => {
 
 
 test("outing editor requests conditions from outing coordinates without provider coupling", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(source, /conditionsLoader\?: OutingConditionsLoader/)
   assert.match(source, /const latitudeNumber = Number\(latitude\)/)
@@ -189,10 +193,10 @@ test("outing editor requests conditions from outing coordinates without provider
 
 
 test("outing editor ignores stale conditions responses after outing inputs change", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(source, /let active = true/)
   assert.match(source, /if \(active\) \{\s*setLoadedConditions\(\{\s*requestKey: weatherRequestKey,\s*value: nextConditions/)
@@ -214,10 +218,10 @@ test("persistent editor composes the Open-Meteo provider without leaking it into
 
 
 test("outing editor presents editable and rejectable contextual recommendations", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(source, /Recomendaciones/)
   assert.match(source, /createRecommendations/)
@@ -230,20 +234,20 @@ test("outing editor presents editable and rejectable contextual recommendations"
 
 
 test("outing editor passes resolved recommendations to the message preview", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(source, /<MessagePreview event=\{event\} recommendations=\{recommendations\} conditions=\{displayedConditions\} \/>/)
 })
 
 
 test("outing editor allows rejecting the hydration recommendation", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(source, /rejectHydration/)
   assert.match(source, /Rechazar agua/)
@@ -251,10 +255,10 @@ test("outing editor allows rejecting the hydration recommendation", async () => 
 
 
 test("outing editor only derives daylight status when sunset is usable", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(source, /displayedConditions\.sunset\.date/)
   assert.match(source, /displayedConditions\.sunset\.time/)
@@ -262,10 +266,10 @@ test("outing editor only derives daylight status when sunset is usable", async (
 
 
 test("clears stale external conditions when the weather request becomes incomplete", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(source, /weatherRequestIsValid/)
   assert.match(source, /weatherRequestKey/)
@@ -278,10 +282,10 @@ test("clears stale external conditions when the weather request becomes incomple
 
 
 test("clears previous external conditions while a new valid request is loading", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(
     source,
@@ -292,20 +296,20 @@ test("clears previous external conditions while a new valid request is loading",
 
 
 test("degrades rejected weather loads to an explicit error state", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(source, /\.catch\(\(\) => \{/)
   assert.match(source, /value: \{ forecastStatus: "error" \}/)
 })
 
 test("does not render empty sunrise or sunset values", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(source, /displayedConditions\.sunrise\.time\s*&&/)
   assert.match(source, /displayedConditions\.sunset\.time\s*&&/)
@@ -313,10 +317,10 @@ test("does not render empty sunrise or sunset values", async () => {
 
 
 test("outing editor exposes an explicit loading state for external conditions", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(source, /Cargando pronóstico/)
   assert.match(source, /conditionsLoading/)
@@ -324,10 +328,10 @@ test("outing editor exposes an explicit loading state for external conditions", 
 
 
 test("outing editor validates geographic coordinate ranges before loading conditions", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(source, /latitudeNumber >= -90 && latitudeNumber <= 90/)
   assert.match(source, /longitudeNumber >= -180 && longitudeNumber <= 180/)
@@ -335,10 +339,10 @@ test("outing editor validates geographic coordinate ranges before loading condit
 
 
 test("clearing manual hydration restores the suggested value instead of forcing zero liters", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(
     source,
@@ -348,10 +352,10 @@ test("clearing manual hydration restores the suggested value instead of forcing 
 
 
 test("weather effect does not synchronously mirror external request state into React state", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.doesNotMatch(
     source,
@@ -365,10 +369,10 @@ test("weather effect does not synchronously mirror external request state into R
 
 
 test("requirement checkboxes keep compact controls on narrow layouts", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(
     source,
@@ -382,10 +386,10 @@ test("requirement checkboxes keep compact controls on narrow layouts", async () 
 
 
 test("saved-place actions use full-width mobile targets and compact desktop sizing", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(source, /className="grid grid-cols-1 gap-2 sm:grid-cols-3"/)
   for (const label of ["Guardar lugar", "Actualizar lugar", "Eliminar lugar"]) {
@@ -420,10 +424,10 @@ test("editor and preview allow long content to shrink without horizontal page ov
 
 
 test("duration controls share a compact responsive row", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(
     source,
@@ -433,10 +437,10 @@ test("duration controls share a compact responsive row", async () => {
 
 
 test("recommendation actions provide full-width mobile touch targets", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(
     source,
@@ -450,10 +454,10 @@ test("recommendation actions provide full-width mobile touch targets", async () 
 
 
 test("validation errors are programmatically associated with their form controls", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(source, /aria-invalid=\{Boolean\(validation\.fieldErrors\.title\)\}/)
   assert.match(source, /aria-describedby=\{validation\.fieldErrors\.title \? "title-error" : undefined\}/)
@@ -465,10 +469,10 @@ test("validation errors are programmatically associated with their form controls
 
 
 test("remaining validation errors are associated with their controls", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   for (const [field, errorId] of [
     ["meeting.location.placeName", "meeting-place-error"],
@@ -489,10 +493,10 @@ test("remaining validation errors are associated with their controls", async () 
 
 
 test("place-management validation feedback is announced accessibly", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(
     source,
@@ -506,10 +510,10 @@ test("place-management validation feedback is announced accessibly", async () =>
 
 
 test("asynchronous weather status is exposed as a live status region", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(
     source,
@@ -540,10 +544,10 @@ test("disabled controls retain visible keyboard focus styling", async () => {
 
 
 test("all editor action buttons expose explicit keyboard focus styling", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   const buttonTags = source.match(/<button\b[^>]*>/g) ?? []
   assert.ok(buttonTags.length > 0)
@@ -554,10 +558,10 @@ test("all editor action buttons expose explicit keyboard focus styling", async (
 
 
 test("place save action is disabled when persistence is unavailable", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(
     source,
@@ -567,10 +571,10 @@ test("place save action is disabled when persistence is unavailable", async () =
 
 
 test("equipment rejection actions have recommendation-specific accessible names", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(
     source,
@@ -580,10 +584,10 @@ test("equipment rejection actions have recommendation-specific accessible names"
 
 
 test("TOMG-7 keeps weather location simple by default and exposes coordinates only as an advanced option", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(source, /Ubicación para clima y luz solar/)
   assert.match(source, /Departamento de San Juan/)
@@ -592,10 +596,10 @@ test("TOMG-7 keeps weather location simple by default and exposes coordinates on
 })
 
 test("TOMG-7 places the trailhead name before frequent-place management actions", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   const trailhead = source.indexOf("Inicio del sendero")
   const save = source.indexOf("Guardar lugar")
@@ -607,10 +611,10 @@ test("TOMG-7 places the trailhead name before frequent-place management actions"
 
 
 test("TOMG-7 offers all San Juan departments as simple weather locations", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   for (const department of [
     "Albardón", "Angaco", "Calingasta", "Capital", "Caucete",
@@ -627,10 +631,10 @@ test("TOMG-7 offers all San Juan departments as simple weather locations", async
 
 
 test("TOMG-7 keeps rejected contextual equipment visible and allows restoring it", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(source, /suggestedRecommendations\?\.equipment\.map/)
   assert.match(source, /rejectedEquipment\.includes\(recommendation\.item\)/)
@@ -687,10 +691,10 @@ test("TOMG-7 does not duplicate generated content in an invalid partial preview"
 
 
 test("TOMG-7 restores saved elevation gain when selecting a frequent place", async () => {
-  const source = await readFile(
+  const source = normalizeSource(await readFile(
     new URL("../components/outing-editor.tsx", import.meta.url),
     "utf8",
-  )
+  ))
 
   assert.match(source, /const result = frequentPlaces\.select\(placeId, event\)/)
   assert.match(source, /setEvent\(result\.event\)/)
