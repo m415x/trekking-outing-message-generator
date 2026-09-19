@@ -1,6 +1,6 @@
 import type { Difficulty, TrekkingEvent } from "./trekking-event"
 import { DIFFICULTIES } from "./trekking-event"
-import type { Recommendations } from "./recommendations"
+import type { Recommendations } from "./recommendations"\nimport type { OutingConditions } from "./outing-conditions"
 
 function formatSpanishDate(date: string): string {
   const [year, month, day] = date.split("-").map(Number)
@@ -99,6 +99,22 @@ export function generateWhatsAppMessage(
   }
   if (routeDetails.length > 0) {
     sections.push(["🥾 *Inicio y recorrido*", ...routeDetails].join("\n"))
+  }
+
+  if (conditions && conditions.forecastStatus !== "error") {
+    const conditionLines = [
+      ...(conditions.forecastStatus === "available"
+        ? [
+            `🌡️ Temperatura: ${conditions.weather.temperatureC} °C`,
+            `💨 Viento: ${conditions.weather.windSpeedKmh} km/h`,
+          ]
+        : ["Pronóstico no disponible"]),
+      ...(conditions.sunrise.time ? [`🌅 Amanecer: ${conditions.sunrise.time}`] : []),
+      ...(conditions.sunset.time ? [`🌇 Atardecer: ${conditions.sunset.time}`] : []),
+    ]
+    if (conditionLines.length > 0) {
+      sections.push(["🌤️ *Clima y luz solar*", ...conditionLines].join("\n"))
+    }
   }
 
   if (recommendations) {
