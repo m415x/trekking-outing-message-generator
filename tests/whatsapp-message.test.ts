@@ -142,3 +142,27 @@ test("omits hydration from the generated message when it was rejected", () => {
 
   assert.doesNotMatch(message, /Agua orientativa/)
 })
+
+
+test("includes available weather and daylight conditions in the generated message", () => {
+  const conditions = {
+    forecastStatus: "available" as const,
+    weather: {
+      temperatureC: 28,
+      precipitationMm: 0,
+      windSpeedKmh: 22,
+      windGustKmh: 35,
+    },
+    sunrise: { date: "2026-09-06", time: "07:42" },
+    sunset: { date: "2026-09-06", time: "19:18" },
+    fetchedAt: "2026-09-05T12:00:00Z",
+  }
+
+  const message = generateWhatsAppMessage(completeEvent(), undefined, conditions)
+
+  assert.match(message, /Clima y luz solar/)
+  assert.match(message, /28 °C/)
+  assert.match(message, /Viento: 22 km\/h/)
+  assert.match(message, /Amanecer: 07:42/)
+  assert.match(message, /Atardecer: 19:18/)
+})
