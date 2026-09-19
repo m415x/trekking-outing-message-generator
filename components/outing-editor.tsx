@@ -729,7 +729,7 @@ export function OutingEditor({
               >
                 {rejectHydration ? "Restaurar agua" : "Rechazar agua"}
               </button>
-              {suggestedRecommendations.equipment.map((recommendation) => {
+              {suggestedRecommendations?.equipment.map((recommendation) => {
                 const isRejected = rejectedEquipment.includes(recommendation.item)
                 return (
                   <div key={recommendation.item} className="space-y-1 text-sm text-slate-700">
