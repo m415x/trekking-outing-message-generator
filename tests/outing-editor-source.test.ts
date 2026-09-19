@@ -624,3 +624,16 @@ test("TOMG-7 offers all San Juan departments as simple weather locations", async
   assert.match(source, /setLatitude\(String\(location\.latitude\)\)/)
   assert.match(source, /setLongitude\(String\(location\.longitude\)\)/)
 })
+
+
+test("TOMG-7 keeps rejected contextual equipment visible and allows restoring it", async () => {
+  const source = await readFile(
+    new URL("../components/outing-editor.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(source, /suggestedRecommendations\.equipment\.map/)
+  assert.match(source, /rejectedEquipment\.includes\(recommendation\.item\)/)
+  assert.match(source, /line-through/)
+  assert.match(source, /Restaurar/)
+})
