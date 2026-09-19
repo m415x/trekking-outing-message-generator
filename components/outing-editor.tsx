@@ -838,7 +838,7 @@ export function OutingEditor({
         </form>
 
         <div className="min-w-0 lg:sticky lg:top-6">
-          <MessagePreview event={event} recommendations={recommendations} />
+          <MessagePreview event={event} recommendations={recommendations} conditions={displayedConditions} />
         </div>
       </div>
     </section>
