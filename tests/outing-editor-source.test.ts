@@ -580,7 +580,7 @@ test("equipment rejection actions have recommendation-specific accessible names"
 
 
 test("TOMG-7 keeps weather location simple by default and exposes coordinates only as an advanced option", async () => {
-  const source = await readSource("components/outing-editor.tsx")
+  const source = await readFile(\n    new URL("../components/outing-editor.tsx", import.meta.url),\n    "utf8",\n  )
 
   assert.match(source, /Ubicación para clima y luz solar/)
   assert.match(source, /Departamento de San Juan/)
