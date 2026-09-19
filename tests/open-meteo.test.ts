@@ -28,6 +28,7 @@ test("builds Open-Meteo requests from outing coordinates", () => {
       "precipitation",
       "wind_speed_10m",
       "wind_gusts_10m",
+      "wind_direction_10m",
     ],
   )
 
@@ -48,6 +49,7 @@ test("maps an Open-Meteo response into provider-neutral hourly and daylight data
       precipitation: [0, 0.3],
       wind_speed_10m: [10, 12],
       wind_gusts_10m: [18, 22],
+      wind_direction_10m: [260, 250],
     },
     daily: {
       time: ["2026-09-20"],
@@ -64,6 +66,7 @@ test("maps an Open-Meteo response into provider-neutral hourly and daylight data
         precipitationMm: 0,
         windSpeedKmh: 10,
         windGustKmh: 18,
+        windDirectionDegrees: 260,
       },
       {
         moment: { date: "2026-09-20", time: "09:00" },
@@ -71,6 +74,7 @@ test("maps an Open-Meteo response into provider-neutral hourly and daylight data
         precipitationMm: 0.3,
         windSpeedKmh: 12,
         windGustKmh: 22,
+        windDirectionDegrees: 250,
       },
     ],
     sunrise: { date: "2026-09-20", time: "07:12" },
@@ -91,6 +95,7 @@ test("rejects malformed Open-Meteo responses instead of leaking partial provider
           precipitation: [0, 0.3],
           wind_speed_10m: [10, 12],
           wind_gusts_10m: [18, 22],
+      wind_direction_10m: [260, 250],
         },
         daily: {
           time: ["2026-09-20"],
@@ -116,6 +121,7 @@ test("Open-Meteo provider adapter fetches and maps an available forecast", async
           precipitation: [0],
           wind_speed_10m: [10],
           wind_gusts_10m: [18],
+          wind_direction_10m: [260],
         },
         daily: {
           time: ["2026-09-20"],
