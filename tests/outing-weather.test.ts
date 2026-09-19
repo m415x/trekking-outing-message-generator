@@ -41,8 +41,11 @@ test("summarizes weather across the expected outing window", () => {
 
   assert.deepEqual(weather, {
     temperatureC: 17,
+    temperatureMinC: 12,
+    temperatureMaxC: 17,
     precipitationMm: 0.6,
     windSpeedKmh: 16,
+    windDirectionDegrees: undefined,
     windGustKmh: 28,
   })
 })
