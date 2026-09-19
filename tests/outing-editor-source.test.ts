@@ -574,7 +574,7 @@ test("equipment rejection actions have recommendation-specific accessible names"
 
   assert.match(
     source,
-    /aria-label=\{\`Rechazar \$\{recommendation\.item\}\`\}/,
+    /aria-label=\{\`\$\{isRejected \? "Restaurar" : "Rechazar"\} \$\{recommendation\.item\}\`\}/,
   )
 })
 
