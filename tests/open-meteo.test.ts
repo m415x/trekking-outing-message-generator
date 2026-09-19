@@ -215,3 +215,33 @@ test("Open-Meteo provider does not classify every HTTP 400 as forecast unavailab
     /Open-Meteo request failed/,
   )
 })
+
+
+test("requests and maps hourly wind direction for the outing summary", async () => {
+  const { mapOpenMeteoResponse } = await import("../lib/open-meteo")
+  const request = createOpenMeteoRequest({
+    latitude: -31.5375,
+    longitude: -68.5364,
+    date: "2026-09-20",
+  })
+
+  assert.ok(request.searchParams.get("hourly")?.includes("wind_direction_10m"))
+
+  const mapped = mapOpenMeteoResponse({
+    hourly: {
+      time: ["2026-09-20T08:00"],
+      temperature_2m: [12],
+      precipitation: [0],
+      wind_speed_10m: [24],
+      wind_gusts_10m: [36],
+      wind_direction_10m: [250],
+    },
+    daily: {
+      time: ["2026-09-20"],
+      sunrise: ["2026-09-20T07:12"],
+      sunset: ["2026-09-20T19:28"],
+    },
+  })
+
+  assert.equal(mapped.hourly[0].windDirectionDegrees, 250)
+})
