@@ -1,8 +1,10 @@
 "use client"
 
 import type { TrekkingEvent } from "../lib/trekking-event"
-import type { Recommendations } from "../lib/recommendations"\nimport type { OutingConditions } from "../lib/outing-conditions"
-import { getSharingState } from "../lib/sharing-state"\nimport { generateWhatsAppMessage } from "../lib/whatsapp-message"
+import type { Recommendations } from "../lib/recommendations"
+import type { OutingConditions } from "../lib/outing-conditions"
+import { getSharingState } from "../lib/sharing-state"
+import { generateWhatsAppMessage } from "../lib/whatsapp-message"
 
 interface MessagePreviewProps {
   event: TrekkingEvent
