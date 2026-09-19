@@ -435,7 +435,7 @@ export function OutingEditor({
           </div>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
             <button
-              className="w-full rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-700"
+              className="w-full rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
               type="button"
               onClick={() => {
                 if (!frequentPlaces) return
@@ -662,7 +662,7 @@ export function OutingEditor({
                 </p>
               )}
               <button
-                className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 transition hover:bg-slate-50 sm:w-auto"
+                className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 transition hover:bg-slate-50 sm:w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
                 type="button"
                 onClick={() => setRejectHydration((current) => !current)}
               >
@@ -673,7 +673,7 @@ export function OutingEditor({
                   <p>{recommendation.item}</p>
                   <p>{recommendation.reasons.join(". ")}</p>
                   <button
-                    className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 transition hover:bg-slate-50 sm:w-auto"
+                    className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 transition hover:bg-slate-50 sm:w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
                     type="button"
                     onClick={() =>
                       setRejectedEquipment((current) => [
@@ -770,7 +770,7 @@ export function OutingEditor({
               onChange={(e) => setCustomRequirement(e.target.value)}
             />
           </label>
-          <button className="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-700" type="button" onClick={addRequirement}>
+          <button className="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2" type="button" onClick={addRequirement}>
             Agregar
           </button>
         </fieldset>
