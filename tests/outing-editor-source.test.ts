@@ -696,3 +696,14 @@ test("TOMG-7 restores saved elevation gain when selecting a frequent place", asy
   assert.match(source, /setEvent\(result\.event\)/)
   assert.match(source, /value=\{event\.route\.elevationGainM \?\? ""\}/)
 })
+
+
+test("TOMG-7 closes the app with the requested developer credit", async () => {
+  const page = await readFile(
+    new URL("../app/page.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(page, /<footer/)
+  assert.match(page, /Desarrollado con ♥ por Cristian Lahoz/)
+})
