@@ -545,7 +545,7 @@ test("all editor action buttons expose explicit keyboard focus styling", async (
     "utf8",
   )
 
-  const buttonTags = source.match(/<button[\s\S]*?>/g) ?? []
+  const buttonTags = source.match(/<button\b[^>]*>/g) ?? []
   assert.ok(buttonTags.length > 0)
   for (const button of buttonTags) {
     assert.match(button, /focus-visible:ring-2/)
