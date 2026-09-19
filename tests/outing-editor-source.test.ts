@@ -577,3 +577,24 @@ test("equipment rejection actions have recommendation-specific accessible names"
     /aria-label=\{\`Rechazar \$\{recommendation\.item\}\`\}/,
   )
 })
+
+
+test("TOMG-7 keeps weather location simple by default and exposes coordinates only as an advanced option", async () => {
+  const source = await readSource("components/outing-editor.tsx")
+
+  assert.match(source, /Ubicación para clima y luz solar/)
+  assert.match(source, /Departamento de San Juan/)
+  assert.match(source, /Otra ubicación/)
+  assert.match(source, /weatherLocationMode === "custom"/)
+})
+
+test("TOMG-7 places the trailhead name before frequent-place management actions", async () => {
+  const source = await readSource("components/outing-editor.tsx")
+
+  const trailhead = source.indexOf("Inicio del sendero")
+  const save = source.indexOf("Guardar lugar")
+
+  assert.ok(trailhead >= 0)
+  assert.ok(save >= 0)
+  assert.ok(trailhead < save)
+})
