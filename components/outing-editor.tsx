@@ -49,6 +49,7 @@ export function OutingEditor({
   const [placeId, setPlaceId] = useState("")
   const [latitude, setLatitude] = useState("")
   const [longitude, setLongitude] = useState("")
+  const [weatherLocationMode, setWeatherLocationMode] = useState("department")
   const [placeError, setPlaceError] = useState("")
   const [placesRevision, setPlacesRevision] = useState(0)
   const [manualHydrationLiters, setManualHydrationLiters] = useState<number | undefined>()
@@ -310,7 +311,7 @@ export function OutingEditor({
         </fieldset>
 
         <fieldset className="space-y-4">
-          <legend className="text-lg font-semibold text-slate-950">Clima y luz solar</legend>
+          <legend className="text-lg font-semibold text-slate-950">Clima y luz solar</legend>\n          <label className="block space-y-2 text-sm font-medium text-slate-800">\n            Ubicación para clima y luz solar\n            <select value={weatherLocationMode} onChange={(e) => setWeatherLocationMode(e.target.value)} className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5">\n              <option value="department">Departamento de San Juan</option>\n              <option value="custom">Otra ubicación</option>\n            </select>\n          </label>
           <div role="status" aria-live="polite" className="space-y-2 text-sm text-slate-600">
           {conditionsLoading && (
             <p>Cargando pronóstico…</p>
@@ -409,7 +410,7 @@ export function OutingEditor({
               ))}
             </select>
           </label>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {weatherLocationMode === "custom" && (\n          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <label className="block space-y-2 text-sm font-medium text-slate-800">
               Latitud
               <input
@@ -432,8 +433,15 @@ export function OutingEditor({
                 onChange={(e) => setLongitude(e.target.value)}
               />
             </label>
-          </div>
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+          </div>\n          )}
+          <label className="block space-y-2 text-sm font-medium text-slate-800">
+            Inicio del sendero
+            <input
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+              value={event.trailhead.placeName}
+              onChange={(e) => updateTrailhead("placeName", e.target.value)}
+            />
+          </label>\n          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
             <button
               className="w-full rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
               type="button"
@@ -526,14 +534,7 @@ export function OutingEditor({
               }
             />
           </label>
-          <label className="block space-y-2 text-sm font-medium text-slate-800">
-            Inicio del sendero
-            <input
-              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
-              value={event.trailhead.placeName}
-              onChange={(e) => updateTrailhead("placeName", e.target.value)}
-            />
-          </label>
+          
           <label className="block space-y-2 text-sm font-medium text-slate-800">
             Enlace de Google Maps del sendero
             <input
