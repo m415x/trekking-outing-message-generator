@@ -728,24 +728,31 @@ export function OutingEditor({
               >
                 {rejectHydration ? "Restaurar agua" : "Rechazar agua"}
               </button>
-              {recommendations.equipment.map((recommendation) => (
-                <div key={recommendation.item} className="space-y-1 text-sm text-slate-700">
-                  <p>{recommendation.item}</p>
-                  <p>{recommendation.reasons.join(". ")}</p>
-                  <button
-                    className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 transition hover:bg-slate-50 sm:w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
-                    type="button"
-                    aria-label={`Rechazar ${recommendation.item}`}
-                    onClick={() =>
-                      setRejectedEquipment((current) => [
-                        ...new Set([...current, recommendation.item]),
-                      ])
-                    }
-                  >
-                    Rechazar
-                  </button>
-                </div>
-              ))}
+              {suggestedRecommendations.equipment.map((recommendation) => {
+                const isRejected = rejectedEquipment.includes(recommendation.item)
+                return (
+                  <div key={recommendation.item} className="space-y-1 text-sm text-slate-700">
+                    <div className={isRejected ? "line-through opacity-60" : undefined}>
+                      <p>{recommendation.item}</p>
+                      <p>{recommendation.reasons.join(". ")}</p>
+                    </div>
+                    <button
+                      className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 transition hover:bg-slate-50 sm:w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+                      type="button"
+                      aria-label={`${isRejected ? "Restaurar" : "Rechazar"} ${recommendation.item}`}
+                      onClick={() =>
+                        setRejectedEquipment((current) =>
+                          isRejected
+                            ? current.filter((item) => item !== recommendation.item)
+                            : [...new Set([...current, recommendation.item])],
+                        )
+                      }
+                    >
+                      {isRejected ? "Restaurar" : "Rechazar"}
+                    </button>
+                  </div>
+                )
+              })}
             </>
           ) : (
             <p className="text-sm text-slate-600">
