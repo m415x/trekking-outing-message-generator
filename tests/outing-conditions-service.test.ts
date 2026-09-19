@@ -83,6 +83,8 @@ test("returns available outing-window conditions with freshness metadata", async
             temperatureC: 20,
       temperatureMinC: 12,
       temperatureMaxC: 20,
+      temperatureMinC: 12,
+      temperatureMaxC: 20,
             precipitationMm: 0,
             windSpeedKmh: 8,
             windGustKmh: 12,
