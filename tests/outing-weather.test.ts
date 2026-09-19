@@ -93,3 +93,35 @@ test("returns no summary when the provider has no hourly data for the outing win
     undefined,
   )
 })
+
+
+test("summarizes min/max temperature, dominant wind direction, and peak gusts", () => {
+  const weather = selectOutingWindowWeather(
+    [
+      {
+        moment: { date: "2026-09-20", time: "08:00" },
+        temperatureC: 11,
+        precipitationMm: 0,
+        windSpeedKmh: 10,
+        windGustKmh: 22,
+        windDirectionDegrees: 260,
+      },
+      {
+        moment: { date: "2026-09-20", time: "09:00" },
+        temperatureC: 18,
+        precipitationMm: 0,
+        windSpeedKmh: 24,
+        windGustKmh: 36,
+        windDirectionDegrees: 250,
+      },
+    ],
+    { date: "2026-09-20", time: "08:00" },
+    { date: "2026-09-20", time: "09:30" },
+  )
+
+  assert.ok(weather)
+  assert.equal(weather.temperatureMinC, 11)
+  assert.equal(weather.temperatureMaxC, 18)
+  assert.equal(weather.windDirectionDegrees, 250)
+  assert.equal(weather.windGustKmh, 36)
+})
