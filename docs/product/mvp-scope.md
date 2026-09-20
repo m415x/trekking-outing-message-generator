@@ -57,7 +57,19 @@ Unless a later approved story explicitly introduces them, the following are outs
 - historical weather storage as domain truth;
 - native mobile applications;
 - progressive web app (PWA) installability, including a web app manifest, install icons, standalone presentation, and any service-worker/offline strategy;
+- interactive map selection for the meeting point and trek start point;
+- Basic/Advanced editor modes for controlling UI complexity without duplicating the domain model;
 - opaque or mandatory recommendation automation.
+
+## Planned post-MVP improvements
+
+The MVP Epic is closed. Near-term improvements are tracked as independent short stories rather than a new Epic so each can be implemented, validated, documented, and merged independently from the current `dev` baseline:
+
+- **TOMG-42 — Add PWA installability.** Add the installability contract (manifest, app identity/icons, standalone presentation) and explicitly decide the scope of service-worker/offline behavior.
+- **TOMG-43 — Select meeting and trek start locations on a map.** Add interactive map selection while preserving the existing separation between meeting point and trek start point and keeping coordinates/form state synchronized.
+- **TOMG-44 — Add basic and advanced editor modes.** Reduce UI complexity through an explicit mode switch while retaining one shared `TrekkingEvent` model, validation path, and message-generation contract.
+
+These stories record intent only. Their detailed implementation contracts must be reconstructed from the current remote `dev`, current durable documentation, and Jira when each story begins.
 
 ## Scope rule
 
