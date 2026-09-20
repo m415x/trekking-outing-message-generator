@@ -14,6 +14,7 @@ const HOURLY_VARIABLES = [
   "precipitation",
   "wind_speed_10m",
   "wind_gusts_10m",
+  "wind_direction_10m",
 ] as const
 
 const DAILY_VARIABLES = ["sunrise", "sunset"] as const
@@ -44,6 +45,7 @@ interface OpenMeteoResponse {
     precipitation: number[]
     wind_speed_10m: number[]
     wind_gusts_10m: number[]
+    wind_direction_10m: number[]
   }
   daily: {
     time: string[]
@@ -64,6 +66,7 @@ export function mapOpenMeteoResponse(response: OpenMeteoResponse) {
     response.hourly.precipitation,
     response.hourly.wind_speed_10m,
     response.hourly.wind_gusts_10m,
+    response.hourly.wind_direction_10m,
   ]
 
   if (
@@ -83,6 +86,7 @@ export function mapOpenMeteoResponse(response: OpenMeteoResponse) {
       precipitationMm: response.hourly.precipitation[index],
       windSpeedKmh: response.hourly.wind_speed_10m[index],
       windGustKmh: response.hourly.wind_gusts_10m[index],
+      windDirectionDegrees: response.hourly.wind_direction_10m[index],
     })),
     sunrise: toEventMoment(response.daily.sunrise[0]),
     sunset: toEventMoment(response.daily.sunset[0]),

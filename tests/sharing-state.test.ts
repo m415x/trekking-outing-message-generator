@@ -36,3 +36,117 @@ test("enables sharing for a valid event using the same generated message", () =>
   assert.ok(state.message.includes("🔴 Alta"))
   assert.ok(state.message.includes("*Coordinador:* Cristian Lahoz"))
 })
+
+
+test("keeps a valid outing shareable when external conditions are unavailable", async () => {
+  const { loadOutingConditions } = await import("../lib/outing-conditions-service")
+
+  const event = createEmptyTrekkingEvent()
+  event.title = "Cerro Palo Seco"
+  event.meeting.date = "2026-09-20"
+  event.meeting.time = "08:00"
+  event.meeting.location.placeName = "Arco de Zonda"
+  event.trekStart.date = "2026-09-20"
+  event.trekStart.time = "09:30"
+  event.trailhead.placeName = "Cerro Palo Seco"
+  event.route.distanceKm = 14
+  event.route.estimatedDurationMinutes = 420
+  event.route.difficulty = "high"
+  event.coordinator = "Cristian Lahoz"
+
+  const conditions = await loadOutingConditions(
+    {
+      latitude: -31.5375,
+      longitude: -68.5364,
+      date: event.trekStart.date,
+      trekStart: event.trekStart,
+      estimatedDurationMinutes: event.route.estimatedDurationMinutes,
+    },
+    {
+      loadForecast: async () => {
+        throw new Error("network failure")
+      },
+    },
+  )
+
+  assert.deepEqual(conditions, { forecastStatus: "error" })
+
+  const state = getSharingState(event)
+
+  assert.equal(state.canShare, true)
+  assert.equal(state.validation.isValid, true)
+  assert.ok(state.message.includes("🥾 *CERRO PALO SECO*"))
+})
+
+
+test("shares the same resolved recommendations that the user accepted", async () => {
+  const { applyRecommendationOverrides, createRecommendations } = await import("../lib/recommendations")
+
+  const event = createEmptyTrekkingEvent()
+  event.title = "Cerro Palo Seco"
+  event.meeting.date = "2026-09-20"
+  event.meeting.time = "08:00"
+  event.meeting.location.placeName = "Arco de Zonda"
+  event.trekStart.date = "2026-09-20"
+  event.trekStart.time = "09:30"
+  event.trailhead.placeName = "Cerro Palo Seco"
+  event.route.distanceKm = 14
+  event.route.estimatedDurationMinutes = 240
+  event.route.difficulty = "high"
+  event.coordinator = "Cristian Lahoz"
+
+  const suggested = createRecommendations({
+    estimatedDurationMinutes: event.route.estimatedDurationMinutes,
+    difficulty: event.route.difficulty,
+    weather: {
+      temperatureC: 30,
+      precipitationMm: 0,
+      windSpeedKmh: 30,
+      windGustKmh: 45,
+    },
+  })
+  const resolved = applyRecommendationOverrides(suggested, {
+    hydrationLiters: 2,
+    rejectedEquipment: ["Protección solar"],
+  })
+
+  const state = getSharingState(event, resolved)
+
+  assert.equal(state.canShare, true)
+  assert.match(state.message, /Agua orientativa: 2 L/)
+  assert.match(state.message, /Protección contra el viento/)
+  const recommendationsStart = state.message.indexOf(
+    "💡 *Recomendaciones para la salida*",
+  )
+  const requirementsStart = state.message.indexOf(
+    "🎒 *Equipo recomendado*",
+    recommendationsStart,
+  )
+  const recommendationsSection = state.message.slice(
+    recommendationsStart,
+    requirementsStart === -1 ? undefined : requirementsStart,
+  )
+
+  assert.ok(recommendationsStart >= 0)
+  assert.doesNotMatch(recommendationsSection, /Protección solar/)
+})
+
+
+test("keeps sharing blocked after recommendations are resolved when the outing is invalid", async () => {
+  const { createRecommendations } = await import("../lib/recommendations")
+
+  const event = createEmptyTrekkingEvent()
+  event.title = "Cerro Palo Seco"
+  event.route.estimatedDurationMinutes = 240
+
+  const recommendations = createRecommendations({
+    estimatedDurationMinutes: event.route.estimatedDurationMinutes,
+    difficulty: "high",
+  })
+
+  const state = getSharingState(event, recommendations)
+
+  assert.equal(state.canShare, false)
+  assert.equal(state.validation.isValid, false)
+  assert.match(state.message, /Agua orientativa:/)
+})

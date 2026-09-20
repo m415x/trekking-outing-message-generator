@@ -30,45 +30,43 @@
 ### Task 1: Define TrekkingEvent domain contract and difficulty
 
 **Files:**
+
 - Create: `lib/trekking-event.ts`
 - Create: `tests/trekking-event.test.ts`
 - Modify: `docs/architecture/domain-model.md`
 
 **Interfaces:**
+
 - Produces: `Difficulty`, `EventMoment`, `EventLocation`, `TrekkingEvent`, `DIFFICULTIES`, `DEFAULT_REQUIREMENTS`, `createEmptyTrekkingEvent()`.
 - Consumes: no product-domain interfaces from earlier tasks.
 
 - [ ] **Step 1: Write the failing domain contract test**
 
 ```ts
-import assert from "node:assert/strict"
-import test from "node:test"
-import {
-  DEFAULT_REQUIREMENTS,
-  DIFFICULTIES,
-  createEmptyTrekkingEvent,
-} from "../lib/trekking-event"
+import assert from 'node:assert/strict'
+import test from 'node:test'
+import { DEFAULT_REQUIREMENTS, DIFFICULTIES, createEmptyTrekkingEvent } from '../lib/trekking-event'
 
-test("defines the project difficulty scale", () => {
+test('defines the project difficulty scale', () => {
   assert.deepEqual(
     DIFFICULTIES.map(({ value, label, emoji }) => ({ value, label, emoji })),
     [
-      { value: "low", label: "Baja", emoji: "🟢" },
-      { value: "moderate", label: "Moderada", emoji: "🟡" },
-      { value: "high", label: "Alta", emoji: "🔴" },
-      { value: "veryHigh", label: "Muy alta", emoji: "⚫" },
+      { value: 'low', label: 'Baja', emoji: '🟢' },
+      { value: 'moderate', label: 'Moderada', emoji: '🟡' },
+      { value: 'high', label: 'Alta', emoji: '🔴' },
+      { value: 'veryHigh', label: 'Muy alta', emoji: '⚫' },
     ],
   )
 })
 
-test("creates an empty event with explicit 15 minute tolerance", () => {
+test('creates an empty event with explicit 15 minute tolerance', () => {
   const event = createEmptyTrekkingEvent()
 
   assert.equal(event.meeting.toleranceMinutes, 15)
-  assert.equal(event.meeting.location.placeName, "")
-  assert.equal(event.trailhead.placeName, "")
-  assert.equal(event.trekStart.date, "")
-  assert.equal(event.trekStart.time, "")
+  assert.equal(event.meeting.location.placeName, '')
+  assert.equal(event.trailhead.placeName, '')
+  assert.equal(event.trekStart.date, '')
+  assert.equal(event.trekStart.time, '')
   assert.deepEqual(event.requirements, DEFAULT_REQUIREMENTS)
 })
 ```
@@ -82,7 +80,7 @@ Expected: FAIL because `lib/trekking-event.ts` does not exist.
 - [ ] **Step 3: Implement the minimal domain contract**
 
 ```ts
-export type Difficulty = "low" | "moderate" | "high" | "veryHigh"
+export type Difficulty = 'low' | 'moderate' | 'high' | 'veryHigh'
 
 export interface EventMoment {
   date: string
@@ -114,37 +112,37 @@ export interface TrekkingEvent {
 }
 
 export const DIFFICULTIES = [
-  { value: "low", label: "Baja", emoji: "🟢" },
-  { value: "moderate", label: "Moderada", emoji: "🟡" },
-  { value: "high", label: "Alta", emoji: "🔴" },
-  { value: "veryHigh", label: "Muy alta", emoji: "⚫" },
+  { value: 'low', label: 'Baja', emoji: '🟢' },
+  { value: 'moderate', label: 'Moderada', emoji: '🟡' },
+  { value: 'high', label: 'Alta', emoji: '🔴' },
+  { value: 'veryHigh', label: 'Muy alta', emoji: '⚫' },
 ] as const
 
 export const DEFAULT_REQUIREMENTS = [
-  "Ropa cómoda",
-  "Calzado con buen agarre",
-  "Bastones de trekking (o palos de escoba)",
-  "Agua",
-  "Protección solar",
-  "Repelente",
-  "Snacks y equipo de mate",
+  'Ropa cómoda',
+  'Calzado con buen agarre',
+  'Bastones de trekking (o palos de escoba)',
+  'Agua',
+  'Protección solar',
+  'Repelente',
+  'Snacks y equipo de mate',
 ] as const
 
 export function createEmptyTrekkingEvent(): TrekkingEvent {
   return {
-    title: "",
+    title: '',
     meeting: {
-      date: "",
-      time: "",
+      date: '',
+      time: '',
       toleranceMinutes: 15,
-      location: { placeName: "", mapsUrl: "" },
+      location: { placeName: '', mapsUrl: '' },
     },
-    trekStart: { date: "", time: "" },
-    trailhead: { placeName: "", mapsUrl: "" },
+    trekStart: { date: '', time: '' },
+    trailhead: { placeName: '', mapsUrl: '' },
     route: {},
     requirements: [...DEFAULT_REQUIREMENTS],
-    coordinator: "",
-    routeKnower: "",
+    coordinator: '',
+    routeKnower: '',
   }
 }
 ```
@@ -167,47 +165,49 @@ git commit -m "feat: define trekking event domain"
 ### Task 2: Implement validation and deterministic message generation
 
 **Files:**
+
 - Create: `lib/trekking-event-validation.ts`
 - Create: `lib/whatsapp-message.ts`
 - Create: `tests/trekking-event-validation.test.ts`
 - Create: `tests/whatsapp-message.test.ts`
 
 **Interfaces:**
+
 - Consumes: `TrekkingEvent`, `Difficulty`, `DIFFICULTIES` from `lib/trekking-event.ts`.
 - Produces: `validateTrekkingEvent(event): ValidationResult`, `generateWhatsAppMessage(event): string`.
 
 - [ ] **Step 1: Write failing validation tests**
 
 ```ts
-import assert from "node:assert/strict"
-import test from "node:test"
-import { createEmptyTrekkingEvent } from "../lib/trekking-event"
-import { validateTrekkingEvent } from "../lib/trekking-event-validation"
+import assert from 'node:assert/strict'
+import test from 'node:test'
+import { createEmptyTrekkingEvent } from '../lib/trekking-event'
+import { validateTrekkingEvent } from '../lib/trekking-event-validation'
 
-test("rejects an empty event for final sharing", () => {
+test('rejects an empty event for final sharing', () => {
   const result = validateTrekkingEvent(createEmptyTrekkingEvent())
   assert.equal(result.isValid, false)
   assert.ok(result.errors.title)
-  assert.ok(result.errors["meeting.date"])
-  assert.ok(result.errors["meeting.location.placeName"])
-  assert.ok(result.errors["trekStart.date"])
-  assert.ok(result.errors["trailhead.placeName"])
-  assert.ok(result.errors["route.distanceKm"])
-  assert.ok(result.errors["route.estimatedDurationMinutes"])
-  assert.ok(result.errors["route.difficulty"])
+  assert.ok(result.errors['meeting.date'])
+  assert.ok(result.errors['meeting.location.placeName'])
+  assert.ok(result.errors['trekStart.date'])
+  assert.ok(result.errors['trailhead.placeName'])
+  assert.ok(result.errors['route.distanceKm'])
+  assert.ok(result.errors['route.estimatedDurationMinutes'])
+  assert.ok(result.errors['route.difficulty'])
   assert.ok(result.errors.responsible)
 })
 
-test("accepts a complete event with only a route knower", () => {
+test('accepts a complete event with only a route knower', () => {
   const event = createEmptyTrekkingEvent()
-  event.title = "Cerro Palo Seco"
-  event.meeting.date = "2026-09-06"
-  event.meeting.time = "08:00"
-  event.meeting.location.placeName = "Arco de Zonda"
-  event.trekStart = { date: "2026-09-06", time: "09:30" }
-  event.trailhead.placeName = "Cerro Palo Seco"
-  event.route = { distanceKm: 14, estimatedDurationMinutes: 420, difficulty: "high" }
-  event.routeKnower = "Cristian Lahoz"
+  event.title = 'Cerro Palo Seco'
+  event.meeting.date = '2026-09-06'
+  event.meeting.time = '08:00'
+  event.meeting.location.placeName = 'Arco de Zonda'
+  event.trekStart = { date: '2026-09-06', time: '09:30' }
+  event.trailhead.placeName = 'Cerro Palo Seco'
+  event.route = { distanceKm: 14, estimatedDurationMinutes: 420, difficulty: 'high' }
+  event.routeKnower = 'Cristian Lahoz'
 
   assert.deepEqual(validateTrekkingEvent(event), { isValid: true, errors: {} })
 })
@@ -222,7 +222,7 @@ Expected: FAIL because validation module does not exist.
 - [ ] **Step 3: Implement structured validation**
 
 ```ts
-import type { TrekkingEvent } from "./trekking-event"
+import type { TrekkingEvent } from './trekking-event'
 
 export interface ValidationResult {
   isValid: boolean
@@ -233,18 +233,23 @@ export function validateTrekkingEvent(event: TrekkingEvent): ValidationResult {
   const errors: Record<string, string> = {}
   const required = (value: string | undefined) => Boolean(value?.trim())
 
-  if (!required(event.title)) errors.title = "Ingresá el nombre de la salida."
-  if (!event.meeting.date) errors["meeting.date"] = "Ingresá la fecha de encuentro."
-  if (!event.meeting.time) errors["meeting.time"] = "Ingresá la hora de encuentro."
-  if (!required(event.meeting.location.placeName)) errors["meeting.location.placeName"] = "Ingresá el punto de encuentro."
-  if (!event.trekStart.date) errors["trekStart.date"] = "Ingresá la fecha de inicio del trekking."
-  if (!event.trekStart.time) errors["trekStart.time"] = "Ingresá la hora de inicio del trekking."
-  if (!required(event.trailhead.placeName)) errors["trailhead.placeName"] = "Ingresá el punto de inicio del trekking."
-  if (!(event.route.distanceKm && event.route.distanceKm > 0)) errors["route.distanceKm"] = "Ingresá una distancia mayor que cero."
-  if (event.route.elevationGainM !== undefined && event.route.elevationGainM < 0) errors["route.elevationGainM"] = "El desnivel no puede ser negativo."
-  if (!(event.route.estimatedDurationMinutes && event.route.estimatedDurationMinutes > 0)) errors["route.estimatedDurationMinutes"] = "Ingresá una duración mayor que cero."
-  if (!event.route.difficulty) errors["route.difficulty"] = "Seleccioná la dificultad."
-  if (!required(event.coordinator) && !required(event.routeKnower)) errors.responsible = "Ingresá al menos un responsable."
+  if (!required(event.title)) errors.title = 'Ingresá el nombre de la salida.'
+  if (!event.meeting.date) errors['meeting.date'] = 'Ingresá la fecha de encuentro.'
+  if (!event.meeting.time) errors['meeting.time'] = 'Ingresá la hora de encuentro.'
+  if (!required(event.meeting.location.placeName))
+    errors['meeting.location.placeName'] = 'Ingresá el punto de encuentro.'
+  if (!event.trekStart.date) errors['trekStart.date'] = 'Ingresá la fecha de inicio del trekking.'
+  if (!event.trekStart.time) errors['trekStart.time'] = 'Ingresá la hora de inicio del trekking.'
+  if (!required(event.trailhead.placeName)) errors['trailhead.placeName'] = 'Ingresá el punto de inicio del trekking.'
+  if (!(event.route.distanceKm && event.route.distanceKm > 0))
+    errors['route.distanceKm'] = 'Ingresá una distancia mayor que cero.'
+  if (event.route.elevationGainM !== undefined && event.route.elevationGainM < 0)
+    errors['route.elevationGainM'] = 'El desnivel no puede ser negativo.'
+  if (!(event.route.estimatedDurationMinutes && event.route.estimatedDurationMinutes > 0))
+    errors['route.estimatedDurationMinutes'] = 'Ingresá una duración mayor que cero.'
+  if (!event.route.difficulty) errors['route.difficulty'] = 'Seleccioná la dificultad.'
+  if (!required(event.coordinator) && !required(event.routeKnower))
+    errors.responsible = 'Ingresá al menos un responsable.'
 
   return { isValid: Object.keys(errors).length === 0, errors }
 }
@@ -259,26 +264,26 @@ Expected: PASS.
 - [ ] **Step 5: Write failing generator tests for complete, optional, role, and cross-date behavior**
 
 ```ts
-import assert from "node:assert/strict"
-import test from "node:test"
-import { createEmptyTrekkingEvent } from "../lib/trekking-event"
-import { generateWhatsAppMessage } from "../lib/whatsapp-message"
+import assert from 'node:assert/strict'
+import test from 'node:test'
+import { createEmptyTrekkingEvent } from '../lib/trekking-event'
+import { generateWhatsAppMessage } from '../lib/whatsapp-message'
 
-test("generates one deterministic complete WhatsApp message", () => {
+test('generates one deterministic complete WhatsApp message', () => {
   const event = createEmptyTrekkingEvent()
-  event.title = "Cerro Palo Seco"
+  event.title = 'Cerro Palo Seco'
   event.meeting = {
-    date: "2026-09-06",
-    time: "08:00",
+    date: '2026-09-06',
+    time: '08:00',
     toleranceMinutes: 15,
-    location: { placeName: "Arco de Zonda", mapsUrl: "https://maps.example/meeting" },
+    location: { placeName: 'Arco de Zonda', mapsUrl: 'https://maps.example/meeting' },
   }
-  event.trekStart = { date: "2026-09-06", time: "09:30" }
-  event.trailhead = { placeName: "Cerro Palo Seco", mapsUrl: "https://maps.example/trailhead" }
-  event.route = { distanceKm: 14, elevationGainM: 745, estimatedDurationMinutes: 420, difficulty: "high" }
-  event.requirements = ["Ropa cómoda", "Agua"]
-  event.coordinator = "Cristian Lahoz"
-  event.routeKnower = "Cristian Lahoz"
+  event.trekStart = { date: '2026-09-06', time: '09:30' }
+  event.trailhead = { placeName: 'Cerro Palo Seco', mapsUrl: 'https://maps.example/trailhead' }
+  event.route = { distanceKm: 14, elevationGainM: 745, estimatedDurationMinutes: 420, difficulty: 'high' }
+  event.requirements = ['Ropa cómoda', 'Agua']
+  event.coordinator = 'Cristian Lahoz'
+  event.routeKnower = 'Cristian Lahoz'
 
   const message = generateWhatsAppMessage(event)
   assert.match(message, /🥾 \*CERRO PALO SECO\*/)
@@ -288,15 +293,15 @@ test("generates one deterministic complete WhatsApp message", () => {
   assert.match(message, /🧭 \*Conocedor del camino:\* Cristian Lahoz/)
 })
 
-test("makes a different trek-start date explicit and omits empty optional values", () => {
+test('makes a different trek-start date explicit and omits empty optional values', () => {
   const event = createEmptyTrekkingEvent()
-  event.title = "Nocturna"
-  event.meeting = { date: "2026-09-05", time: "23:00", toleranceMinutes: 15, location: { placeName: "Encuentro" } }
-  event.trekStart = { date: "2026-09-06", time: "01:30" }
-  event.trailhead = { placeName: "Inicio" }
-  event.route = { distanceKm: 8, estimatedDurationMinutes: 240, difficulty: "moderate" }
+  event.title = 'Nocturna'
+  event.meeting = { date: '2026-09-05', time: '23:00', toleranceMinutes: 15, location: { placeName: 'Encuentro' } }
+  event.trekStart = { date: '2026-09-06', time: '01:30' }
+  event.trailhead = { placeName: 'Inicio' }
+  event.route = { distanceKm: 8, estimatedDurationMinutes: 240, difficulty: 'moderate' }
   event.requirements = []
-  event.routeKnower = "Ana"
+  event.routeKnower = 'Ana'
 
   const message = generateWhatsAppMessage(event)
   assert.match(message, /Inicio estimado: .*6 de septiembre.*01:30 hs/)
@@ -315,6 +320,7 @@ Expected: FAIL because generator module does not exist.
 - [ ] **Step 7: Implement formatting helpers and the pure generator**
 
 Implement in `lib/whatsapp-message.ts`:
+
 - `formatSpanishDate(date: string): string` using a fixed Spanish locale and UTC-safe parsing of the date-only value;
 - `addMinutes(time: string, minutes: number): string` for meeting tolerance display;
 - `formatDuration(minutes: number): string` producing hours/minutes without fractional-hour ambiguity;
@@ -338,12 +344,14 @@ git commit -m "feat: validate outings and generate messages"
 ### Task 3: Build outing form and requirements editor
 
 **Files:**
+
 - Create: `components/outing-editor.tsx`
 - Create: `components/outing-form.tsx`
 - Create: `components/requirements-fieldset.tsx`
 - Modify: `app/page.tsx`
 
 **Interfaces:**
+
 - Consumes: `TrekkingEvent`, `DIFFICULTIES`, `DEFAULT_REQUIREMENTS`, `createEmptyTrekkingEvent()`.
 - Produces: client-owned `TrekkingEvent` state passed to preview/sharing in Task 4.
 
@@ -354,14 +362,14 @@ Read the relevant guides under `node_modules/next/dist/docs/` for App Router pag
 - [ ] **Step 2: Replace the starter page with a server page shell**
 
 ```tsx
-import { OutingEditor } from "@/components/outing-editor"
+import { OutingEditor } from '@/components/outing-editor'
 
 export default function Home() {
   return (
-    <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6">
-      <header className="mb-8">
-        <p className="text-sm font-medium">Pircas Trek</p>
-        <h1 className="text-3xl font-semibold">Generador de salidas</h1>
+    <main className='mx-auto w-full max-w-7xl px-4 py-8 sm:px-6'>
+      <header className='mb-8'>
+        <p className='text-sm font-medium'>Oxidados Trek</p>
+        <h1 className='text-3xl font-semibold'>Generador de salidas</h1>
       </header>
       <OutingEditor />
     </main>
@@ -372,11 +380,11 @@ export default function Home() {
 - [ ] **Step 3: Implement the client editor as the single owner of transient event state**
 
 ```tsx
-"use client"
+'use client'
 
-import { useState } from "react"
-import { createEmptyTrekkingEvent } from "@/lib/trekking-event"
-import { OutingForm } from "./outing-form"
+import { useState } from 'react'
+import { createEmptyTrekkingEvent } from '@/lib/trekking-event'
+import { OutingForm } from './outing-form'
 
 export function OutingEditor() {
   const [event, setEvent] = useState(createEmptyTrekkingEvent)
@@ -387,6 +395,7 @@ export function OutingEditor() {
 - [ ] **Step 4: Implement structured form sections**
 
 In `outing-form.tsx`, render controlled inputs for:
+
 - title;
 - meeting date/time and meeting place/optional Maps URL;
 - trek-start date/time and trailhead place/optional Maps URL;
@@ -416,10 +425,12 @@ git commit -m "feat: build trekking outing form"
 ### Task 4: Add live preview and sharing actions
 
 **Files:**
+
 - Create: `components/message-preview.tsx`
 - Modify: `components/outing-editor.tsx`
 
 **Interfaces:**
+
 - Consumes: `generateWhatsAppMessage(event)`, `validateTrekkingEvent(event)`.
 - Produces: read-only preview plus Copy and WhatsApp browser actions using the exact generated string.
 
@@ -433,19 +444,20 @@ interface MessagePreviewProps {
   onWhatsApp: () => void
 }
 
-export function MessagePreview({
-  message,
-  canShare,
-  onCopy,
-  onWhatsApp,
-}: MessagePreviewProps) {
+export function MessagePreview({ message, canShare, onCopy, onWhatsApp }: MessagePreviewProps) {
   return (
-    <section aria-labelledby="message-preview-title">
-      <h2 id="message-preview-title">Vista previa</h2>
-      <pre className="whitespace-pre-wrap font-sans">{message || "Completá los datos de la salida para generar el mensaje."}</pre>
+    <section aria-labelledby='message-preview-title'>
+      <h2 id='message-preview-title'>Vista previa</h2>
+      <pre className='whitespace-pre-wrap font-sans'>
+        {message || 'Completá los datos de la salida para generar el mensaje.'}
+      </pre>
       <div>
-        <button type="button" disabled={!canShare} onClick={onCopy}>Copiar</button>
-        <button type="button" disabled={!canShare} onClick={onWhatsApp}>Abrir WhatsApp</button>
+        <button type='button' disabled={!canShare} onClick={onCopy}>
+          Copiar
+        </button>
+        <button type='button' disabled={!canShare} onClick={onWhatsApp}>
+          Abrir WhatsApp
+        </button>
       </div>
     </section>
   )
@@ -455,6 +467,7 @@ export function MessagePreview({
 - [ ] **Step 2: Wire generator and validation once in OutingEditor**
 
 Compute:
+
 ```ts
 const message = generateWhatsAppMessage(event)
 const validation = validateTrekkingEvent(event)
@@ -465,9 +478,10 @@ Pass `message` to the preview. Do not regenerate or reformat it inside either br
 - [ ] **Step 3: Implement clipboard and WhatsApp actions**
 
 Use:
+
 ```ts
 await navigator.clipboard.writeText(message)
-window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer")
+window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer')
 ```
 
 Guard both handlers with `validation.isValid` so disabled UI and imperative behavior enforce the same final-valid rule.
@@ -492,6 +506,7 @@ git commit -m "feat: add message preview and sharing"
 ### Task 5: Integrate responsive UI and validation states
 
 **Files:**
+
 - Modify: `components/outing-editor.tsx`
 - Modify: `components/outing-form.tsx`
 - Modify: `components/requirements-fieldset.tsx`
@@ -500,6 +515,7 @@ git commit -m "feat: add message preview and sharing"
 - Modify: `app/layout.tsx`
 
 **Interfaces:**
+
 - Consumes: existing Task 3/4 component props only.
 - Produces: responsive integrated TOMG-3 UI; no new domain contracts.
 
@@ -531,6 +547,7 @@ git commit -m "feat: integrate responsive outing editor"
 ### Task 6: Reconcile documentation, validation evidence, and handoff
 
 **Files:**
+
 - Modify: `docs/README.md`
 - Modify: `docs/product/mvp-scope.md`
 - Modify: `docs/architecture/trekking-event-and-message-generation.md`
@@ -538,6 +555,7 @@ git commit -m "feat: integrate responsive outing editor"
 - Modify: `docs/architecture/validation.md` only if the implemented validation contract changes the documented gate.
 
 **Interfaces:**
+
 - Consumes: final implemented contracts and actual validation evidence.
 - Produces: durable current truth for TOMG-4 bootstrap and Jira closure evidence.
 

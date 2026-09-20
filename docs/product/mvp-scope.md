@@ -45,7 +45,7 @@ Owns the recommendation engine and concrete hydration/equipment rules. Recommend
 
 ### TOMG-7 — Harden and deploy the MVP
 
-Owns integrated desktop/mobile hardening, validation/error/loading behavior, baseline accessibility, final automated coverage, documentation reconciliation, and deployment to Vercel.
+Owns the implemented integrated desktop/mobile hardening, validation/error/loading behavior, baseline accessibility, final automated coverage, documentation reconciliation, and production deployment to Vercel. The hardened MVP preserves manual outing generation when optional external weather data is unavailable and keeps validation failures from becoming shareable final messages.
 
 ## Deferred beyond the MVP
 
@@ -56,6 +56,7 @@ Unless a later approved story explicitly introduces them, the following are outs
 - multi-user collaboration/synchronization;
 - historical weather storage as domain truth;
 - native mobile applications;
+- progressive web app (PWA) installability, including a web app manifest, install icons, standalone presentation, and any service-worker/offline strategy;
 - opaque or mandatory recommendation automation.
 
 ## Scope rule

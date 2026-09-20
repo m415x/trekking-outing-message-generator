@@ -1,6 +1,7 @@
 import type { Difficulty, TrekkingEvent } from "./trekking-event"
 import { DIFFICULTIES } from "./trekking-event"
 import type { Recommendations } from "./recommendations"
+import type { OutingConditions } from "./outing-conditions"
 
 function formatSpanishDate(date: string): string {
   const [year, month, day] = date.split("-").map(Number)
@@ -41,9 +42,17 @@ function formatDifficulty(difficulty: Difficulty): string {
   return item ? `${item.emoji} ${item.label}` : difficulty
 }
 
+function formatWindDirection(degrees: number | undefined): string {
+  if (degrees === undefined || !Number.isFinite(degrees)) return ""
+  const directions = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSO", "SO", "OSO", "O", "ONO", "NO", "NNO"]
+  const normalized = ((degrees % 360) + 360) % 360
+  return directions[Math.round(normalized / 22.5) % 16]
+}
+
 export function generateWhatsAppMessage(
   event: TrekkingEvent,
   recommendations?: Recommendations,
+  conditions?: OutingConditions,
 ): string {
   const sections: string[] = []
 
@@ -99,6 +108,25 @@ export function generateWhatsAppMessage(
   }
   if (routeDetails.length > 0) {
     sections.push(["🥾 *Inicio y recorrido*", ...routeDetails].join("\n"))
+  }
+
+  if (conditions && conditions.forecastStatus !== "error") {
+    const conditionLines = [
+      ...(conditions.forecastStatus === "available"
+        ? [
+            `🌡️ Temperatura: ${conditions.weather.temperatureMaxC ?? conditions.weather.temperatureC}/${conditions.weather.temperatureMinC ?? conditions.weather.temperatureC} °C`,
+            `💨 Viento: ${conditions.weather.windSpeedKmh} km/h${formatWindDirection(conditions.weather.windDirectionDegrees) ? ` ${formatWindDirection(conditions.weather.windDirectionDegrees)}` : ""}`,
+            ...(conditions.weather.windGustKmh >= 30
+              ? [`💨 Ráfagas: ${conditions.weather.windGustKmh} km/h`]
+              : []),
+          ]
+        : ["Pronóstico no disponible"]),
+      ...(conditions.sunrise.time ? [`🌅 Amanecer: ${conditions.sunrise.time}`] : []),
+      ...(conditions.sunset.time ? [`🌇 Atardecer: ${conditions.sunset.time}`] : []),
+    ]
+    if (conditionLines.length > 0) {
+      sections.push(["🌤️ *Clima y luz solar*", ...conditionLines].join("\n"))
+    }
   }
 
   if (recommendations) {

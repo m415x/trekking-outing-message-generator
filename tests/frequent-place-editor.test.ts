@@ -37,9 +37,13 @@ class StubPlaceRepository implements PlaceRepository {
     return this.places
   }
 
-  save(_place: Place): void {}
+  save(place: Place): void {
+    void place
+  }
 
-  remove(_id: string): void {}
+  remove(id: string): void {
+    void id
+  }
 }
 
 test("loads frequent places through the repository boundary", () => {
@@ -244,4 +248,24 @@ test("a reloaded editor port sees places persisted by a previous port", () => {
   const reloadedPort = createFrequentPlaceEditorPort(repository)
 
   assert.deepEqual(reloadedPort.load().places, [place])
+})
+
+
+test("saved frequent place preserves elevation gain with the reusable route snapshot", () => {
+  const event = createEmptyTrekkingEvent()
+  event.trailhead.placeName = "Cerro Test"
+  event.route = {
+    distanceKm: 12,
+    elevationGainM: 745,
+    estimatedDurationMinutes: 360,
+    difficulty: "high",
+  }
+
+  const candidate = createPlaceFromEvent(event, {
+    id: "cerro-test",
+    latitude: -31.5,
+    longitude: -68.7,
+  })
+
+  assert.equal(candidate.route.elevationGainM, 745)
 })

@@ -46,6 +46,20 @@ Read [`AGENTS.md`](AGENTS.md) before beginning work. It defines the source-of-tr
 
 For the durable documentation map and current handoff, start at [`docs/README.md`](docs/README.md).
 
+## Deployment
+
+The MVP is deployed to Vercel and is publicly available at:
+
+- https://info-trek.vercel.app
+
+The Vercel project is connected to the GitHub repository so repository changes can participate in the configured Vercel deployment workflow.
+
+The Vercel CLI does not need to be installed as a project dependency. For an explicit manual production deployment from the repository root, use:
+
+```bash
+pnpm dlx vercel@latest --prod
+```
+
 ## MVP boundaries
 
 The MVP has no database or authentication. Local persistence, when introduced by its owning story, stays behind repository abstractions. Reusable places/routes remain separate from dated trekking events; weather remains temporal external data; recommendations remain advisory and editable; explicit manual choices are never silently overwritten by automation.

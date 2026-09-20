@@ -2,40 +2,50 @@
 
 ## Reliable starting point
 
-TOMG-6 is implemented on `tomg-6-contextual-recommendations` and is in final closure/review. Reconstruct future work from `AGENTS.md`, current code/tests, durable architecture/product docs, and Jira; this handoff is a lower-authority operational summary.
+TOMG-7 is in final closure on `tomg-7-harden-deploy-mvp`. TOMG-36 through TOMG-40 are complete in Jira; TOMG-41 owns the remaining documentation reconciliation and final closure gate.
 
-TOMG-5 is complete and merged into `dev`. Its preserved story branch is `tomg-5-add-weather-daylight`; the merge commit on `dev` is `195c995f34b355196267e6d802e9987ece1bd43d`.
+Reconstruct future work from `AGENTS.md`, current code/tests, durable architecture/product docs, and Jira. This handoff is a lower-authority operational summary and should not override those sources.
 
-## Implemented TOMG-6 contract
+## Implemented MVP contract
 
-- Recommendation logic is independent from React in `lib/recommendations.ts`.
-- Hydration is explicitly orientative carried-water planning, not medical guidance.
-- Water bands are 0.5 L/h base, 0.75 L/h for temperature >=25 °C or high/very-high difficulty, and 1.0 L/h for temperature >=30 °C combined with high/very-high difficulty.
-- Calculated water is rounded upward to 0.5 L increments.
-- Available outing-window forecast temperature is preferred; without weather, duration/difficulty still drive the estimate. No season labels or automatic stream/spring reductions are used.
-- Equipment rules currently cover headlamp near/after sunset, wind protection at >=25 km/h sustained wind or >=40 km/h gusts, and sun protection at >=25 °C.
-- Recommendations include reasons, remain advisory, and can be edited/rejected.
-- Explicit manual water and rejected-equipment choices survive recommendation recalculation.
-- The resolved accepted recommendations flow through the preview/sharing path into the generated WhatsApp message.
+- The core workflow creates a dated trekking outing and produces deterministic WhatsApp-ready output from validated event data.
+- Meeting and trailhead information remain distinct, including independent meeting and trek-start moments.
+- Reusable frequent places are persisted locally behind the `PlaceRepository` abstraction; event-local overrides do not mutate reusable place truth implicitly.
+- Weather and daylight are optional external context based on outing coordinates. Loading, unavailable, and failure states degrade without blocking the core manual workflow where technically possible.
+- Contextual hydration and equipment recommendations are advisory, explainable, editable, and subordinate to explicit manual choices.
+- Validation failures do not become shareable final messages.
+- The integrated editor has been hardened for representative mobile/desktop layouts and baseline keyboard/focus/accessibility behavior.
+- Vercel production deployment and repository workflow are documented in the root `README.md`.
 
-See `docs/architecture/external-data-and-recommendations.md` for the current contract.
+See `docs/product/mvp-scope.md` and the current files under `docs/architecture/` for durable contracts.
 
-## Development evidence
+## Development and validation evidence
 
-TOMG-6 was developed remote-first with focused RED/GREEN cycles. Focused tests were executed locally by the human and reported to the agent; the repository connector did not execute them.
+TOMG-7 was developed remote-first with focused RED/GREEN cycles. Executable checks were run locally by the human and reported to the agent; repository and Jira state were independently inspected through connectors where available.
 
-Human-reported GREEN evidence covers the recommendation contract, hydration thresholds and upward rounding, contextual equipment rules, manual override preservation, editable/rejectable UI integration, accepted recommendation message output, and the UI-to-preview wiring.
+Before production deployment, the human reported GREEN for the integrated gate on the story branch:
 
-The complete TOMG-6 closure gate was run locally on 2026-09-18. The human reported GREEN for `pnpm lint`, `pnpm tsc`, `pnpm test`, and `pnpm build`. This is human-reported execution evidence; the remote connector did not execute these commands.
+- `pnpm lint` — clean after warning cleanup;
+- `pnpm tsc` / TypeScript no-emit checking — GREEN;
+- `pnpm test` — 142/142 tests passing;
+- `pnpm build` — GREEN.
+
+TOMG-40 production deployment was completed with Vercel CLI 59.23.2. The public MVP alias is `https://info-trek.vercel.app`, and the GitHub repository connection was confirmed through the Vercel CLI. Deployment documentation is committed in `a4ec405279a67a4949fed79c287f3a645bd9ee3a`, which was independently observed through the GitHub connector.
+
+These records preserve evidence provenance: local command results are human-reported unless explicitly stated as connector-observed. TOMG-41 still requires the final full closure gate against the final documentation state before TOMG-7 is closed.
 
 ## Known limitations / deferred work
 
-- Recommendation thresholds are deliberately simple MVP product rules, not personalized physiological advice.
-- Recommendations do not model individual health, acclimatization, body mass, or medical hydration needs.
-- Weather/daylight remain optional external context; recommendation calculation degrades to available event inputs when forecast weather is absent.
-- Database/backend persistence, authentication, and multi-user synchronization remain outside the MVP.
-- TOMG-7 owns integrated hardening, accessibility, final validation/error/loading behavior, documentation reconciliation, and deployment.
+- The MVP has no authentication, database-backed persistence, or multi-user/multi-device synchronization.
+- Frequent places are local to the browser storage used by the current client.
+- Weather/daylight are optional external context and are not persisted as stable domain truth.
+- Recommendation thresholds are deliberately simple MVP product rules, not personalized physiological or medical guidance.
+- Native mobile applications remain outside the MVP.
+- PWA/mobile installability is deferred. A future story should evaluate the web app manifest, install icons, standalone presentation, and service-worker/offline strategy as a coherent installability feature rather than treating a manifest alone as sufficient.
+- Features beyond the documented MVP boundaries require an explicit future story/decision rather than anticipatory infrastructure.
 
 ## Closure state
 
-TOMG-30 through TOMG-34 are implemented and Listo in Jira. TOMG-35 documentation reconciliation and the full human-reported closure gate are complete. Final Jira reconciliation and review/merge of TOMG-6 to `dev` remain; preserve the story branch after merge.
+TOMG-36, TOMG-37, TOMG-38, TOMG-39, and TOMG-40 are Listo in Jira. TOMG-41 is the remaining TOMG-7 subtask and owns this final documentation reconciliation plus the full `lint → tsc → test → build` closure gate.
+
+After that gate is recorded and the TOMG-7 acceptance criteria are reconciled, TOMG-41 and TOMG-7 can be closed and the story branch can proceed through the repository's normal review/merge workflow into `dev`. Preserve the story branch after merge.

@@ -165,3 +165,20 @@ test("semantically invalid persisted places are ignored", () => {
 
   assert.deepEqual(repository.getAll(), [place])
 })
+
+
+test("persists and reloads elevation gain for a frequent place", () => {
+  const storage = new MemoryStorage()
+  const repository = new LocalStoragePlaceRepository(storage)
+  const saved = {
+    ...place,
+    route: {
+      ...place.route,
+      elevationGainM: 745,
+    },
+  }
+
+  repository.save(saved)
+
+  assert.equal(repository.getAll()[0]?.route.elevationGainM, 745)
+})

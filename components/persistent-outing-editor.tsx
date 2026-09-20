@@ -32,7 +32,7 @@ export function PersistentOutingEditor() {
   }, [])
 
   if (!frequentPlaces) {
-    return <p>Cargando lugares frecuentes…</p>
+    return <p role="status" aria-live="polite">Cargando lugares frecuentes…</p>
   }
 
   return (
